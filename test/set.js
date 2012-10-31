@@ -23,8 +23,10 @@ module.exports = {
             },
             {
                 status: 200,
-                headers: {'Content-Type': 'application/json; charset=utf-8'},
-                body: "[]"
+                headers: {'Content-Type': 'application/json; charset=utf-8'}
+            },
+            function (res) {
+                assert.eql(JSON.parse(res.body), {id: 1});
             }
         );
     }
