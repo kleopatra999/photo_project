@@ -1,13 +1,16 @@
+var db = require('../utils/database');
 
 /*
  * GET all sets
  * TODO: Should only return sets user has access to
  */
-exports.list = function(req, res) {
-    // TODO: Make this return the actual data
-    var response = [];
+exports.list = function(req, res) {    
+    db.connection.query("SELECT * FROM  `set`", function(err, rows, field) {
+        if (err) throw err;
 
-    res.json(response);
+        res.json(rows);
+    });
+
 };
 
 /*
