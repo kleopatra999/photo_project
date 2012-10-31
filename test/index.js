@@ -4,13 +4,13 @@ var app = require('../app'),
 module.exports = {
     'Test index content type': function(beforeExit, assert) {
         this.callback = function(){};
-        assert.response(app,
+        assert.response(app.server,
             {
                 url: '/'
             },
             {
                 status: 200,
-                headers: {'Content-Type': 'text/html; charset=utf-8'}
+                headers: {'Content-Type': 'text/html; charset=UTF-8'}
             }
         );
     }

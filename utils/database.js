@@ -2,38 +2,26 @@ var mysql = require('mysql'),
     fs = require('fs');
 
 // Sets up the database connection and keeps it open
-var setup = function(multipleStatements) {
-    if (!multipleStatements) {
-        multipleStatements = false;
-    }
-
+var setup = function(config) {
     // Connect to the MySql server
-    module.exports.connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '1990',
-        database: 'photo_project',
-        multipleStatements: multipleStatements
-    });
+    module.exports.connection = mysql.createConnection(config);
     module.exports.connection.connect();
 };
 
 // Creates the database structure from the sql file
 var createDB = function() {
     // Load in the database sql file
-    fs.readFile( __dirname + '/../config/database.sql', function (err, data) {
-        if (err) {
-            throw err;
-        }
+    var sql = fs.readFileSync( __dirname + '/../config/database.sql').toString();
+    module.exports.connection.query(sql, function(err, rows, fields) {
+        if (err) throw err;
 
-        var sql = data.toString();
-        console.log(sql);
+        console.log('Database creation complete');
+    });
+};
 
-        module.exports.connection.query(sql, function(err, rows, fields) {
-            if (err) throw err;
-
-            console.log('Database creation complete');
-        });
+var deleteDB = function() {
+    module.exports.connection.query("DROP TABLE `photo`, `set_user`, `user`, `set`;", function(err, rows, fields) {
+        console.log("Database deletion complete");
     });
 };
 
@@ -47,5 +35,6 @@ module.exports = {
     connection: null,
     'setup': setup,
     'createDB': createDB,
+    'deleteDB': deleteDB,
     'tearDown': tearDown
 };

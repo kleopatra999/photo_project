@@ -28,9 +28,6 @@ app.configure('development', function(){
     app.use(express.errorHandler());
 });
 
-// Setup the database
-database.setup();
-
 // Setup the routes
 app.get('/photo', photo.list);
 app.get('/photo/:id', photo.single);
@@ -40,7 +37,7 @@ app.get('/user', user.list);
 
 // Start the server
 // This also doubles as the export which is used for the test framework
-var server = module.exports = http.createServer(app);
+var server = module.exports.server = http.createServer(app);
 // Only start listening if we aren't being tested
 if (!module.parent) {
     server.listen(app.get('port'), function(){
@@ -48,7 +45,35 @@ if (!module.parent) {
     });
 }
 
-// Listen for close events and shut down the database
-server.on('close', function() {
-    database.tearDown();
-});
+// Setup the database config
+if (module.parent) {
+    // Setup the database
+    database.setup({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'photo_project_test',
+        multipleStatements: true
+    });
+    // Also setup the database
+    database.createDB();
+
+    // Listen for close events and shut down the database
+    server.on('close', function() {
+        database.deleteDB();
+        database.tearDown();
+    });
+}
+else {
+    // Setup the database
+    database.setup({
+        host: 'localhost',
+        user: 'root',
+        password: '1990',
+        database: 'photo_project'
+    });
+    // Listen for close events and shut down the database
+    server.on('close', function() {
+        database.tearDown();
+    });
+}

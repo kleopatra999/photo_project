@@ -4,7 +4,7 @@ var app = require('../app'),
 module.exports = {
     'Test photo list error no set_id': function(beforeExit, assert) {
         this.callback = function(){};
-        assert.response(app,
+        assert.response(app.server,
             {
                 url: '/photo'
             },
@@ -16,7 +16,7 @@ module.exports = {
     },
     'Test photo list content type': function(beforeExit, assert) {
         this.callback = function(){};
-        assert.response(app,
+        assert.response(app.server,
             {
                 url: '/photo?set_id=1'
             },
@@ -28,7 +28,7 @@ module.exports = {
     },
     'Test single photo content type': function(beforeExit, assert) {
         this.callback = function(){};
-        assert.response(app,
+        assert.response(app.server,
             {
                 url: '/photo/1'
             },
