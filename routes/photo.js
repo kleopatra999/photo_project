@@ -1,3 +1,4 @@
+var db = require('../utils/database');
 
 /*
  * GET all photos in a set
@@ -12,20 +13,23 @@ exports.list = function(req, res) {
         return;
     }
 
+
     // Make sure we have a valid set id
-    // TODO: Make this check to see if we have a valid set id
-    if (false) {
-        res.json(404, {error: "set_id not found"});
-        return;
-    }
+    db.connection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
+        if (err) throw err;
 
-    // TODO: Make this return the actual data
-    var response = {
-        set_id: req.query.set_id,
-        photos: []
-    };
+        // We don't have a valid set_id
+        if (rows.length === 0) {
+            res.json(404, {error: "set_id not found"});
+            return;
+        }
 
-    res.json(response);
+        db.connection.query("SELECT * FROM  `photo` WHERE `set_id` = '" + req.query.set_id + "'", function(err, rows, field) {
+            if (err) throw err;
+
+            res.json(rows);
+        });
+    });
 };
 
 /*
@@ -35,11 +39,17 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    // TODO: Make this return the actual data
-    var response = {
-        id: req.params.id
-    };
+    // Make sure we have a valid set id
+    db.connection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
+        if (err) throw err;
 
-    res.json(response);
+        // Nothing with that id
+        if (rows.length === 0) {
+            res.json(404, {error: "Photo not found with that id"});
+            return;
+        }
+
+        res.json(rows[0]);
+    });
 };
 
