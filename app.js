@@ -1,6 +1,5 @@
 // Load in all our dependancies
 var express = require('express'),
-    routes = require('./routes'),
     photo = require('./routes/photo'),
     set = require('./routes/set'),
     user = require('./routes/user'),
@@ -14,8 +13,6 @@ var app = express();
 // Configure for all environments
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
-    app.set('views', __dirname + '/views');
-    app.set('view engine', 'jade');
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
@@ -35,7 +32,6 @@ app.configure('development', function(){
 database.setup();
 
 // Setup the routes
-app.get('/', routes.index);
 app.get('/photo', photo.list);
 app.get('/photo/:id', photo.single);
 app.get('/set', set.list);
