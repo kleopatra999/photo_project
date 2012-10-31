@@ -1,5 +1,6 @@
 var app = require('../app'),
-    assert = require('assert');
+    assert = require('assert'),
+    db = require('../utils/database');
 
 module.exports = {
     'Test set list content type': function(beforeExit, assert) {

@@ -38,12 +38,6 @@ app.get('/user', user.list);
 // Start the server
 // This also doubles as the export which is used for the test framework
 var server = module.exports.server = http.createServer(app);
-// Only start listening if we aren't being tested
-if (!module.parent) {
-    server.listen(app.get('port'), function(){
-        console.log("Express server started at http://0.0.0.0:" + app.get('port'));
-    });
-}
 
 // Setup the database config
 if (module.parent) {
@@ -69,11 +63,18 @@ else {
     database.setup({
         host: 'localhost',
         user: 'root',
-        password: '1990',
+        password: '',
         database: 'photo_project'
     });
     // Listen for close events and shut down the database
     server.on('close', function() {
         database.tearDown();
+    });
+}
+
+// Only start listening if we aren't being tested
+if (!module.parent) {
+    server.listen(app.get('port'), function(){
+        console.log("Express server started at http://0.0.0.0:" + app.get('port'));
     });
 }
