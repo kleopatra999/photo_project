@@ -38,6 +38,11 @@ app.get('/set', set.list);
 app.get('/set/:id', set.single);
 app.get('/user', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log("Express server started at http://0.0.0.0:" + app.get('port'));
-});
+var server = module.exports = http.createServer(app);
+
+// Only start listening if we aren't being tested
+if (!module.parent) {
+    server.listen(app.get('port'), function(){
+        console.log("Express server started at http://0.0.0.0:" + app.get('port'));
+    });
+}

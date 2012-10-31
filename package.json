@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "expresso test/*"
   },
   "dependencies": {
     "express": "3.0.0",
     "jade": "*"
+  },
+  "devDependencies": {
+    "expresso": "~0.9.2"
   }
 }
