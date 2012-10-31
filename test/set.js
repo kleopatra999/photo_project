@@ -2,7 +2,8 @@ var app = require('../app'),
     assert = require('assert');
 
 module.exports = {
-    'Test set list content type': function() {
+    'Test set list content type': function(beforeExit, assert) {
+        this.callback = function(){};
         assert.response(app,
             {
                 url: '/set'
@@ -14,7 +15,8 @@ module.exports = {
             }
         );
     },
-    'Test single set content type': function() {
+    'Test single set content type': function(beforeExit, assert) {
+        this.callback = function(){};
         assert.response(app,
             {
                 url: '/set/1'
