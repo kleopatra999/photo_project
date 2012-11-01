@@ -1,5 +1,3 @@
-var db = require('../utils/database');
-
 /*
  * GET all photos in a set
  * Params
@@ -15,7 +13,7 @@ exports.list = function(req, res) {
 
 
     // Make sure we have a valid set id
-    db.connection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
+    req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
 
         // We don't have a valid set_id
@@ -24,7 +22,7 @@ exports.list = function(req, res) {
             return;
         }
 
-        db.connection.query("SELECT * FROM  `photo` WHERE `set_id` = '" + req.query.set_id + "'", function(err, rows, field) {
+        req.dbConnection.query("SELECT * FROM  `photo` WHERE `set_id` = '" + req.query.set_id + "'", function(err, rows, field) {
             if (err) throw err;
 
             res.json(rows);
@@ -40,7 +38,7 @@ exports.list = function(req, res) {
  */
 exports.single = function(req, res) {
     // Make sure we have a valid set id
-    db.connection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
+    req.dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
 
         // Nothing with that id

@@ -1,11 +1,11 @@
-var db = require('../utils/database');
+
 
 /*
  * GET all sets
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
-    db.connection.query("SELECT * FROM  `set`", function(err, rows, field) {
+    req.dbConnection.query("SELECT * FROM  `set`", function(err, rows, field) {
         if (err) throw err;
 
         res.json(rows);
@@ -20,7 +20,7 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    db.connection.query("SELECT * FROM  `set` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
+    req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
 
         if (rows.length === 0) {

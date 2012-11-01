@@ -1,3 +1,25 @@
+// Set the database connection parameters
+if (module.parent) {
+    // For testing
+    module.exports.databaseConfig = {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'photo_project_test',
+        multipleStatements: true
+    };
+
+}
+else {
+    // For production
+    module.exports.databaseConfig = {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'photo_project'
+    };
+}
+
 // Load in all our dependancies
 var express = require('express'),
     photo = require('./routes/photo'),
@@ -5,7 +27,12 @@ var express = require('express'),
     user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
-    database = require('./utils/database');
+    database = require('./utils/database'),
+    EventEmitter = require('events').EventEmitter;
+
+// Setup this module to emit events
+module.exports = new EventEmitter();
+
 
 // Get the instance of express
 var app = express();
@@ -13,6 +40,7 @@ var app = express();
 // Configure for all environments
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
+    app.use(database.middleware());
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
@@ -39,42 +67,19 @@ app.get('/user', user.list);
 // This also doubles as the export which is used for the test framework
 var server = module.exports.server = http.createServer(app);
 
-// Setup the database config
-if (module.parent) {
-    // Setup the database
-    database.setup({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'photo_project_test',
-        multipleStatements: true
-    });
-    // Also setup the database
-    database.createDB();
-
-    // Listen for close events and shut down the database
-    server.on('close', function() {
-        database.deleteDB();
-        database.tearDown();
+// Check which mode we're in
+if (!module.parent) {
+    // Only start listening if we aren't being tested
+    server.listen(app.get('port'), function() {
+        console.log("Express server started at http://0.0.0.0:" + app.get('port'));
     });
 }
 else {
-    // Setup the database
-    database.setup({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'photo_project'
+    database.createDB(function() {
+        module.exports.emit('dbCreated');
     });
-    // Listen for close events and shut down the database
-    server.on('close', function() {
-        database.tearDown();
-    });
-}
 
-// Only start listening if we aren't being tested
-if (!module.parent) {
-    server.listen(app.get('port'), function(){
-        console.log("Express server started at http://0.0.0.0:" + app.get('port'));
+    server.on('close', function() {
+        database.deleteDB();
     });
 }

@@ -1,8 +1,8 @@
 var app = require('../app'),
     assert = require('assert');
 
-module.exports = {
-    'Test photo list error no set_id': function(beforeExit, assert) {
+app.on('dbCreated', function() {
+    exports['Test photo list error no set_id'] = function(beforeExit, assert) {
         this.callback = function(){};
         assert.response(app.server,
             {
@@ -13,8 +13,8 @@ module.exports = {
                 headers: {'Content-Type': 'application/json; charset=utf-8'}
             }
         );
-    },
-    'Test photo list content type': function(beforeExit, assert) {
+    };
+    exports['Test photo list content type'] = function(beforeExit, assert) {
         this.callback = function(){};
         assert.response(app.server,
             {
@@ -25,8 +25,8 @@ module.exports = {
                 headers: {'Content-Type': 'application/json; charset=utf-8'}
             }
         );
-    },
-    'Test single photo content type': function(beforeExit, assert) {
+    };
+    exports['Test single photo content type'] = function(beforeExit, assert) {
         this.callback = function(){};
         assert.response(app.server,
             {
@@ -35,10 +35,7 @@ module.exports = {
             {
                 status: 200,
                 headers: {'Content-Type': 'application/json; charset=utf-8'}
-            },
-            function (res) {
-                assert.eql(JSON.parse(res.body), {id: 1});
             }
         );
-    }
-};
+    };
+});

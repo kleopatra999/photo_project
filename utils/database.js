@@ -1,40 +1,54 @@
 var mysql = require('mysql'),
-    fs = require('fs');
+    fs = require('fs'),
+    app = require('../app');
 
 // Sets up the database connection and keeps it open
-var setup = function(config) {
+var connect = function() {
     // Connect to the MySql server
-    module.exports.connection = mysql.createConnection(config);
-    module.exports.connection.connect();
+    var connection = mysql.createConnection(app.databaseConfig);
+    connection.connect();
+    return connection;
 };
 
 // Creates the database structure from the sql file
-var createDB = function() {
-    // Load in the database sql file
-    var sql = fs.readFileSync( __dirname + '/../config/database.sql').toString();
-    module.exports.connection.query(sql, function(err, rows, fields) {
-        if (err) throw err;
-
-        console.log('Database creation complete');
+var createDB = function(callback) {
+    // Delete the database incase the tables exist
+    module.exports.deleteDB(function() {
+        // Load in the database sql file
+        var sql = fs.readFileSync( __dirname + '/../config/database.sql').toString();
+        var db = module.exports.connect();
+        db.query(sql, function(err, rows, fields) {
+            if (err) throw err;
+            db.end();
+            callback();
+        });
     });
 };
 
-var deleteDB = function() {
-    module.exports.connection.query("DROP TABLE `photo`, `set_user`, `user`, `set`;", function(err, rows, fields) {
-        console.log("Database deletion complete");
+var deleteDB = function(callback) {
+    var db = module.exports.connect();
+    db.query("DROP TABLE `photo`, `set_user`, `user`, `set`;", function(err, rows, fields) {
+        db.end();
+        if (callback) callback();
     });
 };
 
-// Closes the database connection
-var tearDown = function() {
-    module.exports.connection.end();
+var middleware = function() {
+    return function(req, res, next) {
+        req.dbConnection = module.exports.connect();
+
+        res.on('finish', function() {
+            req.dbConnection.end();
+        });
+
+        next();
+    };
 };
 
 // The external interface of this module
 module.exports = {
-    connection: null,
-    'setup': setup,
+    'connect': connect,
     'createDB': createDB,
     'deleteDB': deleteDB,
-    'tearDown': tearDown
+    'middleware': middleware
 };

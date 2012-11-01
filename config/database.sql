@@ -47,3 +47,8 @@ ALTER TABLE `photo`
 ALTER TABLE `set_user`
   ADD CONSTRAINT `set_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `set_user_ibfk_1` FOREIGN KEY (`set_id`) REFERENCES `set` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('1', 'Testing', '2012-11-01', '2012-11-02');
+INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('1', 'default@user.me', SHA1('default'), 'Default User');
+INSERT INTO `photo` (`id`, `description`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('1', 'A simple test', '1', '1', '2012-11-06 00:00:00', NULL, NULL);
