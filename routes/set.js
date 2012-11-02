@@ -42,7 +42,6 @@ exports.single = function(req, res) {
  * TODO: Assign to current user instead of default user
  */
 exports.create = function(req, res) {
-    console.log(req.query);
     if (!req.query.name || req.query.name.length === 0) {
         res.json(400, {error: "A name is required"});
         return;
