@@ -50,4 +50,17 @@ app.on('dbCreated', function() {
             }
         );
     };
+    exports['Create single set'] = function(beforeExit, assert) {
+        this.callback = function(){};
+        assert.response(app.server,
+            {
+                url: '/set?name=Testing',
+                method: 'POST'
+            },
+            {
+                status: 201,
+                headers: {'Content-Type': 'application/json; charset=utf-8'}
+            }
+        );
+    };
 });

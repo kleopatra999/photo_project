@@ -60,6 +60,7 @@ app.configure('development', function(){
 app.get('/photo', photo.list);
 app.get('/photo/:id', photo.single);
 app.get('/set', set.list);
+app.post('/set', set.create);
 app.get('/set/:id', set.single);
 app.get('/user', user.list);
 
