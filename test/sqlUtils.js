@@ -22,28 +22,37 @@ describe('SqlUtils', function() {
         });
     });
 
-    describe.only('Create value list', function() {
+    describe('Create value list', function() {
         it('should return null when nothing passed in', function() {
             var result = sqlUtils.createValueList(null);
             assert.equal(result, null);
         });
 
-        it('should return null when no tests are not null', function() {
+        it('should return null when no values are not null', function() {
             var result = sqlUtils.createValueList([
-                {name: '1', test: null, value: '1'},
-                {name: '2', test: null, value: '2'},
-                {name: '3', test: null, value: '3'}
+                {name: '1', value: null},
+                {name: '2', value: null},
+                {name: '3', value: null}
             ]);
             assert.equal(result, null);
         });
 
-        it('should only return values with tests which are not null', function() {
+        it('should only return values with values which are not null', function() {
             var result = sqlUtils.createValueList([
-                {name: '1', test: '1', value: '\'1\''},
-                {name: '2', test: null, value: '\'2\''},
-                {name: '3', test: null, value: '\'3\''}
+                {name: '1', value: '1'},
+                {name: '2', value: null},
+                {name: '3', value: null}
             ]);
-            assert.equal(result, '`1` = \'1\'');
+            assert.equal(result, "`1` = '1'");
+        });
+
+        it('should only return a comma seperated list if more than one value isnt null', function() {
+            var result = sqlUtils.createValueList([
+                {name: '1', value: '1'},
+                {name: '2', value: '2'},
+                {name: '3', value: '3'}
+            ]);
+            assert.equal(result, "`1` = '1', `2` = '2', `3` = '3'");
         });
     });
 });

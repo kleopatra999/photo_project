@@ -74,15 +74,11 @@ exports.update = function(req, res) {
         return;
     }
 
-    // Get the values ready for adding to SQL
-    var name = sqlUtils.wrapQuotesOrNull(req.query.name);
-    var start_date = sqlUtils.wrapQuotesOrNull(req.query.start_date);
-    var end_date = sqlUtils.wrapQuotesOrNull(req.query.end_date);
-
+    // Get the value list ready for adding to SQL
     var valueClauses = sqlUtils.createValueList([
-        {name: 'name', test: req.query.name, value: name},
-        {name: 'start_date', test: req.query.start_date, value: start_date},
-        {name: 'end_date', test: req.query.end_date, value: end_date}
+        {name: 'name', value: req.query.name},
+        {name: 'start_date', value: req.query.start_date},
+        {name: 'end_date', value: req.query.end_date}
     ]);
 
     if (!valueClauses) {
