@@ -41,7 +41,9 @@ app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.use(database.middleware());
     app.use(express.favicon());
-    app.use(express.logger('dev'));
+    if (!module.parent) {
+        app.use(express.logger('dev')); // Dont log when testing
+    }
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
