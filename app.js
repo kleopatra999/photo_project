@@ -83,12 +83,3 @@ if (!module.parent) {
         console.log("Express server started at http://0.0.0.0:" + app.get('port'));
     });
 }
-else {
-    database.createDB(function() {
-        module.exports.emit('dbCreated');
-    });
-
-    server.on('close', function() {
-        database.deleteDB();
-    });
-}
