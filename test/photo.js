@@ -1,54 +1,40 @@
 var app = require('../app'),
+    request = require('supertest'),
     assert = require('assert');
 
-app.on('dbCreated', function() {
-    exports['Test photo list error no set_id'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/photo'
-            },
-            {
-                status: 400,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Test photo list content type'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/photo?set_id=1'
-            },
-            {
-                status: 200,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Test single photo content type'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/photo/1'
-            },
-            {
-                status: 200,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Create single photo'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/photo?set_id=1',
-                method: 'POST'
-            },
-            {
-                status: 201,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
+describe('Photo', function() {
+    describe('list', function() {
+        it('should error with no set_id', function(done) {
+            request(app.server)
+                .get('/photo')
+                .expect(400)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return json content type', function(done) {
+            request(app.server)
+                .get('/photo?set_id=1')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+    });
+    describe('single', function() {
+        it('should return json content type', function(done) {
+            request(app.server)
+                .get('/photo/1')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 201 after creating photo', function(done) {
+            request(app.server)
+                .post('/photo/?set_id=1')
+                .expect(201)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+    });
 });
