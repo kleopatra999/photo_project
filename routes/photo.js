@@ -93,6 +93,10 @@ exports.update = function(req, res) {
         res.json(400, {error: "An id is required"});
         return;
     }
+    if (!req.query.description) {
+        res.json(200, {message: "No changes made"});
+        return;
+    }
 
     var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
