@@ -33,7 +33,6 @@ var express = require('express'),
 // Setup this module to emit events
 module.exports = new EventEmitter();
 
-
 // Get the instance of express
 var app = express();
 
@@ -42,7 +41,9 @@ app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.use(database.middleware());
     app.use(express.favicon());
-    app.use(express.logger('dev'));
+    if (!module.parent) {
+        app.use(express.logger('dev')); // Dont log when testing
+    }
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
@@ -81,14 +82,5 @@ if (!module.parent) {
     // Only start listening if we aren't being tested
     server.listen(app.get('port'), function() {
         console.log("Express server started at http://0.0.0.0:" + app.get('port'));
-    });
-}
-else {
-    database.createDB(function() {
-        module.exports.emit('dbCreated');
-    });
-
-    server.on('close', function() {
-        database.deleteDB();
     });
 }
