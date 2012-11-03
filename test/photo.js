@@ -63,7 +63,9 @@ describe('Photo', function() {
                 .expect('Content-Type', /json/)
                 .end(done);
         });
+    });
 
+    describe('Creating', function() {
         it('should return 201 after creating', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1')
@@ -75,8 +77,6 @@ describe('Photo', function() {
         it('should be able to access a photo after creating', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1')
-                .expect(201)
-                .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -87,6 +87,25 @@ describe('Photo', function() {
                 });
         });
 
+        it('should be get the correct photo after creating', function(done) {
+            request(app.server)
+                .post('/photo/?set_id=1&description=Testing')
+                .end(function(err, res) {
+                    if (err) throw err;
+                    var newId = res.body.id;
+                    request(app.server)
+                        .get('/photo/' + newId)
+                        .end(function(err, res) {
+                            if (err) throw err;
+                            assert.equal(res.body.id, newId);
+                            assert.equal(res.body.description, 'Testing');
+                            done();
+                        });
+                });
+        });
+    });
+
+    describe('Deleting', function() {
         it('should return 200 and json message after deleting', function(done) {
             request(app.server)
                 .del('/photo/1')
@@ -98,8 +117,6 @@ describe('Photo', function() {
         it('should not be able to access a photo after deleting', function(done) {
             request(app.server)
                 .del('/photo/1')
-                .expect(200)
-                .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)
@@ -108,7 +125,9 @@ describe('Photo', function() {
                         .end(done);
                 });
         });
+    });
 
+    describe('Updating', function() {
         it('should return 200 and json message after updating', function(done) {
             request(app.server)
                 .post('/photo/1/?description=Changed')
@@ -120,8 +139,6 @@ describe('Photo', function() {
         it('should have a new title after updating', function(done) {
             request(app.server)
                 .post('/photo/1/?description=Changed')
-                .expect(200)
-                .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)
@@ -138,8 +155,6 @@ describe('Photo', function() {
         it('should not change the description if one is not passed', function(done) {
             request(app.server)
                 .post('/photo/1')
-                .expect(200)
-                .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)
