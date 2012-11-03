@@ -57,12 +57,16 @@ app.configure('development', function(){
 });
 
 // Setup the routes
+// Photos
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
+app.post('/photo/:id', photo.update);
+// Sets
 app.get('/set', set.list);
 app.post('/set', set.create);
 app.get('/set/:id', set.single);
+// Users
 app.get('/user', user.list);
 
 // Start the server

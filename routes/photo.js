@@ -37,6 +37,11 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
+    if (req.params.id) {
+        res.json(400, {error: "An id is required"});
+        return;
+    }
+
     // Make sure we have a valid set id
     req.dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
@@ -77,5 +82,39 @@ exports.create = function(req, res) {
         if (err) throw err;
 
         res.json(201, {id: rows.insertId});
+    });
+};
+
+/*
+ * POST a current photo to update it
+ * Params:
+ *   id - The id of the photo (required)
+ *   description - A description of the photo
+ */
+exports.update = function(req, res) {
+    if (!req.params.id) {
+        res.json(400, {error: "An id is required"});
+        return;
+    }
+
+    var description;
+    if (req.query.description) {
+        description = "'" + req.query.description + "'";
+    }
+    else {
+        description = "NULL";
+    }
+
+    var sql = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = " + req.params.id + " LIMIT 1";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        if (err) throw err;
+
+        console.log(rows);
+        if (rows.affectedRows === 0) {
+            res.json(404, {error: "Photo not found with that id"});
+        }
+        else {
+            res.json(200, {message: "Update complete"});
+        }
     });
 };
