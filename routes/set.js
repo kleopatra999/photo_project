@@ -1,4 +1,4 @@
-
+var sqlUtils = require('../utils/sql');
 
 /*
  * GET all sets
@@ -46,23 +46,12 @@ exports.create = function(req, res) {
         return;
     }
 
-    var start_date;
-    if (req.query.start_date) {
-        start_date = "'" + req.query.start_date + "'";
-    }
-    else {
-        start_date = "NULL";
-    }
+    // Get the values ready for adding to SQL
+    var name = sqlUtils.wrapQuotesOrNull(req.query.name);
+    var start_date = sqlUtils.wrapQuotesOrNull(req.query.start_date);
+    var end_date = sqlUtils.wrapQuotesOrNull(req.query.end_date);
 
-    var end_date;
-    if (req.query.end_date) {
-        end_date = "'" + req.query.end_date + "'";
-    }
-    else {
-        end_date = "NULL";
-    }
-
-    var sql = "INSERT INTO  `set` (`name`, `start_date`, `end_date`) VALUES ('" + req.query.name + "', " + start_date + ", " + end_date + ")";
+    var sql = "INSERT INTO  `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + start_date + ", " + end_date + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
         if (err) throw err;
 
@@ -85,29 +74,10 @@ exports.update = function(req, res) {
         return;
     }
 
-    var name;
-    if (req.query.name) {
-        name = "'" + req.query.name + "'";
-    }
-    else {
-        name = "NULL";
-    }
-
-    var start_date;
-    if (req.query.start_date) {
-        start_date = "'" + req.query.start_date + "'";
-    }
-    else {
-        start_date = "NULL";
-    }
-
-    var end_date;
-    if (req.query.end_date) {
-        end_date = "'" + req.query.end_date + "'";
-    }
-    else {
-        end_date = "NULL";
-    }
+    // Get the values ready for adding to SQL
+    var name = sqlUtils.wrapQuotesOrNull(req.query.name);
+    var start_date = sqlUtils.wrapQuotesOrNull(req.query.start_date);
+    var end_date = sqlUtils.wrapQuotesOrNull(req.query.end_date);
 
     var sql = "UPDATE `set` SET `name` = " + name + ", `start_date` = " + start_date + ", `end_date` = " + end_date + " WHERE `id` = " + req.params.id + " LIMIT 1";
     req.dbConnection.query(sql, function(err, rows, field) {

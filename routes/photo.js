@@ -1,3 +1,5 @@
+var sqlUtils = require('../utils/sql');
+
 /*
  * GET all photos in a set
  * Params
@@ -69,13 +71,7 @@ exports.create = function(req, res) {
         return;
     }
 
-    var description;
-    if (req.query.description) {
-        description = "'" + req.query.description + "'";
-    }
-    else {
-        description = "NULL";
-    }
+    var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
     var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
@@ -98,13 +94,7 @@ exports.update = function(req, res) {
         return;
     }
 
-    var description;
-    if (req.query.description) {
-        description = "'" + req.query.description + "'";
-    }
-    else {
-        description = "NULL";
-    }
+    var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
     var sql = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = " + req.params.id + " LIMIT 1";
     req.dbConnection.query(sql, function(err, rows, field) {
