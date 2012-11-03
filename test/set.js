@@ -1,5 +1,4 @@
 var app = require('../app'),
-    assert = require('assert'),
     request = require('supertest');
 
 describe('Set', function() {

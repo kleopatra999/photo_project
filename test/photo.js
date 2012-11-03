@@ -1,6 +1,5 @@
 var app = require('../app'),
-    request = require('supertest'),
-    assert = require('assert');
+    request = require('supertest');
 
 describe('Photo', function() {
     describe('list', function() {

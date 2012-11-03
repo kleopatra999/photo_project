@@ -1,6 +1,5 @@
 var app = require('../app'),
-    request = require('supertest'),
-    assert = require('assert');
+    request = require('supertest');
 
 describe('Index', function() {
     it('index content type', function(done) {
