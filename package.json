@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "mocha -R spec test/*"
+    "test": "mocha -R nyan test/*"
   },
   "dependencies": {
     "express": "3.0.0",

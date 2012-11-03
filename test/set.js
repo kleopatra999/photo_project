@@ -1,66 +1,48 @@
 var app = require('../app'),
     assert = require('assert'),
-    database = require('../utils/database');
+    request = require('supertest');
 
-app.on('dbCreated', function() {
-    exports['Test set list content type'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/set'
-            },
-            {
-                status: 200,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Test single set content type'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/set/1'
-            },
-            {
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Test single set 404'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/set/1000'
-            },
-            {
-                status: 404,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Single set 200'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/set/1'
-            },
-            {
-                status: 200,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
-    exports['Create single set'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/set?name=Testing',
-                method: 'POST'
-            },
-            {
-                status: 201,
-                headers: {'Content-Type': 'application/json; charset=utf-8'}
-            }
-        );
-    };
+describe('Set', function() {
+    describe('List', function() {
+        it('should return json content type', function(done) {
+            request(app.server)
+                .get('/set')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+    });
+    describe('Single', function() {
+        it('should return json content type', function(done) {
+            request(app.server)
+                .get('/set/1')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 for incorrect id', function(done) {
+            request(app.server)
+                .get('/set/1000')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 200 for correct id', function(done) {
+            request(app.server)
+                .get('/set/1')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 201 after creating a set', function(done) {
+            request(app.server)
+                .post('/set/?name=Testing')
+                .expect(201)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+    });
 });
