@@ -1,17 +1,15 @@
 var app = require('../app'),
+    request = require('supertest'),
     assert = require('assert');
 
-app.on('dbCreated', function() {
-    exports['Test index content type'] = function(beforeExit, assert) {
-        this.callback = function(){};
-        assert.response(app.server,
-            {
-                url: '/'
-            },
-            {
-                status: 200,
-                headers: {'Content-Type': 'text/html; charset=UTF-8'}
-            }
-        );
-    };
+describe('Index', function() {
+    it('index content type', function(done) {
+        app.on('dbCreated', function() {
+            request(app.server)
+                .get('/')
+                .expect(200)
+                .expect('Content-Type', 'text/html; charset=UTF-8')
+                .end(done);
+        });
+    });
 });
