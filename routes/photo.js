@@ -51,3 +51,31 @@ exports.single = function(req, res) {
     });
 };
 
+/*
+ * POST a new photo
+ * Params:
+ *   set_id - The id of the set the photo is in (required)
+ *   description - A description of the photo
+ * TODO: Assign to current user instead of default user
+ */
+exports.create = function(req, res) {
+    if (!req.query.set_id || req.query.set_id.length === 0) {
+        res.json(400, {error: "A set_id is required"});
+        return;
+    }
+
+    var description;
+    if (req.query.description) {
+        description = "'" + req.query.description + "'";
+    }
+    else {
+        description = "NULL";
+    }
+
+    var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ")";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        if (err) throw err;
+
+        res.json(201, {id: rows.insertId});
+    });
+};

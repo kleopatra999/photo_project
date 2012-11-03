@@ -58,6 +58,7 @@ app.configure('development', function(){
 
 // Setup the routes
 app.get('/photo', photo.list);
+app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
 app.get('/set', set.list);
 app.post('/set', set.create);
