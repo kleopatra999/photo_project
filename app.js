@@ -66,6 +66,7 @@ app.post('/photo/:id', photo.update);
 app.get('/set', set.list);
 app.post('/set', set.create);
 app.get('/set/:id', set.single);
+app.post('/set/:id', set.update);
 // Users
 app.get('/user', user.list);
 

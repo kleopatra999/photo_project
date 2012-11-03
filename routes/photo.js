@@ -90,6 +90,7 @@ exports.create = function(req, res) {
  * Params:
  *   id - The id of the photo (required)
  *   description - A description of the photo
+ * TODO: Paramters which are not passed in should not be altered
  */
 exports.update = function(req, res) {
     if (!req.params.id) {
