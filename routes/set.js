@@ -79,19 +79,13 @@ exports.update = function(req, res) {
     var start_date = sqlUtils.wrapQuotesOrNull(req.query.start_date);
     var end_date = sqlUtils.wrapQuotesOrNull(req.query.end_date);
 
-    var valueClauses = '';
-    if (req.query.name) {
-        valueClauses += '`name` = ' + name + ',';
-    }
-    if (req.query.start_date) {
-        valueClauses += '`start_date` = ' + start_date + ',';
-    }
-    if (req.query.end_date) {
-        valueClauses += '`end_date` = ' + end_date + ',';
-    }
-    valueClauses = valueClauses.slice(0, valueClauses.length - 1);
+    var valueClauses = sqlUtils.createValueList([
+        {name: 'name', test: req.query.name, value: name},
+        {name: 'start_date', test: req.query.start_date, value: start_date},
+        {name: 'end_date', test: req.query.end_date, value: end_date}
+    ]);
 
-    if (valueClauses === '') {
+    if (!valueClauses) {
         res.json(200, {message: 'No changes made'});
         return;
     }
