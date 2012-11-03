@@ -37,7 +37,7 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    if (req.params.id) {
+    if (!req.params.id) {
         res.json(400, {error: "An id is required"});
         return;
     }
