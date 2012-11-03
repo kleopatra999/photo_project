@@ -109,7 +109,6 @@ exports.update = function(req, res) {
     req.dbConnection.query(sql, function(err, rows, field) {
         if (err) throw err;
 
-        console.log(rows);
         if (rows.affectedRows === 0) {
             res.json(404, {error: "Photo not found with that id"});
         }
