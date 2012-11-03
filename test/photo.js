@@ -1,12 +1,7 @@
 var app = require('../app'),
-    database = require('../utils/database'),
     request = require('supertest');
 
 describe('Photo', function() {
-    beforeEach(function(done) {
-        database.createDB(done);
-    });
-
     describe('list', function() {
         it('should error with no set_id', function(done) {
             request(app.server)

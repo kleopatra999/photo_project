@@ -1,12 +1,7 @@
 var app = require('../app'),
-    database = require('../utils/database'),
     request = require('supertest');
 
 describe('Set', function() {
-    beforeEach(function(done) {
-        database.createDB(done);
-    });
-
     describe('List', function() {
         it('should return json content type', function(done) {
             request(app.server)

@@ -33,7 +33,6 @@ var express = require('express'),
 // Setup this module to emit events
 module.exports = new EventEmitter();
 
-
 // Get the instance of express
 var app = express();
 
