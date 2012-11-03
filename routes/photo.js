@@ -108,3 +108,28 @@ exports.update = function(req, res) {
         }
     });
 };
+
+/*
+ * DELETE a current photo
+ * Params:
+ *   id - The id of the photo (required)
+ * TODO: Only allow the owning user to do this
+ */
+exports.delete = function(req, res) {
+    if (!req.params.id) {
+        res.json(400, {error: "An id is required"});
+        return;
+    }
+
+    var sql = "DELETE FROM `photo` WHERE `id` = " + req.params.id + " LIMIT 1";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        if (err) throw err;
+
+        if (rows.affectedRows === 0) {
+            res.json(404, {error: "Photo not found with that id"});
+        }
+        else {
+            res.json(200, {message: "Delete complete"});
+        }
+    });
+};

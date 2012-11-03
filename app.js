@@ -62,11 +62,13 @@ app.get('/photo', photo.list);
 app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
 app.post('/photo/:id', photo.update);
+app.delete('/photo/:id', photo.delete);
 // Sets
 app.get('/set', set.list);
 app.post('/set', set.create);
 app.get('/set/:id', set.single);
 app.post('/set/:id', set.update);
+app.delete('/set/:id', set.delete);
 // Users
 app.get('/user', user.list);
 
