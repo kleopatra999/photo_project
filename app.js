@@ -62,6 +62,7 @@ app.configure('development', function(){
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
+app.get('/photo/:id/file', photo.photoFile);
 app.post('/photo/:id', photo.update);
 app.delete('/photo/:id', photo.delete);
 // Sets

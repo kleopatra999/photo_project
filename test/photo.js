@@ -144,6 +144,8 @@ describe('Photo', function() {
                         .end(function(err, res) {
                             if (err) throw err;
                             var photoUrl = res.body.photoUrl;
+                            // Need to do this to make the test run correctly
+                            photoUrl = photoUrl.replace('http://127.0.0.1:3456', '');
                             request(app.server)
                                 .get(photoUrl)
                                 .expect(200)
