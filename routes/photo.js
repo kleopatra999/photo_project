@@ -75,7 +75,15 @@ exports.create = function(req, res) {
 
     var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
+        if (err) {
+            if (err.code === "ER_NO_REFERENCED_ROW_") {
+                res.json(404, {error: "No set with that set_id"});
+                return;
+            }
+            else {
+                throw err;
+            }
+        }
 
         res.json(201, {id: rows.insertId});
     });
