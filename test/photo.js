@@ -66,9 +66,34 @@ describe('Photo', function() {
     });
 
     describe('Creating', function() {
+        it('should return 400 if no set_id is sent', function(done) {
+            request(app.server)
+                .post('/photo/')
+                .expect(400)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 if the set_id provided does not exist', function(done) {
+            request(app.server)
+                .post('/photo/?set_id=1000')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 400 if no photo file provided', function(done) {
+            request(app.server)
+                .post('/photo/?set_id=1')
+                .expect(400)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
         it('should return 201 after creating', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1')
+                .attach('photo', 'test/fixtures/uok.jpg')
                 .expect(201)
                 .expect('Content-Type', /json/)
                 .end(done);
@@ -77,6 +102,7 @@ describe('Photo', function() {
         it('should be able to access a photo after creating', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1')
+                .attach('photo', 'test/fixtures/uok.jpg')
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -90,6 +116,7 @@ describe('Photo', function() {
         it('should be get the correct photo after creating', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1&description=Testing')
+                .attach('photo', 'test/fixtures/uok.jpg')
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -100,6 +127,27 @@ describe('Photo', function() {
                             assert.equal(res.body.id, newId);
                             assert.equal(res.body.description, 'Testing');
                             done();
+                        });
+                });
+        });
+
+        it('should be able to access the photo after creating', function(done) {
+            request(app.server)
+                .post('/photo/?set_id=1&description=Testing')
+                .attach('photo', 'test/fixtures/uok.jpg')
+                .end(function(err, res) {
+                    if (err) throw err;
+                    var newId = res.body.id;
+                    request(app.server)
+                        .get('/photo/' + newId)
+                        .end(function(err, res) {
+                            if (err) throw err;
+                            var photoUrl = res.body.photoUrl;
+                            request(app.server)
+                                .get(photoUrl)
+                                .expect(200)
+                                .expect('Content-Type', /jpeg/)
+                                .end(done);
                         });
                 });
         });
