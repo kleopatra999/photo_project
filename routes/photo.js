@@ -1,4 +1,5 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    fs = require('fs');
 
 /*
  * GET all photos in a set
@@ -12,7 +13,6 @@ exports.list = function(req, res) {
         res.json(400, {error: "A set_id is required"});
         return;
     }
-
 
     // Make sure we have a valid set id
     req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
@@ -68,6 +68,11 @@ exports.single = function(req, res) {
 exports.create = function(req, res) {
     if (!req.query.set_id || req.query.set_id.length === 0) {
         res.json(400, {error: "A set_id is required"});
+        return;
+    }
+
+    if (!req.files.photo || req.files.photo.length === 0) {
+        res.json(400, {error: "A photo file upload is required"});
         return;
     }
 

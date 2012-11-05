@@ -77,6 +77,7 @@ describe('Photo', function() {
         it('should return 404 if the set_id provided does not exist', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1000')
+                .attach('photo', 'test/fixtures/uok.jpg')
                 .expect(404)
                 .expect('Content-Type', /json/)
                 .end(done);
