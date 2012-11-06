@@ -1,4 +1,6 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    filestore = require('../utils/filestore'),
+    fs = require('fs');
 
 /*
  * GET all photos in a set
@@ -12,7 +14,6 @@ exports.list = function(req, res) {
         res.json(400, {error: "A set_id is required"});
         return;
     }
-
 
     // Make sure we have a valid set id
     req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
@@ -39,11 +40,6 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
     // Make sure we have a valid set id
     req.dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
@@ -71,13 +67,34 @@ exports.create = function(req, res) {
         return;
     }
 
+    if (!req.files || !req.files.photo || req.files.photo.type != "image/jpeg") {
+        res.json(400, {error: "A image/jpeg photo file upload is required"});
+        return;
+    }
+
     var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
-    var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ")";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
+    filestore.uploadPhoto(req.files.photo.path, function(err, url) {
+        if (err) {
+            console.log('Error uploading file', err);
+            res.json(500, {error: 'Cannot upload file'});
+            return;
+        }
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `photo_url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + url + "')";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) {
+                if (err.code === "ER_NO_REFERENCED_ROW_") {
+                    res.json(404, {error: "No set with that set_id"});
+                    return;
+                }
+                else {
+                    throw err;
+                }
+            }
 
-        res.json(201, {id: rows.insertId});
+            var newId = rows.insertId;
+            res.json(201, {id: newId});
+        });
     });
 };
 

@@ -4,6 +4,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` text,
+  `photo_url` varchar(255) NOT NULL,
   `owner_id` int(11) NOT NULL COMMENT 'Foreign key linking to the user',
   `set_id` int(11) NOT NULL,
   `date_taken` datetime DEFAULT NULL,
@@ -51,4 +52,4 @@ ALTER TABLE `set_user`
 
 INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('1', 'Testing', '2012-11-01', '2012-11-02');
 INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('1', 'default@user.me', SHA1('default'), 'Default User');
-INSERT INTO `photo` (`id`, `description`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('1', 'A simple test', '1', '1', '2012-11-06 00:00:00', NULL, NULL);
+INSERT INTO `photo` (`id`, `description`, `photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('1', 'A simple test', 'http://fake.com', '1', '1', '2012-11-06 00:00:00', NULL, NULL);

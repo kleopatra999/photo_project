@@ -2,10 +2,33 @@ var mysql = require('mysql'),
     fs = require('fs'),
     app = require('../app');
 
+var databaseConfig;
+
+// Set the database connection parameters
+if (app.testing) {
+    // For testing
+    databaseConfig = {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'photo_project_test',
+        multipleStatements: true
+    };
+}
+else {
+    // For production
+    databaseConfig = {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'photo_project'
+    };
+}
+
 // Sets up the database connection and keeps it open
 var connect = function() {
     // Connect to the MySql server
-    var connection = mysql.createConnection(app.databaseConfig);
+    var connection = mysql.createConnection(databaseConfig);
     connection.connect();
     return connection;
 };
