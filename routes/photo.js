@@ -1,4 +1,5 @@
 var sqlUtils = require('../utils/sql'),
+    filestore = require('../utils/filestore'),
     fs = require('fs');
 
 /*
@@ -39,11 +40,6 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
     // Make sure we have a valid set id
     req.dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
         if (err) throw err;
@@ -54,32 +50,7 @@ exports.single = function(req, res) {
             return;
         }
 
-        var data = rows[0];
-        data.photoUrl = 'http://' + req.header('host') + '/photo/' + req.params.id + '/file';
-        res.json(data);
-    });
-};
-
-/*
- * GET a single photo file
- * Params:
- *   id - the photo id
- * TODO: Should only return a set if user has access to it
- */
-exports.photoFile = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
-    var path = './photos/' + req.params.id + '.jpg';
-    fs.readFile(path, function(err, data) {
-        if (err) {
-            res.json(404, {error: 'No photo with that id found'});
-            return;
-        }
-
-        res.sendfile(path);
+        res.json(rows[0]);
     });
 };
 
@@ -103,20 +74,25 @@ exports.create = function(req, res) {
 
     var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
-    var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ")";
-    req.dbConnection.query(sql, function(err, rows, field) {
+    filestore.uploadPhoto(req.files.photo.path, function(err, url) {
         if (err) {
-            if (err.code === "ER_NO_REFERENCED_ROW_") {
-                res.json(404, {error: "No set with that set_id"});
-                return;
-            }
-            else {
-                throw err;
-            }
+            console.log('Error uploading file', err);
+            res.json(500, {error: 'Cannot upload file'});
+            return;
         }
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + url + "')";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) {
+                if (err.code === "ER_NO_REFERENCED_ROW_") {
+                    res.json(404, {error: "No set with that set_id"});
+                    return;
+                }
+                else {
+                    throw err;
+                }
+            }
 
-        var newId = rows.insertId;
-        fs.rename(req.files.photo.path, './photos/' + newId + '.jpg', function(err) {
+            var newId = rows.insertId;
             res.json(201, {id: newId});
         });
     });

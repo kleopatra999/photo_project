@@ -1,25 +1,3 @@
-// Set the database connection parameters
-if (module.parent) {
-    // For testing
-    module.exports.databaseConfig = {
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'photo_project_test',
-        multipleStatements: true
-    };
-
-}
-else {
-    // For production
-    module.exports.databaseConfig = {
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'photo_project'
-    };
-}
-
 // Load in all our dependancies
 var express = require('express'),
     photo = require('./routes/photo'),
@@ -27,14 +5,23 @@ var express = require('express'),
     user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
-    database = require('./utils/database'),
     EventEmitter = require('events').EventEmitter;
 
 // Setup this module to emit events
 module.exports = new EventEmitter();
 
+// Set the testing switch
+if (module.parent) {
+    module.exports.testing = true;
+}
+else {
+    module.exports.testing = false;
+}
+
 // Get the instance of express
 var app = express();
+// Get an instance of the database
+var database = require('./utils/database');
 
 // Configure for all environments
 app.configure(function(){
@@ -62,7 +49,6 @@ app.configure('development', function(){
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
-app.get('/photo/:id/file', photo.photoFile);
 app.post('/photo/:id', photo.update);
 app.delete('/photo/:id', photo.delete);
 // Sets
@@ -79,7 +65,7 @@ app.get('/user', user.list);
 var server = module.exports.server = http.createServer(app);
 
 // Check which mode we're in
-if (!module.parent) {
+if (!module.exports.testing) {
     // Only start listening if we aren't being tested
     server.listen(app.get('port'), function() {
         console.log("Express server started at http://0.0.0.0:" + app.get('port'));

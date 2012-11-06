@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "express": "3.0.0",
-    "mysql": "~2.0.0-alpha3"
+    "mysql": "~2.0.0-alpha3",
+    "superagent": "~0.9.8",
+    "knox": "~0.4.1"
   },
   "devDependencies": {
     "mocha": "~1.6.0",
