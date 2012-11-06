@@ -143,10 +143,8 @@ describe('Photo', function() {
                         .get('/photo/' + newId)
                         .end(function(err, res) {
                             if (err) throw err;
-                            var photoUrl = res.body.photoUrl;
-                            // Need to do this to make the test run correctly
-                            photoUrl = photoUrl.replace('http://127.0.0.1:3456', '');
-                            request(app.server)
+                            var photoUrl = res.body.photo_url;
+                            request('')
                                 .get(photoUrl)
                                 .expect(200)
                                 .expect('Content-Type', /jpeg/)

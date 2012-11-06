@@ -80,7 +80,7 @@ exports.create = function(req, res) {
             res.json(500, {error: 'Cannot upload file'});
             return;
         }
-        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + url + "')";
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `photo_url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + url + "')";
         req.dbConnection.query(sql, function(err, rows, field) {
             if (err) {
                 if (err.code === "ER_NO_REFERENCED_ROW_") {

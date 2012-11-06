@@ -4,7 +4,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` text,
-  `photo_ url` varchar(255) NOT NULL,
+  `photo_url` varchar(255) NOT NULL,
   `owner_id` int(11) NOT NULL COMMENT 'Foreign key linking to the user',
   `set_id` int(11) NOT NULL,
   `date_taken` datetime DEFAULT NULL,
