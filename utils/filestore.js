@@ -48,17 +48,24 @@ var uploadPhoto = function(path, callback) {
 
 // Removed all files from the photos data store
 var deleteAllFiles = function(done) {
-    fs.readdir('./photos', function(err, files) {
+    client.list(function(err, data) {
         if (err) throw err;
 
-        for (var i = 0; i < files.length; i++) {
-            fs.unlinkSync('./photos/' + files[i]);
-        }
+        // Check if we have an files
+        if (data.Contents) {
+            // Get an array of all the files
+            var files = [];
+            for (var i = 0; i < data.Contents.length; i++) {
+                files.push(data.Contents[i].Key);
+            }
 
-        fs.rmdir('./photos', function(err) {
-            if (err) throw err;
-            fs.mkdir('./photos', done);
-        });
+            // Delete all the files and make the callback
+            client.deleteMultiple(files, done);
+        }
+        else {
+            // If not we're done here!
+            done();
+        }
     });
 };
 
