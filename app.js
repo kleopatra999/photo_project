@@ -1,14 +1,15 @@
+// Setup this module to emit events
+var EventEmitter = require('events').EventEmitter;
+module.exports = new EventEmitter();
+
 // Load in all our dependancies
 var express = require('express'),
     photo = require('./routes/photo'),
     set = require('./routes/set'),
     user = require('./routes/user'),
     http = require('http'),
-    path = require('path'),
-    EventEmitter = require('events').EventEmitter;
+    path = require('path');
 
-// Setup this module to emit events
-module.exports = new EventEmitter();
 
 // Set the testing switch
 if (module.parent) {
@@ -22,6 +23,8 @@ else {
 var app = express();
 // Get an instance of the database
 var database = require('./utils/database');
+
+module.exports.emit('setupComplete');
 
 // Configure for all environments
 app.configure(function(){

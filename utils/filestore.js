@@ -2,13 +2,17 @@ var fs = require('fs'),
     knox = require('knox'),
     app = require('../app');
 
-var bucket = (app.testing) ? 'photoprojecttest' : 'photoproject';
+var client = null;
 
-var client = knox.createClient({
-    key: 'AKIAJC56DUVJJKN7JVYA',
-    secret: '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',
-    bucket: bucket,
-    region: 'eu-west-1'
+app.on('setupComplete', function() {
+    var bucket = (app.testing) ? 'photoprojecttest' : 'photoproject';
+
+    client = knox.createClient({
+        key: 'AKIAJC56DUVJJKN7JVYA',
+        secret: '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',
+        bucket: bucket,
+        region: 'eu-west-1'
+    });
 });
 
 var uploadPhoto = function(path, callback) {
@@ -21,7 +25,7 @@ var uploadPhoto = function(path, callback) {
 
         // Make an amazon S3 request
         var date = Date.now();
-        var req = client.put('/photos/' + date + '-' + genRandonNumber() + '.jpg', {
+        var req = client.put('/photos-' + date + '-' + genRandonNumber() + '.jpg', {
             'Content-Length': buffer.length,
             'Content-Type': 'image/jpeg',
             'x-amz-acl': 'public-read'
