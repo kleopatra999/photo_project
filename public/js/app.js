@@ -1,16 +1,32 @@
-var App = Ember.Application.create();
+App = {};
 
-App.ApplicationController = Ember.Controller.extend();
-App.ApplicationView = Ember.View.extend({
-    templateName: 'application'
-});
+App.appController = (function() {
+    var init = function() {
+        _.extend(this, Backbone.Events);
 
-App.Router = Ember.Router.extend({
-    root: Ember.Route.extend({
-        index: Ember.Route.extend({
-            route: '/'
-        })
-    })
-});
+        // Set up our stores
+        App.allSetStore = new App.collections.SetStore();
+        App.currentSetStore = new App.collections.SetStore();
 
-App.initialize();
+        // Initialise our controllers
+        App.viewController.init();
+        App.dataController.init();
+
+        // Create our views
+        App.homeView = new App.views.HomeView({
+            el: $('#homeView'),
+            model: App.models.Set,
+            collection: App.currentSetStore
+        });
+
+        // Create the router
+        App.router = new App.routers.Router();
+
+        // And start Backbone history
+        Backbone.history.start();
+    };
+
+    return {
+        init : init
+    };
+}());
