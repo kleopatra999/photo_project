@@ -1,4 +1,6 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    urls = require('../utils/urls'),
+    _ = require('underscore');
 
 /*
  * GET all sets
@@ -7,6 +9,11 @@ var sqlUtils = require('../utils/sql');
 exports.list = function(req, res) {
     req.dbConnection.query("SELECT * FROM  `set`", function(err, rows, field) {
         if (err) throw err;
+
+        _.each(rows, function(row) {
+            row.url = urls.getSetUrl(req, row.id);
+            row.photoUrl = urls.getPhotoListUrl(req, row.id);
+        });
 
         res.json(rows);
     });
@@ -28,7 +35,9 @@ exports.single = function(req, res) {
             return;
         }
 
-        res.json(rows[0]);
+        var set = rows[0];
+        set.photoUrl = urls.getPhotoListUrl(req, set.id);
+        res.json(set);
     });
 };
 
@@ -55,7 +64,11 @@ exports.create = function(req, res) {
     req.dbConnection.query(sql, function(err, rows, field) {
         if (err) throw err;
 
-        res.json(201, {id: rows.insertId});
+        var newId = rows.insertId;
+        res.json(201, {
+            id: newId,
+            url: urls.getSetUrl(req, newId)
+        });
     });
 };
 
@@ -94,7 +107,10 @@ exports.update = function(req, res) {
             res.json(404, {error: "No set found with that id"});
         }
         else {
-            res.json(200, {message: "Update complete"});
+            res.json(200, {
+                message: "Update complete",
+                url: urls.getSetUrl(req, req.params.id)
+            });
         }
     });
 };
@@ -105,7 +121,7 @@ exports.update = function(req, res) {
  *   id - The id of the set (required)
  * TODO: Only allow the owning user to do this
  */
-exports.delete = function(req, res) {
+exports.del = function(req, res) {
     if (!req.params.id) {
         res.json(400, {error: "An id is required"});
         return;
