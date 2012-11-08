@@ -1,6 +1,9 @@
 var sqlUtils = require('../utils/sql'),
     filestore = require('../utils/filestore'),
-    fs = require('fs');
+    urls = require('../utils/urls'),
+    fs = require('fs'),
+    urls = require('../utils/urls'),
+    _ = require('underscore');
 
 /*
  * GET all photos in a set
@@ -27,6 +30,10 @@ exports.list = function(req, res) {
 
         req.dbConnection.query("SELECT * FROM  `photo` WHERE `set_id` = '" + req.query.set_id + "'", function(err, rows, field) {
             if (err) throw err;
+
+            _.each(rows, function(row) {
+                row.url = urls.getPhotoUrl(req, row.id);
+            });
 
             res.json(rows);
         });
@@ -93,7 +100,10 @@ exports.create = function(req, res) {
             }
 
             var newId = rows.insertId;
-            res.json(201, {id: newId});
+            res.json(201, {
+                id: newId,
+                url: urls.getPhotoUrl(req, newId)
+            });
         });
     });
 };
@@ -125,7 +135,10 @@ exports.update = function(req, res) {
             res.json(404, {error: "Photo not found with that id"});
         }
         else {
-            res.json(200, {message: "Update complete"});
+            res.json(200, {
+                message: "Update complete",
+                url: urls.getPhotoUrl(req, req.params.id)
+            });
         }
     });
 };
@@ -136,7 +149,7 @@ exports.update = function(req, res) {
  *   id - The id of the photo (required)
  * TODO: Only allow the owning user to do this
  */
-exports.delete = function(req, res) {
+exports.del = function(req, res) {
     if (!req.params.id) {
         res.json(400, {error: "An id is required"});
         return;
