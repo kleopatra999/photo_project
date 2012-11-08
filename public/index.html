@@ -20,9 +20,19 @@
 
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
+    <script id="homeViewTemplate" type="text/x-handlebars-template">
+        <h2>Sets</h2>
+        <ul>
+        {{#each sets}}
+            <li>{{name}}</li>
+        {{/each}}
+        </ul>
+    </script>
+
     <!-- LIBS -->
     <script src="js/libs/json2.js"></script>
     <script src="js/libs/zepto.js"></script>
+    <script src="js/libs/handlebars.js"></script>
     <script src="js/libs/underscore.js"></script>
     <script src="js/libs/backbone.js"></script>
 
@@ -50,18 +60,11 @@
         <header>
             <div id="appHeader">
                 <h1>Photo Project</h1>
-                <nav>
-                    <li><a href="#/home">Home</a></li>
-                    <li><a href="#/search">Search</a></li>
-                    <li><a href="#/account">Account</a></li>
-                </nav>
             </div>
-            <div id="restaurantHeaderView"></div>
         </header>
 
         <div id="content">
-            <div id="homeView" class="view selected">
-            </div>
+            <div id="homeView" class="view selected"></div>
         </div>
 
         <footer>

@@ -1,7 +1,7 @@
 App.views = App.views || {};
 
 App.views.HomeView = Backbone.View.extend({
-    template: _.template('<h1>Testing</h1>'),
+    template: Handlebars.compile($('#homeViewTemplate').html()),
     
     initialize: function() {
         _.bindAll(this, 'render');
@@ -9,7 +9,10 @@ App.views.HomeView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template({restaurants: this.collection.toJSON()}));
+        var sets = this.collection.toJSON();
+        this.$el.html(this.template({
+            sets: sets
+        }));
         return this;
     }
 });
