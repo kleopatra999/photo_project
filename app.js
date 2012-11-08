@@ -1,3 +1,5 @@
+// Boo!
+
 // Setup this module to emit events
 var EventEmitter = require('events').EventEmitter;
 module.exports = new EventEmitter();
