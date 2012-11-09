@@ -64,6 +64,11 @@ app.post('/set/:id', set.update);
 app.del('/set/:id', set.del);
 // Users
 app.get('/user', user.list);
+if (module.exports.testing) {
+    // Test filestore route
+    var knoxMock = require('./test/fixtures/knoxMock');
+    app.get('/fileTest/:path', knoxMock.testRoute);
+}
 
 // Start the server
 // This also doubles as the export which is used for the test framework

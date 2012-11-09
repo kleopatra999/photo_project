@@ -1,16 +1,21 @@
 var fs = require('fs'),
-    knox = require('knox'),
     app = require('../app');
 
 var client = null;
 
 app.on('setupComplete', function() {
-    var bucket = (app.testing) ? 'photoprojecttest' : 'photoproject';
+    var knox;
+    if (app.testing) {
+        knox = require('../test/fixtures/knoxMock');
+    }
+    else {
+        knox = require('knox');
+    }
 
     client = knox.createClient({
         key: 'AKIAJC56DUVJJKN7JVYA',
         secret: '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',
-        bucket: bucket,
+        bucket: 'photoproject',
         region: 'eu-west-1'
     });
 });
