@@ -144,7 +144,7 @@ describe('Photo', function() {
                         .end(function(err, res) {
                             if (err) throw err;
                             var photoUrl = res.body.photo_url;
-                            request('')
+                            request(app.server)
                                 .get(photoUrl)
                                 .expect(200)
                                 .expect('Content-Type', /jpeg/)

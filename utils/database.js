@@ -61,7 +61,8 @@ var middleware = function() {
         req.dbConnection = module.exports.connect();
 
         res.on('finish', function() {
-            req.dbConnection.end();
+            // We dont want to close if we're testing because the tests will fail sometimes
+            if (!app.testing) req.dbConnection.end();
         });
 
         next();
