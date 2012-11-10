@@ -138,3 +138,9 @@ img {
 * End Vanilla CSS
 */
 
+.view {
+    display: none;
+}
+.selected {
+    display: block;
+}

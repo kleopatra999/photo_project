@@ -7,6 +7,8 @@ App.appController = (function() {
         // Set up our stores
         App.allSetStore = new App.collections.SetStore();
         App.currentSetStore = new App.collections.SetStore();
+        App.photoStore = new App.collections.PhotoStore();
+        App.currentPhotoStore = new App.collections.PhotoStore();
 
         // Initialise our controllers
         App.viewController.init();
