@@ -29,7 +29,7 @@
         </ul>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
-        <h2>Photo List</h2>
+        <h2>{{set.name}} - Photo List</h2>
         <ul>
         {{#each photos}}
             <li><a href="#/photo/{{id}}">Photo - {{description}}</a></li>
