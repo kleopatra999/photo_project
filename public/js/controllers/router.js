@@ -39,26 +39,26 @@ App.routers.Router = Backbone.Router.extend({
         this._lastSetId = setId;
 
         var set = App.allSetStore.getById(setId);
-        if (set) {
-            if (App.photoStore.length > 0) {
-                var photos = App.photoStore.getAll();
-                if (photos) {
-                    App.selectedSetStore.reset(set);
-                    App.currentPhotoStore.reset(photos);
-                    App.viewController.showPhotoListView();
-                }
-                else {
-                    alert('No photos');
-                }
-            }
-            else {
-                App.dataController.bind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotosData);
-                App.dataController.getPhotos(setId);
-            }
-        }
-        else {
+        if (!set) {
             App.dataController.bind(App.dataController.SET_DATA_READY, this._handleAllSetsDataPhoto);
             App.dataController.getSets();
+            return;
+        }
+
+        if (App.photoStore.length === 0) {
+            App.dataController.bind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotosData);
+            App.dataController.getPhotos(setId);
+            return;
+        }
+        
+        var photos = App.photoStore.getAll();
+        if (photos) {
+            App.selectedSetStore.reset(set);
+            App.currentPhotoStore.reset(photos);
+            App.viewController.showPhotoListView();
+        }
+        else {
+            alert('No photos');
         }
     },
     _handleAllPhotosData: function(sets) {
