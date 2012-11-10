@@ -24,7 +24,15 @@
         <h2>Sets</h2>
         <ul>
         {{#each sets}}
-            <li><a href="#/photos/{{id}}">{{name}}</a></li>
+            <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
+        {{/each}}
+        </ul>
+    </script>
+    <script id="photoListViewTemplate" type="text/x-handlebars-template">
+        <h2>Photo List</h2>
+        <ul>
+        {{#each photos}}
+            <li><a href="#/photo/{{id}}">Photo - {{description}}</a></li>
         {{/each}}
         </ul>
     </script>
@@ -48,6 +56,7 @@
 
     <!-- APP VIEWS -->
     <script src="js/views/HomeView.js"></script>
+    <script src="js/views/PhotoListView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -64,7 +73,8 @@
         </header>
 
         <div id="content">
-            <div id="homeView" class="view selected"></div>
+            <div id="homeView" class="view"></div>
+            <div id="photoListView" class="view"></div>
         </div>
 
         <footer>

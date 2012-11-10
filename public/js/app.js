@@ -20,6 +20,11 @@ App.appController = (function() {
             model: App.models.Set,
             collection: App.currentSetStore
         });
+        App.photoListView = new App.views.PhotoListView({
+            el: $('#photoListView'),
+            model: App.models.Photo,
+            collection: App.currentPhotoStore
+        });
 
         // Create the router
         App.router = new App.routers.Router();

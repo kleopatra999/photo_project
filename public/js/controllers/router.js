@@ -4,7 +4,7 @@ App.routers.Router = Backbone.Router.extend({
     routes: {
         '': 'showHome',
         'home': 'showHome',
-        'photos/:setId': 'showPhotoList'
+        'set/:setId/photos': 'showPhotoList'
     },
     
     initialize: function (options) {
