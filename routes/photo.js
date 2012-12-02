@@ -87,8 +87,6 @@ exports.create = function(req, res) {
             return;
         }
 
-        console.log(urls);
-
         var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
         req.dbConnection.query(sql, function(err, rows, field) {
             if (err) {

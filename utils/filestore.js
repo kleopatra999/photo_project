@@ -1,30 +1,30 @@
 var fs = require('fs'),
     im = require('imagemagick'),
+    knox = require('knox'),
     app = require('../app');
 
 var sizeNames = ["small", "medium", "large"];
 var sizeNumbers = [100, 300, 800];
 
-var client = null;
-
-app.on('setupComplete', function() {
-    var knox;
-    if (app.testing) {
-        knox = require('../test/fixtures/knoxMock');
-    }
-    else {
-        knox = require('knox');
-    }
-
-    client = knox.createClient({
-        key: 'AKIAJC56DUVJJKN7JVYA',
-        secret: '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',
-        bucket: 'photoproject',
-        region: 'eu-west-1'
-    });
+var client = knox.createClient({
+    key: 'AKIAJC56DUVJJKN7JVYA',
+    secret: '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',
+    bucket: 'photoproject',
+    region: 'eu-west-1'
 });
 
 var uploadPhoto = function(path, callback) {
+    // If we're testing then basically do nothing
+    if (app.testing) {
+        callback(null, {
+            'orig': 'http://nothing.com/blah.jpg',
+            'small': 'http://nothing.com/blah.jpg',
+            'medium': 'http://nothing.com/blah.jpg',
+            'large': 'http://nothing.com/blah.jpg'
+        });
+        return;
+    }
+
     var date = Date.now();
     var prefix = 'photos-' + date + '-' + genRandonNumber() + '-';
     var out_files = [];
@@ -85,44 +85,39 @@ module.exports = {
 };
 
 function uploadThumbnail(inFile, prefix, sizeNumber, sizeName, callback) {
-    var dest = prefix + sizeName + ".jpg";
-    console.log(inFile);
-    console.log(dest);
+    var filename = prefix + sizeName + ".jpg";
 
     im.resize({
         srcPath: inFile,
-        dstPath: '/tmp/' + dest,
+        dstPath: getFilePath(filename),
         width: sizeNumber
     }, function(err, stdout, stderr){
         if (err) {
             callback(err);
             return;
         }
-        console.log('resized file ' + dest + " size " + sizeNumber);
 
-        fs.readFile('/tmp/' + dest, function(err, buffer) {
-            console.log('read file ' + dest + " size " + sizeNumber);
+        fs.readFile(getFilePath(filename), function(err, buffer) {
             // If we have an error then go no further
             if (err) {
                 callback(err);
                 return;
             }
 
-            pushToS3(dest, buffer, function(err, file) {
+            pushToS3(filename, buffer, function(err, file) {
                 if (err) {
                     callback(err);
                     return;
                 }
-                console.log('pushed file ' + dest + " size " + sizeNumber);
                 callback(null, sizeName, file);
             });
         });
     });
 }
 
-function pushToS3(dest, buffer, callback) {
+function pushToS3(filename, buffer, callback) {
     // Make an amazon S3 request
-    var req = client.put('/' + dest, {
+    var req = client.put('/' + filename, {
         'Content-Length': buffer.length,
         'Content-Type': 'image/jpeg',
         'x-amz-acl': 'public-read'
@@ -140,6 +135,10 @@ function pushToS3(dest, buffer, callback) {
 
     // Send the data!
     req.end(buffer);
+}
+
+function getFilePath(filename) {
+    return '/tmp/' + filename;
 }
 
 function genRandonNumber() {

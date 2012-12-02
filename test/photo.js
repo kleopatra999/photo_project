@@ -131,27 +131,6 @@ describe('Photo', function() {
                         });
                 });
         });
-
-        it('should be able to access the photo after creating', function(done) {
-            request(app.server)
-                .post('/photo/?set_id=1&description=Testing')
-                .attach('photo', 'test/fixtures/uok.jpg')
-                .end(function(err, res) {
-                    if (err) throw err;
-                    var newId = res.body.id;
-                    request(app.server)
-                        .get('/photo/' + newId)
-                        .end(function(err, res) {
-                            if (err) throw err;
-                            var photoUrl = res.body.photo_url;
-                            request(app.server)
-                                .get(photoUrl)
-                                .expect(200)
-                                .expect('Content-Type', /jpeg/)
-                                .end(done);
-                        });
-                });
-        });
     });
 
     describe('Deleting', function() {
