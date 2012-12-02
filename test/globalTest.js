@@ -3,7 +3,5 @@ var app = require('../app'),
     filestore = require('../utils/filestore');
 
 beforeEach(function(done) {
-    database.createDB(function() {
-        filestore.deleteAllFiles(done);
-    });
+    database.createDB(done);
 });
