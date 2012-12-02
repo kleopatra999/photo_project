@@ -13,6 +13,10 @@ App.viewController = (function() {
             home: {
                 position: 1,
                 el: $('#homeView')
+            },
+            photoList: {
+                position: 2,
+                el: $('#photoListView')
             }
         };
         wrapper = $('#wrapper');
@@ -31,16 +35,13 @@ App.viewController = (function() {
     showHomeView = function() {
         _showView('home');
     },
+    showPhotoListView = function() {
+        _showView('photoList');
+    },
         
     _showView = function(view) {
-        if (views[currentView].position < views[view].position) {
-            views[currentView].el.addClass('left').removeClass('selected');
-            views[view].el.removeClass('left right').addClass('selected');
-        } else {
-            views[currentView].el.addClass('right').removeClass('selected');
-            views[view].el.removeClass('left right').addClass('selected');
-        }
-        wrapper.removeClass(currentView).addClass(view);
+        views[currentView].el.removeClass('selected');
+        views[view].el.addClass('selected');
 
         currentView = view;
     },
@@ -58,7 +59,8 @@ App.viewController = (function() {
     return {
         init: init,
         views: views,
-        showHomeView: showHomeView
+        showHomeView: showHomeView,
+        showPhotoListView: showPhotoListView
     };
 
 }());

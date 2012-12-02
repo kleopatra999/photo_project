@@ -7,6 +7,9 @@ App.appController = (function() {
         // Set up our stores
         App.allSetStore = new App.collections.SetStore();
         App.currentSetStore = new App.collections.SetStore();
+        App.selectedSetStore = new App.collections.SetStore();
+        App.photoStore = new App.collections.PhotoStore();
+        App.currentPhotoStore = new App.collections.PhotoStore();
 
         // Initialise our controllers
         App.viewController.init();
@@ -17,6 +20,12 @@ App.appController = (function() {
             el: $('#homeView'),
             model: App.models.Set,
             collection: App.currentSetStore
+        });
+        App.photoListView = new App.views.PhotoListView({
+            collection: App.currentPhotoStore,
+            setCollection: App.selectedSetStore,
+            el: $('#photoListView'),
+            model: App.models.Photo
         });
 
         // Create the router

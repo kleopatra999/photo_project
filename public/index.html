@@ -29,7 +29,20 @@
             <h2>Your Sets</h2>
             <ul>
             {{#each sets}}
-                <li>{{name}}</li>
+                <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
+            {{/each}}
+            </ul>
+        </div>
+    </script>
+    <script id="photoListViewTemplate" type="text/x-handlebars-template">
+        <div class="container">
+            <div class="pull-right">
+                <button class="btn btn-primary" style="margin-top: 16px">Upload Photos</button>
+            </div>
+            <h2>{{set.name}}</h2>
+            <ul>
+            {{#each photos}}
+                <li><a href="#/photo/{{id}}">Photo - {{description}}</a></li>
             {{/each}}
             </ul>
         </div>
@@ -55,6 +68,7 @@
 
     <!-- APP VIEWS -->
     <script src="js/views/HomeView.js"></script>
+    <script src="js/views/PhotoListView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -77,6 +91,7 @@
         <div id="content" class="row-fluid">
             <!--Body content-->
             <div id="homeView" class="view selected"></div>
+            <div id="photoListView" class="view"></div>
         </div>
     </div>
 </body>
