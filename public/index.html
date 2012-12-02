@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="ie6"><![endif]-->
 <!--[if IE 7 ]><html lang="en" class="ie7"><![endif]-->
 <!--[if IE 8 ]><html lang="en" class="ie8"><![endif]-->
@@ -16,22 +16,29 @@
 
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/style.css?v=2">
+    <link rel="stylesheet" href="css/bootstrap.css?v=1">
+    <link rel="stylesheet" href="css/style.css?v=1">
 
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
-        <h2>Sets</h2>
-        <ul>
-        {{#each sets}}
-            <li>{{name}}</li>
-        {{/each}}
-        </ul>
+        <div class="container">
+            <div class="pull-right">
+                <button class="btn btn-primary" style="margin-top: 16px">Add Set</button>
+            </div>
+            <h2>Your Sets</h2>
+            <ul>
+            {{#each sets}}
+                <li>{{name}}</li>
+            {{/each}}
+            </ul>
+        </div>
     </script>
 
     <!-- LIBS -->
     <script src="js/libs/json2.js"></script>
     <script src="js/libs/zepto.js"></script>
+    <script src="js/libs/bootstrap.js"></script>
     <script src="js/libs/handlebars.js"></script>
     <script src="js/libs/underscore.js"></script>
     <script src="js/libs/backbone.js"></script>
@@ -40,7 +47,7 @@
     <script src="js/app.js"></script>
     <script src="js/models/models.js"></script>
     <script src="js/collections/collections.js"></script>
-    
+
     <!-- CONTROLLERS -->
     <script src="js/controllers/dataController.js"></script>
     <script src="js/controllers/viewController.js"></script>
@@ -56,19 +63,21 @@
     </script>
 </head>
 <body>
-    <div id="wrapper">
-        <header>
-            <div id="appHeader">
-                <h1>Photo Project</h1>
+    <div class="container-fluid">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <a class="brand" href="#">Shoto</a>
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                </ul>
             </div>
-        </header>
-
-        <div id="content">
+        </div>
+        <div id="content" class="row-fluid">
+            <!--Body content-->
             <div id="homeView" class="view selected"></div>
         </div>
-
-        <footer>
-        </footer>
     </div>
 </body>
 </html>
