@@ -2,6 +2,7 @@ App.collections = {};
 
 App.collections.SetStore = Backbone.Collection.extend({
     model: App.models.Set,
+    fetched: false,
     url: '/set',
 
     initialize: function() {
@@ -27,6 +28,7 @@ App.collections.SetStore = Backbone.Collection.extend({
 App.collections.PhotoStore = Backbone.Collection.extend({
     model: App.models.Photo,
     setId: null,
+    fetched: false,
     url: function() {
         if (!this.setId) {
             throw "Need to set a setId on the collection before fetching";

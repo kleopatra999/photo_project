@@ -11,6 +11,7 @@ App.dataController = (function() {
         var self = this;
         App.allSetStore.fetch({
             success: function(collection, response, options) {
+                collection.fetched = true;
                 self.trigger(SET_DATA_READY, collection);
             }
         });
@@ -21,6 +22,7 @@ App.dataController = (function() {
         App.photoStore.setId = setId;
         App.photoStore.fetch({
             success: function(collection, response, options) {
+                collection.fetched = true;
                 self.trigger(PHOTOS_DATA_READY, collection, setId);
             }
         });

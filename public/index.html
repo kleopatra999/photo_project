@@ -26,7 +26,7 @@
             <div class="pull-right">
                 <button class="btn btn-primary" style="margin-top: 16px">Add Set</button>
             </div>
-            <h2>Your Sets</h2>
+            <h2>Your Albums</h2>
             <ul>
             {{#each sets}}
                 <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
@@ -44,7 +44,7 @@
                 {{#each photos}}
                     <li class="span4">
                         <a href="#/photo/{{id}}" class="thumbnail">
-                            <img src="{{photo_url}}" alt="Photo - {{description}}">
+                            <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
                         </a>
                     </li>
                 {{/each}}

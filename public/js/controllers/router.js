@@ -6,14 +6,14 @@ App.routers.Router = Backbone.Router.extend({
         'home': 'showHome',
         'set/:setId/photos': 'showPhotoList'
     },
-    
+
     initialize: function (options) {
         _.bindAll(this, 'showHome', '_handleAllSetsData', 'showPhotoList', '_handleAllPhotosData', '_handleAllSetsDataPhoto');
     },
-    
+
     // Home
     showHome: function() {
-        if (App.allSetStore.length > 0) {
+        if (App.allSetStore.fetched) {
             var sets = App.allSetStore.getAll();
             if (sets) {
                 App.currentSetStore.reset(sets);
@@ -45,12 +45,12 @@ App.routers.Router = Backbone.Router.extend({
             return;
         }
 
-        if (App.photoStore.length === 0) {
+        if (App.photoStore.setId != setId || !App.photoStore.fetched) {
             App.dataController.bind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotosData);
             App.dataController.getPhotos(setId);
             return;
         }
-        
+
         var photos = App.photoStore.getAll();
         if (photos) {
             App.selectedSetStore.reset(set);
