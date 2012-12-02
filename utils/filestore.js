@@ -3,7 +3,7 @@ var fs = require('fs'),
     app = require('../app');
 
 var sizeNames = ["small", "medium", "large"];
-var sizeNumbers = [100, 500, 800];
+var sizeNumbers = [100, 300, 800];
 
 var client = null;
 
@@ -28,23 +28,25 @@ var uploadPhoto = function(path, callback) {
     var date = Date.now();
     var prefix = 'photos-' + date + '-' + genRandonNumber() + '-';
     var out_files = [];
+    var filesReturned = 0;
 
     // Push the origional file to S3
     fs.readFile(path, function(err, buffer) {
         pushToS3(prefix + 'orig.jpg', buffer, function(err, file) {
-            out_files.push(file);
+            out_files['orig'] = file;
 
             // Make the thumbnails and upload to S3
             for (var i = 0; i < sizeNumbers.length; i++) {
-                uploadThumbnail(path, prefix, sizeNumbers[i], sizeNames[i], function(err, file) {
+                uploadThumbnail(path, prefix, sizeNumbers[i], sizeNames[i], function(err, sizeName, file) {
                     if (err) {
                         callback(err);
                         return;
                     }
-                    out_files.push(file);
+                    out_files[sizeName] = file;
+                    filesReturned++;
 
                     // Check if all thumbnails are uploaded
-                    if ((out_files.length - 1) == sizeNumbers.length) {
+                    if (filesReturned == sizeNumbers.length) {
                         // Make the callback
                         callback(null, out_files);
                     }
@@ -112,7 +114,7 @@ function uploadThumbnail(inFile, prefix, sizeNumber, sizeName, callback) {
                     return;
                 }
                 console.log('pushed file ' + dest + " size " + sizeNumber);
-                callback(null, file);
+                callback(null, sizeName, file);
             });
         });
     });

@@ -1,8 +1,7 @@
 var sqlUtils = require('../utils/sql'),
     filestore = require('../utils/filestore'),
-    urls = require('../utils/urls'),
+    urlUtils = require('../utils/urls'),
     fs = require('fs'),
-    urls = require('../utils/urls'),
     _ = require('underscore');
 
 /*
@@ -32,7 +31,7 @@ exports.list = function(req, res) {
             if (err) throw err;
 
             _.each(rows, function(row) {
-                row.url = urls.getPhotoUrl(req, row.id);
+                row.url = urlUtils.getPhotoUrl(req, row.id);
             });
 
             res.json(rows);
@@ -81,13 +80,16 @@ exports.create = function(req, res) {
 
     var description = sqlUtils.wrapQuotesOrNull(req.query.description);
 
-    filestore.uploadPhoto(req.files.photo.path, function(err, url) {
+    filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
         if (err) {
             console.log('Error uploading file', err);
             res.json(500, {error: 'Cannot upload file'});
             return;
         }
-        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `photo_url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + url + "')";
+
+        console.log(urls);
+
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + req.query.set_id + "', " + 1 + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
         req.dbConnection.query(sql, function(err, rows, field) {
             if (err) {
                 if (err.code === "ER_NO_REFERENCED_ROW_") {
@@ -102,7 +104,7 @@ exports.create = function(req, res) {
             var newId = rows.insertId;
             res.json(201, {
                 id: newId,
-                url: urls.getPhotoUrl(req, newId)
+                url: urlUtils.getPhotoUrl(req, newId)
             });
         });
     });
@@ -137,7 +139,7 @@ exports.update = function(req, res) {
         else {
             res.json(200, {
                 message: "Update complete",
-                url: urls.getPhotoUrl(req, req.params.id)
+                url: urlUtils.getPhotoUrl(req, req.params.id)
             });
         }
     });
