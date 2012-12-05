@@ -8,7 +8,6 @@ App.views.NewSetView = Backbone.View.extend({
     },
 
     render: function() {
-        console.log('New set view render');
         this.$el.html(this.template());
         return this;
     }

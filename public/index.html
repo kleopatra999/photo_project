@@ -24,7 +24,7 @@
     <script id="homeViewTemplate" type="text/x-handlebars-template">
         <div class="container">
             <div class="pull-right">
-                <button class="newSet btn btn-primary" style="margin-top: 16px">Add Set</button>
+                <button class="newSet btn btn-primary" style="margin-top: 16px">New Album</button>
             </div>
             <h2>Your Albums</h2>
             <ul>
@@ -36,7 +36,25 @@
     </script>
     <script id="newSetViewTemplate" type="text/x-handlebars-template">
         <div class="container">
-            <p>Here goes some stuff</p>
+            <h2>New Album</h2>
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" for="inputTitle">Title</label>
+                    <div class="controls">
+                        <input type="text" class="span6" id="inputTitle">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputDescription">Description</label>
+                    <div class="controls">
+                        <textarea class="span6" id="inputDescription" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn">Cancel</button>
+                </div>
+            </form>
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
