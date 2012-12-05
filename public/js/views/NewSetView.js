@@ -9,6 +9,7 @@ App.views.NewSetView = Backbone.View.extend({
 
     render: function() {
         this.$el.html(this.template());
+        this.$el.find('.date').datepicker();
         return this;
     }
 });
