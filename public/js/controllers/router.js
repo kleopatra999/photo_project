@@ -4,11 +4,12 @@ App.routers.Router = Backbone.Router.extend({
     routes: {
         '': 'showHome',
         'home': 'showHome',
+        'set/new': 'showNewSet',
         'set/:setId/photos': 'showPhotoList'
     },
 
     initialize: function (options) {
-        _.bindAll(this, 'showHome', '_handleAllSetsData', 'showPhotoList', '_handleAllPhotosData', '_handleAllSetsDataPhoto');
+        _.bindAll(this, 'showHome', '_handleAllSetsData', 'showNewSet', 'showPhotoList', '_handleAllPhotosData', '_handleAllSetsDataPhoto');
     },
 
     // Home
@@ -31,6 +32,12 @@ App.routers.Router = Backbone.Router.extend({
     _handleAllSetsData: function(sets) {
         App.dataController.unbind(App.dataController.SET_DATA_READY, this._handleAllSetsData);
         this.showHome();
+    },
+
+    // New Set
+    showNewSet: function() {
+        App.newSetView.render();
+        App.viewController.showNewSetView();
     },
 
     // Photo list

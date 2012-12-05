@@ -24,7 +24,7 @@
     <script id="homeViewTemplate" type="text/x-handlebars-template">
         <div class="container">
             <div class="pull-right">
-                <button class="btn btn-primary" style="margin-top: 16px">Add Set</button>
+                <button class="newSet btn btn-primary" style="margin-top: 16px">Add Set</button>
             </div>
             <h2>Your Albums</h2>
             <ul>
@@ -32,6 +32,11 @@
                 <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
             {{/each}}
             </ul>
+        </div>
+    </script>
+    <script id="newSetViewTemplate" type="text/x-handlebars-template">
+        <div class="container">
+            <p>Here goes some stuff</p>
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
@@ -72,6 +77,7 @@
 
     <!-- APP VIEWS -->
     <script src="js/views/HomeView.js"></script>
+    <script src="js/views/NewSetView.js"></script>
     <script src="js/views/PhotoListView.js"></script>
 
     <script>
@@ -95,6 +101,7 @@
         <div id="content" class="row-fluid">
             <!--Body content-->
             <div id="homeView" class="view selected"></div>
+            <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
         </div>
     </div>
