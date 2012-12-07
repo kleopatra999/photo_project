@@ -26,7 +26,15 @@ App.views.NewSetView = Backbone.View.extend({
             return false;
         }
 
-        console.log('Form submit');
+        var newSet = new App.models.Set({
+            name: this.$el.find('#inputTitle').val(),
+            description: this.$el.find('#inputDescription').val(),
+            start_date: this.$el.find('#inputStartDate input').val(),
+            end_date: this.$el.find('#inputEndDate input').val()
+        });
+        newSet.save();
+
+        console.log('Saving...');
         return false;
     },
 
