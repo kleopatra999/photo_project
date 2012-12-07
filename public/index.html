@@ -38,20 +38,20 @@
     <script id="newSetViewTemplate" type="text/x-handlebars-template">
         <div class="container">
             <h2>New Album</h2>
-            <form class="form-horizontal">
-                <div class="control-group">
+            <form id="newSetForm" class="form-horizontal">
+                <div class="control-group" id="titleGroup">
                     <label class="control-label" for="inputTitle">Title</label>
                     <div class="controls">
                         <input type="text" class="span6" id="inputTitle">
                     </div>
                 </div>
-                <div class="control-group">
+                <div class="control-group" id="descriptionGroup">
                     <label class="control-label" for="inputDescription">Description</label>
                     <div class="controls">
                         <textarea class="span6" id="inputDescription" rows="3"></textarea>
                     </div>
                 </div>
-                <div class="control-group">
+                <div class="control-group" id="startDateGroup">
                     <label class="control-label" for="inputStartDate">Start Date of Event</label>
                     <div class="controls">
                         <div class="input-append date" id="inputStartDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="control-group">
+                <div class="control-group" id="endDateGroup">
                     <label class="control-label" for="inputEndDate">End Date of Event</label>
                     <div class="controls">
                         <div class="input-append date" id="inputEndDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
@@ -71,7 +71,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Create</button>
-                    <button type="button" class="btn">Cancel</button>
+                    <button type="button" class="btn" id="cancel">Cancel</button>
                 </div>
             </form>
         </div>

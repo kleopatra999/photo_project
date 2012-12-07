@@ -16,6 +16,8 @@
   },
   "devDependencies": {
     "mocha": "~1.6.0",
+    "mocha-phantomjs": "~1.1.0",
+    "chai": "~1.4.0",
     "supertest": "~0.4.0"
   }
 }
