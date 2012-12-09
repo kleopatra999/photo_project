@@ -50,15 +50,15 @@ exports.single = function(req, res) {
  * TODO: Assign to current user instead of default user
  */
 exports.create = function(req, res) {
-    if (!req.query.name || req.query.name.length === 0) {
+    if (!req.body.name || req.body.name.length === 0) {
         res.json(400, {error: "A name is required"});
         return;
     }
 
     // Get the values ready for adding to SQL
-    var name = sqlUtils.wrapQuotesOrNull(req.query.name);
-    var start_date = sqlUtils.wrapQuotesOrNull(req.query.start_date);
-    var end_date = sqlUtils.wrapQuotesOrNull(req.query.end_date);
+    var name = sqlUtils.wrapQuotesOrNull(req.body.name);
+    var start_date = sqlUtils.wrapQuotesOrNull(req.body.start_date);
+    var end_date = sqlUtils.wrapQuotesOrNull(req.body.end_date);
 
     var sql = "INSERT INTO  `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + start_date + ", " + end_date + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
@@ -89,9 +89,9 @@ exports.update = function(req, res) {
 
     // Get the value list ready for adding to SQL
     var valueClauses = sqlUtils.createValueList([
-        {name: 'name', value: req.query.name},
-        {name: 'start_date', value: req.query.start_date},
-        {name: 'end_date', value: req.query.end_date}
+        {name: 'name', value: req.body.name},
+        {name: 'start_date', value: req.body.start_date},
+        {name: 'end_date', value: req.body.end_date}
     ]);
 
     if (!valueClauses) {

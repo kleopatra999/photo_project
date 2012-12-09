@@ -21,6 +21,9 @@ App.appController = (function() {
             model: App.models.Set,
             collection: App.currentSetStore
         });
+        App.newSetView = new App.views.NewSetView({
+            el: $('#newSetView')
+        });
         App.photoListView = new App.views.PhotoListView({
             collection: App.currentPhotoStore,
             setCollection: App.selectedSetStore,

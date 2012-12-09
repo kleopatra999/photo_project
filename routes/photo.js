@@ -78,7 +78,7 @@ exports.create = function(req, res) {
         return;
     }
 
-    var description = sqlUtils.wrapQuotesOrNull(req.query.description);
+    var description = sqlUtils.wrapQuotesOrNull(req.body.description);
 
     filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
         if (err) {
@@ -120,12 +120,12 @@ exports.update = function(req, res) {
         res.json(400, {error: "An id is required"});
         return;
     }
-    if (!req.query.description) {
+    if (!req.body.description) {
         res.json(200, {message: "No changes made"});
         return;
     }
 
-    var description = sqlUtils.wrapQuotesOrNull(req.query.description);
+    var description = sqlUtils.wrapQuotesOrNull(req.body.description);
 
     var sql = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = " + req.params.id + " LIMIT 1";
     req.dbConnection.query(sql, function(err, rows, field) {

@@ -113,24 +113,6 @@ describe('Photo', function() {
                         .end(done);
                 });
         });
-
-        it('should be get the correct photo after creating', function(done) {
-            request(app.server)
-                .post('/photo/?set_id=1&description=Testing')
-                .attach('photo', 'test/fixtures/uok.jpg')
-                .end(function(err, res) {
-                    if (err) throw err;
-                    var newId = res.body.id;
-                    request(app.server)
-                        .get('/photo/' + newId)
-                        .end(function(err, res) {
-                            if (err) throw err;
-                            assert.equal(res.body.id, newId);
-                            assert.equal(res.body.description, 'Testing');
-                            done();
-                        });
-                });
-        });
     });
 
     describe('Deleting', function() {
@@ -158,7 +140,8 @@ describe('Photo', function() {
     describe('Updating', function() {
         it('should return 200 and json message after updating', function(done) {
             request(app.server)
-                .post('/photo/1/?description=Changed')
+                .post('/photo/1/')
+                .send({description: "Changed"})
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .end(done);
@@ -166,7 +149,8 @@ describe('Photo', function() {
 
         it('should have a new title after updating', function(done) {
             request(app.server)
-                .post('/photo/1/?description=Changed')
+                .post('/photo/1/')
+                .send({description: "Changed"})
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)

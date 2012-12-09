@@ -61,7 +61,8 @@ describe('Set', function() {
     describe('Creating', function() {
         it('should return 201 and json message after creating', function(done) {
             request(app.server)
-                .post('/set/?name=Testing')
+                .post('/set/')
+                .send({name: "Testing"})
                 .expect(201)
                 .expect('Content-Type', /json/)
                 .end(done);
@@ -69,7 +70,8 @@ describe('Set', function() {
 
         it('should be get 200 and json data after creating', function(done) {
             request(app.server)
-                .post('/set/?name=Testing')
+                .post('/set/')
+                .send({name: "Testing"})
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -83,7 +85,8 @@ describe('Set', function() {
 
         it('should be get the correct set after creating', function(done) {
             request(app.server)
-                .post('/set/?name=Testing')
+                .post('/set/')
+                .send({name: "Testing"})
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -125,7 +128,8 @@ describe('Set', function() {
     describe('Updating', function() {
         it('should return 200 and json message after updating', function(done) {
             request(app.server)
-                .post('/set/1/?name=Changed')
+                .post('/set/1/')
+                .send({name: "Changed"})
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .end(done);
@@ -133,7 +137,8 @@ describe('Set', function() {
 
         it('should have a new name after updating', function(done) {
             request(app.server)
-                .post('/set/1/?name=Changed')
+                .post('/set/1/')
+                .send({name: "Changed"})
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)

@@ -11,11 +11,12 @@ App.viewController = (function() {
     init = function() {
         views = {
             home: {
-                position: 1,
                 el: $('#homeView')
             },
+            newSet: {
+                el: $('#newSetView')
+            },
             photoList: {
-                position: 2,
                 el: $('#photoListView')
             }
         };
@@ -35,10 +36,13 @@ App.viewController = (function() {
     showHomeView = function() {
         _showView('home');
     },
+    showNewSetView = function() {
+        _showView('newSet');
+    },
     showPhotoListView = function() {
         _showView('photoList');
     },
-        
+
     _showView = function(view) {
         views[currentView].el.removeClass('selected');
         views[view].el.addClass('selected');
@@ -49,17 +53,18 @@ App.viewController = (function() {
     _addEventHandlersAndTransitions = function() {
         $(window).bind('resize', _handleResize);
     },
-    
+
     _handleResize = function() {
         content.css({
             height: document.documentElement.clientHeight
         });
     };
-    
+
     return {
         init: init,
         views: views,
         showHomeView: showHomeView,
+        showNewSetView: showNewSetView,
         showPhotoListView: showPhotoListView
     };
 
