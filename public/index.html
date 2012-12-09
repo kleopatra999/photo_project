@@ -28,11 +28,15 @@
                 <button class="newSet btn btn-primary" style="margin-top: 16px">New Album</button>
             </div>
             <h2>Your Albums</h2>
-            <ul>
-            {{#each sets}}
-                <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
-            {{/each}}
-            </ul>
+            {{#if sets}}
+                <ul>
+                {{#each sets}}
+                    <li><a href="#/set/{{id}}/photos">{{name}}</a></li>
+                {{/each}}
+                </ul>
+            {{else}}
+                <p>No albums</p>
+            {{/if}}
         </div>
     </script>
     <script id="newSetViewTemplate" type="text/x-handlebars-template">

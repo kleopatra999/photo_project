@@ -16,13 +16,8 @@ App.routers.Router = Backbone.Router.extend({
     showHome: function() {
         if (App.allSetStore.fetched) {
             var sets = App.allSetStore.getAll();
-            if (sets) {
-                App.currentSetStore.reset(sets);
-                App.viewController.showHomeView();
-            }
-            else {
-                alert('No sets');
-            }
+            App.currentSetStore.reset(sets);
+            App.viewController.showHomeView();
         }
         else {
             App.dataController.bind(App.dataController.SET_DATA_READY, this._handleAllSetsData);
