@@ -24,8 +24,8 @@
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
         <div class="container">
-            <div class="pull-right">
-                <button class="newSet btn btn-primary" style="margin-top: 16px">New Album</button>
+            <div class="pull-right title-align">
+                <button class="newSet btn btn-primary">New Album</button>
             </div>
             <h2>Your Albums</h2>
             {{#if sets}}
@@ -81,9 +81,9 @@
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
-        <div class="container">
-            <div class="pull-right">
-                <button class="btn btn-primary" style="margin-top: 16px">Upload Photos</button>
+        <div class="container" id="dropzone">
+            <div class="pull-right title-align">
+                <button class="btn btn-primary">Upload Photos</button>
             </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
