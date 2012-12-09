@@ -1,9 +1,10 @@
 App.dataController = (function() {
-    var SET_DATA_READY = 'DATA_CONTROLLER_SETS_DATA_READY';
+    var SETS_DATA_READY = 'DATA_CONTROLLER_SETS_DATA_READY';
     var PHOTOS_DATA_READY = 'DATA_CONTROLLER_PHOTOS_DATA_READY';
+    var SET_DATA_CREATED = "DATA_CONTROLLER_SET_DATA_CREATED";
 
     var init = function() {
-        _.bindAll(this, 'getSets', 'getPhotos');
+        _.bindAll(this, 'getSets', 'getPhotos', 'createSet');
         _.extend(this, Backbone.Events);
     };
 
@@ -12,7 +13,7 @@ App.dataController = (function() {
         App.allSetStore.fetch({
             success: function(collection, response, options) {
                 collection.fetched = true;
-                self.trigger(SET_DATA_READY, collection);
+                self.trigger(SETS_DATA_READY, collection);
             }
         });
     };
@@ -28,13 +29,29 @@ App.dataController = (function() {
         });
     };
 
+    var createSet = function(data) {
+        var self = this;
+        var newSet = new App.models.Set(data);
+        App.allSetStore.add(newSet);
+        newSet.save(null, {
+            success: function(model, response, options) {
+                console.log('New set created');
+                self.trigger(SET_DATA_CREATED, model);
+            }
+        });
+
+        return newSet;
+    };
+
     return {
-        SET_DATA_READY: SET_DATA_READY,
+        SETS_DATA_READY: SETS_DATA_READY,
         PHOTOS_DATA_READY: PHOTOS_DATA_READY,
+        SET_DATA_CREATED: SET_DATA_CREATED,
 
         init: init,
         getSets: getSets,
-        getPhotos: getPhotos
+        getPhotos: getPhotos,
+        createSet: createSet
     };
 
 }());

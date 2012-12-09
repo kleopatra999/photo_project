@@ -20,12 +20,12 @@ App.routers.Router = Backbone.Router.extend({
             App.viewController.showHomeView();
         }
         else {
-            App.dataController.bind(App.dataController.SET_DATA_READY, this._handleAllSetsData);
+            App.dataController.bind(App.dataController.SETS_DATA_READY, this._handleAllSetsData);
             App.dataController.getSets();
         }
     },
     _handleAllSetsData: function(sets) {
-        App.dataController.unbind(App.dataController.SET_DATA_READY, this._handleAllSetsData);
+        App.dataController.unbind(App.dataController.SETS_DATA_READY, this._handleAllSetsData);
         this.showHome();
     },
 
@@ -42,7 +42,7 @@ App.routers.Router = Backbone.Router.extend({
 
         var set = App.allSetStore.getById(setId);
         if (!set) {
-            App.dataController.bind(App.dataController.SET_DATA_READY, this._handleAllSetsDataPhoto);
+            App.dataController.bind(App.dataController.SETS_DATA_READY, this._handleAllSetsDataPhoto);
             App.dataController.getSets();
             return;
         }
@@ -63,12 +63,12 @@ App.routers.Router = Backbone.Router.extend({
             alert('No photos');
         }
     },
-    _handleAllPhotosData: function(sets) {
-        App.dataController.unbind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotoData);
+    _handleAllSetsDataPhoto: function(sets) {
+        App.dataController.unbind(App.dataController.SETS_DATA_READY, this._handleAllSetsDataPhoto);
         this.showPhotoList(this._lastSetId);
     },
-    _handleAllSetsDataPhoto: function(sets) {
-        App.dataController.unbind(App.dataController.SET_DATA_READY, this._handleAllSetsDataPhoto);
+    _handleAllPhotosData: function(sets) {
+        App.dataController.unbind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotoData);
         this.showPhotoList(this._lastSetId);
     }
 });

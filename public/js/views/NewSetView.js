@@ -9,7 +9,7 @@ App.views.NewSetView = Backbone.View.extend({
     },
 
     initialize: function() {
-        _.bindAll(this, 'render', 'formSubmit', 'formCancel');
+        _.bindAll(this, 'render', 'formSubmit', 'formCancel', '_handleSetCreated');
     },
 
     render: function() {
@@ -26,16 +26,20 @@ App.views.NewSetView = Backbone.View.extend({
             return false;
         }
 
-        var newSet = new App.models.Set({
+        var data = {
             name: this.$el.find('#inputTitle').val(),
             description: this.$el.find('#inputDescription').val(),
             start_date: this.$el.find('#inputStartDate input').val(),
             end_date: this.$el.find('#inputEndDate input').val()
-        });
-        newSet.save();
+        };
+        App.dataController.bind(App.dataController.SET_DATA_CREATED, this._handleSetCreated);
+        var newSet = App.dataController.createSet(data);
 
-        console.log('Saving...');
         return false;
+    },
+    _handleSetCreated: function(set) {
+        App.dataController.unbind(App.dataController.SET_DATA_CREATED, this._handleSetCreated);
+        App.router.navigate('set/' + set.id + '/photos', {trigger: true});
     },
 
     formCancel: function() {
