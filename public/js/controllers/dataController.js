@@ -35,7 +35,6 @@ App.dataController = (function() {
         App.allSetStore.add(newSet);
         newSet.save(null, {
             success: function(model, response, options) {
-                console.log('New set created');
                 self.trigger(SET_DATA_CREATED, model);
             }
         });
