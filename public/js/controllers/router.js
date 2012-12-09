@@ -54,14 +54,9 @@ App.routers.Router = Backbone.Router.extend({
         }
 
         var photos = App.photoStore.getAll();
-        if (photos) {
-            App.selectedSetStore.reset(set);
-            App.currentPhotoStore.reset(photos);
-            App.viewController.showPhotoListView();
-        }
-        else {
-            alert('No photos');
-        }
+        App.selectedSetStore.reset(set);
+        App.currentPhotoStore.reset(photos);
+        App.viewController.showPhotoListView();
     },
     _handleAllSetsDataPhoto: function(sets) {
         App.dataController.unbind(App.dataController.SETS_DATA_READY, this._handleAllSetsDataPhoto);

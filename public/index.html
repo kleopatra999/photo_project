@@ -86,15 +86,19 @@
                 <button class="btn btn-primary" style="margin-top: 16px">Upload Photos</button>
             </div>
             <h2>{{set.name}}</h2>
-            <ul class="thumbnails">
-                {{#each photos}}
-                    <li class="span4">
-                        <a href="#/photo/{{id}}" class="thumbnail">
-                            <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
-                        </a>
-                    </li>
-                {{/each}}
-            </ul>
+            {{#if photos}}
+                <ul class="thumbnails">
+                    {{#each photos}}
+                        <li class="span4">
+                            <a href="#/photo/{{id}}" class="thumbnail">
+                                <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
+                            </a>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p>No photos</p>
+            {{/if}}
         </div>
     </script>
 
