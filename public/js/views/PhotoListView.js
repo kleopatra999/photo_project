@@ -50,5 +50,33 @@ App.views.PhotoListView = Backbone.View.extend({
         evt.preventDefault();
 
         this.$dropzone.removeClass('dragging');
+
+        var files = evt.dataTransfer.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        var file;
+        for (var i = 0; i < files.length; i++) {
+            file = files[i];
+
+            // Only process image files.
+            if (!file.type.match('image/jpeg')) {
+                console.log("Ignoring:", file);
+                continue;
+            }
+
+            // Read the file in as a data url
+            var reader = new FileReader();
+            reader.onload = this._renderThumbnail(file);
+            reader.readAsDataURL(file);
+        }
+    },
+    _renderThumbnail: function(file) {
+        return (function(theFile) {
+            return function(e) {
+                var span = document.createElement('span');
+                span.innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
+                document.getElementById('dropzone').insertBefore(span, null);
+            };
+        })(file);
     }
 });
