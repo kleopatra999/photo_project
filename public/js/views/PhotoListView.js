@@ -5,10 +5,13 @@ App.views.PhotoListView = Backbone.View.extend({
     $dropzone: null,
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_handleDragLeave', '_handleDragOver', '_handleDrop');
+        _.bindAll(this, 'render', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_renderThumbnail');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
+        this.collection.bind('change', this.render);
+        this.collection.bind('add', this.render);
+        this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
     },
 
@@ -71,11 +74,17 @@ App.views.PhotoListView = Backbone.View.extend({
         }
     },
     _renderThumbnail: function(file) {
+        var self = this;
         return (function(theFile) {
             return function(e) {
-                var span = document.createElement('span');
-                span.innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
-                document.getElementById('dropzone').insertBefore(span, null);
+                // var span = document.createElement('span');
+                // span.innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
+                // document.getElementById('dropzone').insertBefore(span, null);
+                var newPhoto = new App.models.Photo({
+                    title: escape(theFile.name),
+                    medium_photo_url: e.target.result
+                });
+                self.collection.add(newPhoto);
             };
         })(file);
     }
