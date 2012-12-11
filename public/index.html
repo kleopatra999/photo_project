@@ -91,8 +91,9 @@
                     {{#each photos}}
                         <li class="span2">
                             {{#if localFile}}
-                                <img src="{{localFile}}" class="thumbnail" alt="Uploading...">
-                                <h3>Uploading...</h3>
+                                <a href="" class="thumbnail processing">
+                                    <img src="{{localFile}}" alt="Uploading...">
+                                </a>
                             {{else}}
                                 <a href="#/photo/{{id}}" class="thumbnail">
                                     <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
