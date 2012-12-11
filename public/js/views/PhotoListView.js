@@ -20,6 +20,7 @@ App.views.PhotoListView = Backbone.View.extend({
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
+        console.log(photos);
         this.$el.html(this.template({
             set: set,
             photos: photos
@@ -79,11 +80,17 @@ App.views.PhotoListView = Backbone.View.extend({
             return function(e) {
                 var newPhoto = new App.models.Photo({
                     setId: self.setCollection.toJSON()[0].id,
+                    tempName: theFile.name,
                     localFile: e.target.result,
                     localFileBlob: theFile
                 });
                 self.collection.add(newPhoto);
-                newPhoto.save();
+                newPhoto.save(null, {
+                    progress: function(progress) {
+                        var $progressBar = self.$el.find('.bar').filter('[data-file=' + theFile.name + ']');
+                        $progressBar.width(progress + '%');
+                    }
+                });
             };
         })(file);
     }
