@@ -26,7 +26,7 @@ App.models.Photo = Backbone.Model.extend({
                     self.unset('localFile', {silent: true});
                     self.unset('localFileBlob', {silent: true});
                     self.trigger('change');
-                    options.success();
+                    options.success(JSON.parse(xhr.response), xhr.status, xhr);
                 }
                 else if (xhr.readyState == 4 && options.error) {
                     options.error();

@@ -46,17 +46,13 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    // Make sure we have a valid set id
-    req.dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
-        if (err) throw err;
-
-        // Nothing with that id
-        if (rows.length === 0) {
-            res.json(404, {error: "Photo not found with that id"});
+    _getSingle(req.params.id, req.dbConnection, function(err, data) {
+        if (err) {
+            res.json(404, {error: err});
             return;
         }
 
-        res.json(rows[0]);
+        res.json(data);
     });
 };
 
@@ -100,9 +96,13 @@ exports.create = function(req, res) {
             }
 
             var newId = rows.insertId;
-            res.json(201, {
-                id: newId,
-                url: urlUtils.getPhotoUrl(req, newId)
+            _getSingle(newId, req.dbConnection, function(err, data) {
+                if (err) {
+                    res.json(404, {error: err});
+                    return;
+                }
+
+                res.json(201, data);
             });
         });
     });
@@ -135,9 +135,13 @@ exports.update = function(req, res) {
             res.json(404, {error: "Photo not found with that id"});
         }
         else {
-            res.json(200, {
-                message: "Update complete",
-                url: urlUtils.getPhotoUrl(req, req.params.id)
+            _getSingle(req.params.id, req.dbConnection, function(err, data) {
+                if (err) {
+                    res.json(404, {error: err});
+                    return;
+                }
+
+                res.json(200, data);
             });
         }
     });
@@ -165,5 +169,23 @@ exports.del = function(req, res) {
         else {
             res.json(200, {message: "Delete complete"});
         }
+    });
+};
+
+var _getSingle = function(id, dbConnection, callback) {
+    // Make sure we have a valid set id
+    dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + id + "' LIMIT 1", function(err, rows, field) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+
+        // Nothing with that id
+        if (rows.length === 0) {
+            callback("Photo not found with that id", null);
+            return;
+        }
+
+        callback(null, rows[0]);
     });
 };
