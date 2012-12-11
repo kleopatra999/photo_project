@@ -4,6 +4,12 @@ App.appController = (function() {
     var init = function() {
         _.extend(this, Backbone.Events);
 
+        // Check for the various File API support.
+        if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+            alert('The File APIs are not fully supported in this browser. You cannot use Shoto :\'(');
+            return;
+        }
+
         // Set up our stores
         App.allSetStore = new App.collections.SetStore();
         App.currentSetStore = new App.collections.SetStore();
