@@ -69,22 +69,21 @@ App.views.PhotoListView = Backbone.View.extend({
 
             // Read the file in as a data url
             var reader = new FileReader();
-            reader.onload = this._renderThumbnail(file);
+            reader.onload = this._saveNewPhoto(file);
             reader.readAsDataURL(file);
         }
     },
-    _renderThumbnail: function(file) {
+    _saveNewPhoto: function(file) {
         var self = this;
         return (function(theFile) {
             return function(e) {
-                // var span = document.createElement('span');
-                // span.innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
-                // document.getElementById('dropzone').insertBefore(span, null);
                 var newPhoto = new App.models.Photo({
-                    title: escape(theFile.name),
-                    medium_photo_url: e.target.result
+                    setId: self.setCollection.toJSON()[0].id,
+                    localFile: e.target.result,
+                    localFileBlob: theFile
                 });
                 self.collection.add(newPhoto);
+                newPhoto.save();
             };
         })(file);
     }
