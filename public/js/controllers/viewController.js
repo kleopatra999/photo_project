@@ -23,7 +23,7 @@ App.viewController = (function() {
         wrapper = $('#wrapper');
         header = $('header');
         content = $('#content');
-        currentView = 'home';
+        currentView = null;
         dimensions = {
             width: views.home.el.width(),
             height: views.home.el.height()
@@ -44,8 +44,14 @@ App.viewController = (function() {
     },
 
     _showView = function(view) {
-        views[currentView].el.removeClass('selected');
-        views[view].el.addClass('selected');
+        if (currentView) {
+            views[currentView].el.fadeOut('fast', function() {
+                $(this).removeClass('selected');
+            });
+        }
+        views[view].el.fadeIn('fast', function() {
+            $(this).addClass('selected');
+        });
 
         currentView = view;
     },

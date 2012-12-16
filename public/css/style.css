@@ -2,8 +2,14 @@ body {
     padding-top: 60px;
 }
 
+div#content {
+    position: relative;
+}
+
 .view {
+    position:absolute;
     display: none;
+    width: 100%;
 }
 .selected {
     display: block;

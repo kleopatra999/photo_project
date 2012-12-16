@@ -77,7 +77,7 @@ var server = module.exports.server = http.createServer(app);
 // Check which mode we're in
 if (!module.exports.testing) {
     // Only start listening if we aren't being tested
-    server.listen(app.get('port'), function() {
+    server.listen(3000, function() {
         console.log("Express server started at http://0.0.0.0:" + app.get('port'));
     });
 }
