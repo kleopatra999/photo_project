@@ -3,9 +3,14 @@ App.views = App.views || {};
 App.views.PhotoListView = Backbone.View.extend({
     template: Handlebars.compile($('#photoListViewTemplate').html()),
     $dropzone: null,
+    $fileUpload: null,
+
+    events: {
+        'click #uploadBtn': '_uploadClicked'
+    },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_saveNewPhoto');
+        _.bindAll(this, 'render', '_uploadClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_uploadFiles', '_saveNewPhoto');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -20,7 +25,6 @@ App.views.PhotoListView = Backbone.View.extend({
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
-        console.log(photos);
         this.$el.html(this.template({
             set: set,
             photos: photos
@@ -33,7 +37,16 @@ App.views.PhotoListView = Backbone.View.extend({
         dropzone.addEventListener('dragover', this._handleDragOver, false);
         dropzone.addEventListener('drop', this._handleDrop, false);
 
+        // Set the listeners for the manual file upload
+        this.$fileUpload = this.$el.find('#fileUpload');
+        var fileUpload = this.$fileUpload.get(0);
+        fileUpload.addEventListener('change', this._handleFileUpload, false);
+
         return this;
+    },
+
+    _uploadClicked: function() {
+        this.$fileUpload.click();
     },
 
     _handleDragLeave: function(evt) {
@@ -56,7 +69,13 @@ App.views.PhotoListView = Backbone.View.extend({
         this.$dropzone.removeClass('dragging');
 
         var files = evt.dataTransfer.files; // FileList object
-
+        this._uploadFiles(files);
+    },
+    _handleFileUpload: function(evt) {
+        var files = evt.target.files; // FileList object
+        this._uploadFiles(files);
+    },
+    _uploadFiles: function(files) {
         // Loop through the FileList and render image files as thumbnails.
         var file;
         for (var i = 0; i < files.length; i++) {

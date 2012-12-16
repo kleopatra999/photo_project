@@ -83,7 +83,8 @@
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
         <div class="container" id="dropzone">
             <div class="pull-right title-align">
-                <button class="btn btn-primary">Upload Photos</button>
+                <input id="fileUpload" type="file" style="visibility:hidden;"/>
+                <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
             </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
