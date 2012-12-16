@@ -90,17 +90,22 @@ App.views.PhotoListView = Backbone.View.extend({
             // Read the file in as a data url
             var reader = new FileReader();
             reader.onload = this._saveNewPhoto(file);
-            reader.readAsDataURL(file);
+            reader.readAsBinaryString(file);
         }
     },
     _saveNewPhoto: function(file) {
         var self = this;
         return (function(theFile) {
             return function(e) {
+                var fileString = e.target.result;
+                var base64String = 'data:image/png;base64,' + base64_encode(fileString);
+                var exif = EXIF.readFromBinaryFile(new BinaryFile(e.target.result));
+                console.log('EXIF', exif);
+
                 var newPhoto = new App.models.Photo({
                     setId: self.setCollection.toJSON()[0].id,
                     tempName: theFile.name,
-                    localFile: e.target.result,
+                    localFile: base64String,
                     localFileBlob: theFile
                 });
                 self.collection.add(newPhoto);
