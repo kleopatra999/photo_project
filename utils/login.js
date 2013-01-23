@@ -1,5 +1,6 @@
 var passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy;
+    LocalStrategy = require('passport-local').Strategy,
+    userData = require('../data/user');
 
 exports.setup = function() {
     // Sets up the passport login
@@ -21,8 +22,9 @@ exports.setup = function() {
 
     // Tells passport how to deserialise a cookie into a user object
     passport.deserializeUser(function(id, done) {
-        var user = {id: 1, email: "testing@example.com"};
-        done(null, user);
+        userData.getById(id, function(err, user) {
+            done(err, user);
+        });
     });
 };
 
