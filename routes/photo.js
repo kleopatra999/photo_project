@@ -11,6 +11,8 @@ var sqlUtils = require('../utils/sql'),
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
+    console.log('User', req.user);
+    
     // Make sure we have a set id passed in
     if (!req.query.set_id) {
         res.json(400, {error: "A set_id is required"});

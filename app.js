@@ -10,8 +10,9 @@ var express = require('express'),
     set = require('./routes/set'),
     user = require('./routes/user'),
     http = require('http'),
-    path = require('path');
-
+    path = require('path'),
+    passport = require('passport'),
+    login = require('./utils/login');
 
 // Set the testing switch
 if (module.parent) {
@@ -25,6 +26,8 @@ else {
 var app = express();
 // Get an instance of the database
 var database = require('./utils/database');
+// Setup the passport instance
+login.setup();
 
 module.exports.emit('setupComplete');
 
@@ -40,6 +43,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
     app.use(express.session());
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -50,6 +55,9 @@ app.configure('development', function(){
 });
 
 // Setup the routes
+// User login
+app.post('/login', login.postLoginRoute);
+app.get('/logout', login.logoutRoute);
 // Photos
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
