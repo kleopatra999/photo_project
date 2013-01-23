@@ -9,14 +9,14 @@ describe('Login', function() {
     });
 
     it('should fail on incorrect password', function() {
-        loginUtil._getAndCheckUser('example@user.me', 'incorrect', function(err, user, info) {
+        loginUtil._getAndCheckUser('default@user.me', 'incorrect', function(err, user, info) {
             assert.equal(user, false);
         });
     });
 
     it('should return a user when details are correct', function() {
         loginUtil._getAndCheckUser('default@user.me', 'default', function(err, user, info) {
-            assert.notEqual(user, null);
+            assert.notEqual(user, false);
         });
     });
 });
