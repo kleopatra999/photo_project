@@ -4,15 +4,6 @@
 var EventEmitter = require('events').EventEmitter;
 module.exports = new EventEmitter();
 
-// Load in all our dependancies
-var express = require('express'),
-    photo = require('./routes/photo'),
-    set = require('./routes/set'),
-    user = require('./routes/user'),
-    http = require('http'),
-    path = require('path');
-
-
 // Set the testing switch
 if (module.parent) {
     module.exports.testing = true;
@@ -21,10 +12,21 @@ else {
     module.exports.testing = false;
 }
 
+// Load in all our dependancies
+var express = require('express'),
+    photo = require('./routes/photo'),
+    set = require('./routes/set'),
+    user = require('./routes/user'),
+    http = require('http'),
+    path = require('path'),
+    passport = require('passport'),
+    login = require('./utils/login'),
+    database = require('./utils/database');
+
 // Get the instance of express
 var app = express();
-// Get an instance of the database
-var database = require('./utils/database');
+// Setup the passport instance
+login.setup();
 
 module.exports.emit('setupComplete');
 
@@ -40,6 +42,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
     app.use(express.session());
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -50,6 +54,9 @@ app.configure('development', function(){
 });
 
 // Setup the routes
+// User login
+app.post('/login', login.postLoginRoute);
+app.get('/logout', login.logoutRoute);
 // Photos
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
