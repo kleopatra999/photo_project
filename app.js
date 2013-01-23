@@ -11,7 +11,6 @@ if (module.parent) {
 else {
     module.exports.testing = false;
 }
-console.log(module.exports.testing);
 
 // Load in all our dependancies
 var express = require('express'),
