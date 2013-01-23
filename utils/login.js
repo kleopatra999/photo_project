@@ -59,5 +59,6 @@ var logoutRoute = function(req, res) {
 module.exports = {
     'setup': setup,
     'postLoginRoute': postLoginRoute,
-    'logoutRoute': logoutRoute
+    'logoutRoute': logoutRoute,
+    '_getAndCheckUser': getAndCheckUser
 };
