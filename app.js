@@ -4,6 +4,15 @@
 var EventEmitter = require('events').EventEmitter;
 module.exports = new EventEmitter();
 
+// Set the testing switch
+if (module.parent) {
+    module.exports.testing = true;
+}
+else {
+    module.exports.testing = false;
+}
+console.log(module.exports.testing);
+
 // Load in all our dependancies
 var express = require('express'),
     photo = require('./routes/photo'),
@@ -12,20 +21,11 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     passport = require('passport'),
-    login = require('./utils/login');
-
-// Set the testing switch
-if (module.parent) {
-    module.exports.testing = true;
-}
-else {
-    module.exports.testing = false;
-}
+    login = require('./utils/login'),
+    database = require('./utils/database');
 
 // Get the instance of express
 var app = express();
-// Get an instance of the database
-var database = require('./utils/database');
 // Setup the passport instance
 login.setup();
 
