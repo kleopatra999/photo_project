@@ -167,6 +167,7 @@ describe('Photo', function() {
         it('should not change the description if one is not passed', function(done) {
             request(app.server)
                 .post('/photo/1')
+                .expect(200)
                 .end(function(err, res) {
                     if (err) throw err;
                     request(app.server)

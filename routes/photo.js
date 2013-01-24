@@ -111,36 +111,24 @@ exports.create = function(req, res) {
  *   id - The id of the photo (required)
  *   description - A description of the photo
  * TODO: Paramters which are not passed in should not be altered
+ * TODO: This should be a transaction
  */
 exports.update = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-    if (!req.body.description) {
-        res.json(200, {message: "No changes made"});
-        return;
-    }
-
-    var description = sqlUtils.wrapQuotesOrNull(req.body.description);
-
-    var sql = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = " + req.params.id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
-
-        if (rows.affectedRows === 0) {
-            res.json(404, {error: "Photo not found with that id"});
+    // Update the data
+    photoData.updateById(req, req.params.id, req.body.description, function(err) {
+        // Handle any errors
+        if (err) {
+            if (err === photoData.NO_DESCRIPTION) {
+                // Just return the data if no description is provided
+                exports.single(req, res);
+            }
+            else {
+                return _handleSinglePhotoError(err, res);
+            }
         }
-        else {
-            _getSingle(req.params.id, req.dbConnection, function(err, data) {
-                if (err) {
-                    res.json(404, {error: err});
-                    return;
-                }
 
-                res.json(200, data);
-            });
-        }
+        // Delegate to the single request to return the data
+        exports.single(req, res);
     });
 };
 
@@ -151,7 +139,7 @@ exports.update = function(req, res) {
  * TODO: Only allow the owning user to do this
  */
 exports.del = function(req, res) {
-    photoData.deleteById(req, req.params.id, function(err, done) {
+    photoData.deleteById(req, req.params.id, function(err) {
         // Handle any errors
         if (err) return _handleSinglePhotoError(err, res);
         // Delete successful
