@@ -1,5 +1,6 @@
 var sqlUtils = require('../utils/sql'),
     filestore = require('../utils/filestore'),
+    photoData = require('../data/photo'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore');
@@ -11,31 +12,29 @@ var sqlUtils = require('../utils/sql'),
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
-    // Make sure we have a set id passed in
-    if (!req.query.set_id) {
-        res.json(400, {error: "A set_id is required"});
-        return;
-    }
-
-    // Make sure we have a valid set id
-    req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.query.set_id + "' LIMIT 1", function(err, rows, field) {
-        if (err) throw err;
-
-        // We don't have a valid set_id
-        if (rows.length === 0) {
-            res.json(404, {error: "set_id not found"});
-            return;
+    // Get the data from the database using the set_id
+    photoData.getAllBySetId(req, req.query.set_id, function(err, rows) {
+        // Check for and deal with errors
+        if (err) {
+            switch (err) {
+            case photoData.NO_SET_ID:
+                return res.json(400, {error: "A set_id is required"});
+            case photoData.SET_NOT_FOUND:
+                return res.json(404, {error: "No set with that set_id found"});
+            default:
+                res.json(500, {error: "Unknown server error"});
+                console.log("Photo List:", err);
+                return;
+            }
         }
 
-        req.dbConnection.query("SELECT * FROM  `photo` WHERE `set_id` = '" + req.query.set_id + "'", function(err, rows, field) {
-            if (err) throw err;
-
-            _.each(rows, function(row) {
-                row.url = urlUtils.getPhotoUrl(req, row.id);
-            });
-
-            res.json(rows);
+        // Set the correct photo urls for all the items
+        _.each(rows, function(row) {
+            row.url = urlUtils.getPhotoUrl(req, row.id);
         });
+
+        // Send the data back
+        res.json(rows);
     });
 };
 
@@ -46,12 +45,21 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    _getSingle(req.params.id, req.dbConnection, function(err, data) {
+    photoData.getById(req, req.params.id, function(err, data) {
         if (err) {
-            res.json(404, {error: err});
-            return;
+            switch (err) {
+            case photoData.NO_ID:
+                return res.json(400, {error: "Aan id is required"});
+            case photoData.PHOTO_NOT_FOUND:
+                return res.json(404, {error: "No photo with that id found"});
+            default:
+                res.json(500, {error: "Unknown server error"});
+                console.log("Photo Single:", err);
+                return;
+            }
         }
 
+        // Return the data
         res.json(data);
     });
 };
