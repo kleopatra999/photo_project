@@ -46,19 +46,8 @@ exports.list = function(req, res) {
  */
 exports.single = function(req, res) {
     photoData.getById(req, req.params.id, function(err, data) {
-        if (err) {
-            switch (err) {
-            case photoData.NO_ID:
-                return res.json(400, {error: "Aan id is required"});
-            case photoData.PHOTO_NOT_FOUND:
-                return res.json(404, {error: "No photo with that id found"});
-            default:
-                res.json(500, {error: "Unknown server error"});
-                console.log("Photo Single:", err);
-                return;
-            }
-        }
-
+        // Handle any errors
+        if (err) return _handleSinglePhotoError(err, res);
         // Return the data
         res.json(data);
     });
@@ -162,21 +151,11 @@ exports.update = function(req, res) {
  * TODO: Only allow the owning user to do this
  */
 exports.del = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
-    var sql = "DELETE FROM `photo` WHERE `id` = " + req.params.id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
-
-        if (rows.affectedRows === 0) {
-            res.json(404, {error: "Photo not found with that id"});
-        }
-        else {
-            res.json(200, {message: "Delete complete"});
-        }
+    photoData.deleteById(req, req.params.id, function(err, done) {
+        // Handle any errors
+        if (err) return _handleSinglePhotoError(err, res);
+        // Delete successful
+        res.json(200, {message: "Delete complete"});
     });
 };
 
@@ -196,4 +175,17 @@ var _getSingle = function(id, dbConnection, callback) {
 
         callback(null, rows[0]);
     });
+};
+
+var _handleSinglePhotoError = function(err, res) {
+    switch (err) {
+    case photoData.NO_ID:
+        return res.json(400, {error: "An id is required"});
+    case photoData.PHOTO_NOT_FOUND:
+        return res.json(404, {error: "No photo with that id found"});
+    default:
+        res.json(500, {error: "Unknown server error"});
+        console.log("Photo Single:", err);
+        return;
+    }
 };

@@ -50,6 +50,26 @@ var NO_ID = "No id was supplied";
 var PHOTO_NOT_FOUND = "No photo found with that ID";
 
 /**
+ * Deletes the photo with the given ID
+ **/
+var deleteById = function(req, id, done) {
+    // Check for invalid inputs
+    if (!id) return done(NO_ID, false);
+    // TODO: Should validate the format of the id
+
+    var query = "DELETE FROM `photo` WHERE `id` = " + id + " LIMIT 1";
+    req.dbConnection.query(query, function(err, rows, field) {
+        if (err) return done(err, false); // Unknown error
+
+        // Nothing found for the given ID
+        if (rows.length === 0) return done(PHOTO_NOT_FOUND, false);
+
+        // Return the data
+        done(null, true);
+    });
+};
+
+/**
  * Exports
  **/
 module.exports = {
@@ -59,5 +79,7 @@ module.exports = {
 
     'getById': getById,
     'NO_ID': NO_ID,
-    'PHOTO_NOT_FOUND': PHOTO_NOT_FOUND
+    'PHOTO_NOT_FOUND': PHOTO_NOT_FOUND,
+
+    'deleteById': deleteById
 };
