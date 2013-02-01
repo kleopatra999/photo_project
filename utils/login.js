@@ -56,6 +56,7 @@ var logoutRoute = function(req, res) {
     res.redirect('/');
 };
 
+// Used only in testing and automatically makes it look like user 1 is logged in
 var fakeUserLogin = function() {
     return function(req, res, next){
         userData.getById(1, function(err, user) {
