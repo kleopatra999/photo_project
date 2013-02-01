@@ -28,6 +28,9 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
+    exports.singleWithStatus(req, res, 200);
+};
+exports.singleWithStatus = function(req, res, status) {
     setData.getById(req, req.params.id, function(err, set) {
         // Check for and handle errors
         if (err) {
@@ -45,7 +48,7 @@ exports.single = function(req, res) {
 
         // Return the set data
         set.photoUrl = urls.getPhotoListUrl(req, set.id);
-        res.json(set);
+        res.json(status, set);
     });
 };
 
@@ -58,25 +61,26 @@ exports.single = function(req, res) {
  * TODO: Assign to current user instead of default user
  */
 exports.create = function(req, res) {
-    if (!req.body.name || req.body.name.length === 0) {
-        res.json(400, {error: "A name is required"});
-        return;
-    }
+    setData.create(req, req.body.name, req.body.start_date, req.body.end_date, function(err, newId) {
+        // Check for and handle errors
+        if (err) {
+            switch (err) {
+            case setData.NO_NAME:
+                return res.json(400, {error: "A name is required"});
+            case setData.NO_START_DATE:
+                return res.json(400, {error: "A start data is required"});
+            case setData.NO_END_DATE:
+                return res.json(400, {error: "An end data is required"});
+            default:
+                console.log("Error while creating set:", err);
+                return res.json(500, {error: "Unknown error while creating set"});
+            }
+        }
 
-    // Get the values ready for adding to SQL
-    var name = sqlUtils.wrapQuotesOrNull(req.body.name);
-    var start_date = sqlUtils.wrapQuotesOrNull(req.body.start_date);
-    var end_date = sqlUtils.wrapQuotesOrNull(req.body.end_date);
-
-    var sql = "INSERT INTO  `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + start_date + ", " + end_date + ")";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
-
-        var newId = rows.insertId;
-        res.json(201, {
-            id: newId,
-            url: urls.getSetUrl(req, newId)
-        });
+        // A hack to use allow us to use the single route handler
+        req.params.id = newId;
+        // return the new data
+        exports.singleWithStatus(req, res, 201);
     });
 };
 
