@@ -58,7 +58,7 @@ var create = function(req, name, startDate, endDate, done) {
 /**
  * Updates the set with the given id
  **/
-var update = function(req, id, name, startDate, endDate, done) {
+var updateById = function(req, id, name, startDate, endDate, done) {
     // Check for valid inputs
     if (!id) return done(NO_ID);
 
@@ -82,6 +82,25 @@ var update = function(req, id, name, startDate, endDate, done) {
 };
 
 /**
+ * Deletes the set with the given id
+ **/
+var deleteById = function(req, id, done) {
+    // Check for valid inputs
+    if (!id) return done(NO_ID);
+
+    // Make the request
+    var sql = "DELETE FROM `set` WHERE `id` = " + id + " LIMIT 1";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        // Check for and return errors
+        if (err) return done(err);
+        if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
+
+        // Return result
+        done(null, true);
+    });
+};
+
+/**
  * Errors
  **/
 var NO_ID = "No id provided";
@@ -97,7 +116,8 @@ module.exports = {
     'getAll': getAll,
     'getById': getById,
     'create': create,
-    'update': update,
+    'updateById': updateById,
+    'deleteById': deleteById,
 
     'NO_ID': NO_ID,
     'SET_NOT_FOUND': SET_NOT_FOUND,

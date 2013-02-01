@@ -94,7 +94,7 @@ exports.create = function(req, res) {
  * TODO: Paramters which are not passed in should not be altered
  */
 exports.update = function(req, res) {
-    setData.update(req, req.params.id, req.body.name, req.body.start_date, req.body.end_date, function(err, result) {
+    setData.updateById(req, req.params.id, req.body.name, req.body.start_date, req.body.end_date, function(err, result) {
         if (err) {
             if (err == setData.NO_ID) {
                 return res.json(400, {error: "An id is required"});
@@ -117,20 +117,17 @@ exports.update = function(req, res) {
  * TODO: Only allow the owning user to do this
  */
 exports.del = function(req, res) {
-    if (!req.params.id) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
-    var sql = "DELETE FROM `set` WHERE `id` = " + req.params.id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
-
-        if (rows.affectedRows === 0) {
-            res.json(404, {error: "Set not found with that id"});
+    setData.deleteById(req, req.params.id, function(err, result) {
+        if (err) {
+            if (err == setData.NO_ID) {
+                return res.json(400, {error: "An id is required"});
+            }
+            else {
+                console.log("Error while deleting set:", err);
+                return res.json(500, {error: "Unknown error while deleting set"});
+            }
         }
-        else {
-            res.json(200, {message: "Delete complete"});
-        }
+
+        res.json(200, {message: "Delete complete"});
     });
 };
