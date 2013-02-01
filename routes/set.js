@@ -94,36 +94,19 @@ exports.create = function(req, res) {
  * TODO: Paramters which are not passed in should not be altered
  */
 exports.update = function(req, res) {
-    if (!req.params.id || req.params.id.length === 0) {
-        res.json(400, {error: "An id is required"});
-        return;
-    }
-
-    // Get the value list ready for adding to SQL
-    var valueClauses = sqlUtils.createValueList([
-        {name: 'name', value: req.body.name},
-        {name: 'start_date', value: req.body.start_date},
-        {name: 'end_date', value: req.body.end_date}
-    ]);
-
-    if (!valueClauses) {
-        res.json(200, {message: 'No changes made'});
-        return;
-    }
-
-    var sql = "UPDATE `set` SET " + valueClauses + " WHERE `id` = " + req.params.id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) throw err;
-
-        if (rows.affectedRows === 0) {
-            res.json(404, {error: "No set found with that id"});
+    setData.update(req, req.params.id, req.body.name, req.body.start_date, req.body.end_date, function(err, result) {
+        if (err) {
+            if (err == setData.NO_ID) {
+                return res.json(400, {error: "An id is required"});
+            }
+            else {
+                console.log("Error while updating set:", err);
+                return res.json(500, {error: "Unknown error while creating set"});
+            }
         }
-        else {
-            res.json(200, {
-                message: "Update complete",
-                url: urls.getSetUrl(req, req.params.id)
-            });
-        }
+
+        // return the new data
+        exports.single(req, res);
     });
 };
 

@@ -56,6 +56,32 @@ var create = function(req, name, startDate, endDate, done) {
 };
 
 /**
+ * Updates the set with the given id
+ **/
+var update = function(req, id, name, startDate, endDate, done) {
+    // Check for valid inputs
+    if (!id) return done(NO_ID);
+
+    // Get the value list ready for adding to SQL
+    var valueClauses = sqlUtils.createValueList([
+        {name: 'name', value: name},
+        {name: 'start_date', value: startDate},
+        {name: 'end_date', value: endDate}
+    ]);
+
+    if (!valueClauses) return done(null, false);
+
+    var sql = "UPDATE `set` SET " + valueClauses + " WHERE `id` = " + id + " LIMIT 1";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        if (err) return done(err);
+
+        if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
+        
+        done(null, true);
+    });
+};
+
+/**
  * Errors
  **/
 var NO_ID = "No id provided";
@@ -71,6 +97,7 @@ module.exports = {
     'getAll': getAll,
     'getById': getById,
     'create': create,
+    'update': update,
 
     'NO_ID': NO_ID,
     'SET_NOT_FOUND': SET_NOT_FOUND,
