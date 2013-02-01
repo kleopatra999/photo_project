@@ -5,7 +5,7 @@ var sqlUtils = require('../utils/sql');
  **/
 var getAllBySetId = function(req, setId, done) {
     // Check for invalid inputs
-    if (!setId) return done(NO_SET_ID, null);
+    if (!setId) return done(NO_SET_ID);
     // TODO: Should validate the format of the setId
 
     var query = "SELECT * FROM `set` WHERE `id` = '" + setId + "' LIMIT 1";

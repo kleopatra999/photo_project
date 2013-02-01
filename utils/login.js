@@ -56,9 +56,19 @@ var logoutRoute = function(req, res) {
     res.redirect('/');
 };
 
+var fakeUserLogin = function() {
+    return function(req, res, next){
+        userData.getById(1, function(err, user) {
+            req.user = user;
+            next();
+        });
+    };
+};
+
 module.exports = {
     'setup': setup,
     'postLoginRoute': postLoginRoute,
     'logoutRoute': logoutRoute,
+    'fakeUserLogin': fakeUserLogin,
     '_getAndCheckUser': getAndCheckUser
 };

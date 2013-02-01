@@ -8,6 +8,9 @@ var sqlUtils = require('../utils/sql'),
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     setData.getAll(req, function(err, rows) {
         if (err) return res.json(500, {error: 'Unknown error while getting sets'});
 
@@ -31,6 +34,9 @@ exports.single = function(req, res) {
     exports.singleWithStatus(req, res, 200);
 };
 exports.singleWithStatus = function(req, res, status) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     setData.getById(req, req.params.id, function(err, set) {
         // Check for and handle errors
         if (err) {
@@ -61,6 +67,9 @@ exports.singleWithStatus = function(req, res, status) {
  * TODO: Assign to current user instead of default user
  */
 exports.create = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     setData.create(req, req.body.name, req.body.start_date, req.body.end_date, function(err, newId) {
         // Check for and handle errors
         if (err) {
@@ -94,6 +103,9 @@ exports.create = function(req, res) {
  * TODO: Paramters which are not passed in should not be altered
  */
 exports.update = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     setData.updateById(req, req.params.id, req.body.name, req.body.start_date, req.body.end_date, function(err, result) {
         if (err) {
             if (err == setData.NO_ID) {
@@ -117,6 +129,9 @@ exports.update = function(req, res) {
  * TODO: Only allow the owning user to do this
  */
 exports.del = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+    
     setData.deleteById(req, req.params.id, function(err, result) {
         if (err) {
             if (err == setData.NO_ID) {
