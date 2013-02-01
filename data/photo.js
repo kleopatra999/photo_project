@@ -1,22 +1,20 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    setData = require('./set');
 
 /**
  * Returns all the photos under a specific setId
  **/
 var getAllBySetId = function(req, setId, done) {
     // Check for invalid inputs
-    if (!setId) return done(NO_SET_ID, null);
+    if (!setId) return done(NO_SET_ID);
     // TODO: Should validate the format of the setId
 
-    var query = "SELECT * FROM `set` WHERE `id` = '" + setId + "' LIMIT 1";
-    req.dbConnection.query(query, function(err, rows, field) {
-        if (err) return done(err, null); // Unknown error
-
-        if (rows.length === 0) return done(SET_NOT_FOUND, null); // We don't have a valid setId
+    setData.getById(req, setId, function(err, set) {
+        if (err) return done(SET_NOT_FOUND);
 
         var photoQuery = "SELECT * FROM `photo` WHERE `set_id` = '" + setId + "'";
         req.dbConnection.query(photoQuery, function(err, rows, field) {
-            if (err) return done(err, null);
+            if (err) return done(err);
 
             done(null, rows);
         });
@@ -28,18 +26,23 @@ var getAllBySetId = function(req, setId, done) {
  **/
 var getById = function(req, id, done) {
     // Check for invalid inputs
-    if (!id) return done(NO_ID, null);
+    if (!id) return done(NO_ID);
     // TODO: Should validate the format of the id
 
     var query = "SELECT * FROM `photo` WHERE `id` = '" + id + "' LIMIT 1";
     req.dbConnection.query(query, function(err, rows, field) {
-        if (err) return done(err, null); // Unknown error
+        if (err) return done(err); // Unknown error
+        if (rows.length === 0) return done(PHOTO_NOT_FOUND); // Nothing found for the given ID
 
-        // Nothing found for the given ID
-        if (rows.length === 0) return done(PHOTO_NOT_FOUND, null);
+        var photo = rows[0];
 
-        // Return the data
-        done(null, rows[0]);
+        // Get the set data to validate that the user has access to this photo
+        setData.getById(req, photo.set_id, function(err, set) {
+            if (err) return done(PHOTO_NOT_FOUND); // Hide that auth is the error, send 404
+
+            // Return the data
+            done(null, photo);
+        });
     });
 };
 
@@ -56,16 +59,21 @@ var updateById = function(req, id, description, done) {
     // Wrap the description in quotes for the SQL statement
     description = sqlUtils.wrapQuotesOrNull(description);
 
-    var query = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = '" + id + "' LIMIT 1";
-    req.dbConnection.query(query, function(err, rows, field) {
-        // Unknown error
-        if (err) return done(err);
+    // Get the photo first to validate that the user has access to this photo
+    getById(req, id, function(err, photo) {
+        if (err) return done(PHOTO_NOT_FOUND); // Unauthorised
 
-        // Nothing found for the given ID
-        if (rows.affectedRows === 0) return done(PHOTO_NOT_FOUND);
+        var query = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = '" + id + "' LIMIT 1";
+        req.dbConnection.query(query, function(err, rows, field) {
+            // Unknown error
+            if (err) return done(err);
 
-        // Return the data
-        done(null);
+            // Nothing found for the given ID
+            if (rows.affectedRows === 0) return done(PHOTO_NOT_FOUND);
+
+            // Return the data
+            done(null);
+        });
     });
 };
 
@@ -77,18 +85,26 @@ var deleteById = function(req, id, done) {
     if (!id) return done(NO_ID, false);
     // TODO: Should validate the format of the id
 
-    var query = "DELETE FROM `photo` WHERE `id` = " + id + " LIMIT 1";
-    req.dbConnection.query(query, function(err, rows, field) {
-        if (err) return done(err, false); // Unknown error
+    // Get the photo first to validate that the user has access to this photo
+    getById(req, id, function(err, photo) {
+        if (err) return done(PHOTO_NOT_FOUND); // Unauthorised
 
-        // Nothing found for the given ID
-        if (rows.length === 0) return done(PHOTO_NOT_FOUND, false);
+        var query = "DELETE FROM `photo` WHERE `id` = " + id + " LIMIT 1";
+        req.dbConnection.query(query, function(err, rows, field) {
+            if (err) return done(err, false); // Unknown error
 
-        // Return the data
-        done(null, true);
+            // Nothing found for the given ID
+            if (rows.length === 0) return done(PHOTO_NOT_FOUND, false);
+
+            // Return the data
+            done(null, true);
+        });
     });
 };
 
+/**
+ * Creates a photo with the given paramters
+ **/
 var create = function(req, setId, description, urls, done) {
     // Check for invalid inputs
     if (!setId) return done(NO_SET_ID);
@@ -97,19 +113,24 @@ var create = function(req, setId, description, urls, done) {
     // Wrap the description up correctly
     description = sqlUtils.wrapQuotesOrNull(description);
 
-    var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + 1 + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) {
-            if (err.code === "ER_NO_REFERENCED_ROW_") {
-                return done(SET_NOT_FOUND);
-            }
-            else {
-                return done(err);
-            }
-        }
+    // Get the set data to validate that the user has access to this photo
+    setData.getById(req, setId, function(err, set) {
+        if (err) return done(SET_NOT_FOUND); // Make the user think the set doesn't exist
 
-        var newId = rows.insertId;
-        return done(null, newId);
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + req.user.id + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) {
+                if (err.code === "ER_NO_REFERENCED_ROW_") {
+                    return done(SET_NOT_FOUND);
+                }
+                else {
+                    return done(err);
+                }
+            }
+
+            var newId = rows.insertId;
+            return done(null, newId);
+        });
     });
 };
 

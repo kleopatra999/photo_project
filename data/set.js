@@ -1,11 +1,11 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    _ = require('underscore');
 
 /**
  * Returns all the sets
  **/
 var getAll = function(req, done) {
-
-    var query = "SELECT * FROM  `set`";
+    var query = "SELECT `set`.* FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "'";
     req.dbConnection.query(query, function(err, rows, field) {
         if (err) return done(err); // Unknown error
 
@@ -21,13 +21,14 @@ var getById = function(req, id, done) {
     // Check for valid inputs
     if (!id) return done(NO_ID, null);
 
-    var query = "SELECT * FROM  `set` WHERE `id` = '" + id + "' LIMIT 1";
+    var query = "SELECT `set`.* FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "' AND `set`.`id` = '" + id + "' LIMIT 1";
     req.dbConnection.query(query, function(err, rows, field) {
         // Check for errors
         if (err) return done(err);
         if (rows.length === 0) return done(SET_NOT_FOUND);
 
-        done(null, rows[0]);
+        var set = rows[0];
+        done(null, set);
     });
 };
 
@@ -46,12 +47,19 @@ var create = function(req, name, startDate, endDate, done) {
     endDate = sqlUtils.wrapQuotesOrNull(endDate);
 
     // Make the request
-    var sql = "INSERT INTO  `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + startDate + ", " + endDate + ")";
+    var sql = "INSERT INTO `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + startDate + ", " + endDate + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
         if (err) done(err);
 
-        // Send back the new id
-        done(null, rows.insertId);
+        var newSetId = rows.insertId;
+
+        var sql = "INSERT INTO `set_user` (`set_id`, `user_id`) VALUES (" + newSetId + ", " + req.user.id + ")";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) done(err);
+
+            // Send back the new id
+            done(null, newSetId);
+        });
     });
 };
 
@@ -71,13 +79,18 @@ var updateById = function(req, id, name, startDate, endDate, done) {
 
     if (!valueClauses) return done(null, false);
 
-    var sql = "UPDATE `set` SET " + valueClauses + " WHERE `id` = " + id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        if (err) return done(err);
+    // Get the set first to validate that the user has access to it
+    getById(req, id, function(err, set) {
+        if (err) return done(SET_NOT_FOUND); // Unauthorised
 
-        if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
-        
-        done(null, true);
+        var sql = "UPDATE `set` SET " + valueClauses + " WHERE `id` = " + id + " LIMIT 1";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) return done(err);
+
+            if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
+            
+            done(null, true);
+        });
     });
 };
 
@@ -88,15 +101,20 @@ var deleteById = function(req, id, done) {
     // Check for valid inputs
     if (!id) return done(NO_ID);
 
-    // Make the request
-    var sql = "DELETE FROM `set` WHERE `id` = " + id + " LIMIT 1";
-    req.dbConnection.query(sql, function(err, rows, field) {
-        // Check for and return errors
-        if (err) return done(err);
-        if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
+    // Get the set first to validate that the user has access to it
+    getById(req, id, function(err, set) {
+        if (err) return done(SET_NOT_FOUND); // Unauthorised
 
-        // Return result
-        done(null, true);
+        // Make the request
+        var sql = "DELETE FROM `set` WHERE `id` = " + id + " LIMIT 1";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            // Check for and return errors
+            if (err) return done(err);
+            if (rows.affectedRows === 0) return done(SET_NOT_FOUND);
+
+            // Return result
+            done(null, true);
+        });
     });
 };
 

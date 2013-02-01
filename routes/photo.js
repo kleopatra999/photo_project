@@ -1,5 +1,6 @@
 var filestore = require('../utils/filestore'),
     photoData = require('../data/photo'),
+    setData = require('../data/set'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore');
@@ -11,6 +12,9 @@ var filestore = require('../utils/filestore'),
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     // Get the data from the database using the set_id
     photoData.getAllBySetId(req, req.query.set_id, function(err, rows) {
         // Check for and deal with errors
@@ -48,7 +52,8 @@ exports.single = function(req, res) {
     exports.singleWithStatus(req, res, 200);
 };
 exports.singleWithStatus = function(req, res, status) {
-    status = status || 200;
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
 
     photoData.getById(req, req.params.id, function(err, data) {
         // Handle any errors
@@ -67,6 +72,9 @@ exports.singleWithStatus = function(req, res, status) {
  * TODO: Assign to current user instead of default user
  */
 exports.create = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     // We do these before invoking the file stroe because it's such an expensive operation
     if (!req.query.set_id || req.query.set_id.length === 0) {
         return res.json(400, {error: "A set_id is required"});
@@ -75,34 +83,39 @@ exports.create = function(req, res) {
         return res.json(400, {error: "A image/jpeg photo file upload is required"});
     }
 
-    // Upload the images to the file store
-    filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
-        if (err) {
-            console.log('Error uploading image', err);
-            return res.json(500, {error: 'Cannot upload image'});
-        }
+    // Check by fetching that the set is accessible
+    setData.getById(req, req.query.set_id, function(err, set) {
+        if (err) return res.json(404, {error: "No set with that set_id found"});
 
-        // Create the images in the database
-        photoData.create(req, req.query.set_id, req.body.description, urls, function(err, newId) {
-            // Check for and deal with errors
+        // Upload the images to the file store
+        filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
             if (err) {
-                switch (err) {
-                case photoData.NO_SET_ID:
-                    return res.json(400, {error: "A set_id is required"});
-                case photoData.SET_NOT_FOUND:
-                    return res.json(404, {error: "No set with that set_id found"});
-                case photoData.NO_URLS:
-                    return res.json(500, {error: "Cannot upload image"});
-                default:
-                    console.log("Photo create:", err);
-                    return res.json(500, {error: "Unknown server error"});
-                }
+                console.log('Error uploading image', err);
+                return res.json(500, {error: 'Cannot upload image'});
             }
 
-            // A small hack so we can use the same single method
-            req.params.id = newId;
-            // Delegate to the single request to return the data
-            exports.singleWithStatus(req, res, 201);
+            // Create the images in the database
+            photoData.create(req, req.query.set_id, req.body.description, urls, function(err, newId) {
+                // Check for and deal with errors
+                if (err) {
+                    switch (err) {
+                    case photoData.NO_SET_ID:
+                        return res.json(400, {error: "A set_id is required"});
+                    case photoData.SET_NOT_FOUND:
+                        return res.json(404, {error: "No set with that set_id found"});
+                    case photoData.NO_URLS:
+                        return res.json(500, {error: "Cannot upload image"});
+                    default:
+                        console.log("Photo create:", err);
+                        return res.json(500, {error: "Unknown server error"});
+                    }
+                }
+
+                // A small hack so we can use the same single method
+                req.params.id = newId;
+                // Delegate to the single request to return the data
+                exports.singleWithStatus(req, res, 201);
+            });
         });
     });
 };
@@ -116,6 +129,9 @@ exports.create = function(req, res) {
  * TODO: This should be a transaction
  */
 exports.update = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
     // Update the data
     photoData.updateById(req, req.params.id, req.body.description, function(err) {
         // Handle any errors
@@ -141,6 +157,9 @@ exports.update = function(req, res) {
  * TODO: Only allow the owning user to do this
  */
 exports.del = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+    
     photoData.deleteById(req, req.params.id, function(err) {
         // Handle any errors
         if (err) return _handleSinglePhotoError(err, res);

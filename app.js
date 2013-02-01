@@ -35,15 +35,22 @@ app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.use(database.middleware());
     app.use(express.favicon());
-    if (!module.parent) {
+    
+    if (!module.exports.testing) {
         app.use(express.logger('dev')); // Dont log when testing
     }
+
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser('your secret here'));
     app.use(express.session());
     app.use(passport.initialize());
     app.use(passport.session());
+
+    if (module.exports.testing) {
+        app.use(login.fakeUserLogin());
+    }
+
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 });

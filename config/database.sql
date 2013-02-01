@@ -65,5 +65,13 @@ ALTER TABLE `set_user`
 
 
 INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('1', 'Testing', '2012-11-01', '2012-11-02');
+INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('2', 'Only for user 2', '2012-11-01', '2012-11-02');
+
 INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('1', 'default@user.me', SHA1('default'), 'Default User');
+INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('2', 'user@two.me', SHA1('boom'), 'User 2');
+
+INSERT INTO `set_user` (`id`, `set_id`, `user_id`) VALUES ('1', '1', '1');
+INSERT INTO `set_user` (`id`, `set_id`, `user_id`) VALUES ('2', '2', '2');
+
 INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('1', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '1', '1', '2012-11-06 00:00:00', NULL, NULL);
+INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('2', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '2', '2', '2012-11-06 00:00:00', NULL, NULL);
