@@ -102,6 +102,9 @@ var deleteById = function(req, id, done) {
     });
 };
 
+/**
+ * Creates a photo with the given paramters
+ **/
 var create = function(req, setId, description, urls, done) {
     // Check for invalid inputs
     if (!setId) return done(NO_SET_ID);
@@ -114,7 +117,7 @@ var create = function(req, setId, description, urls, done) {
     setData.getById(req, setId, function(err, set) {
         if (err) return done(SET_NOT_FOUND); // Make the user think the set doesn't exist
 
-        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + 1 + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + req.user.id + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
         req.dbConnection.query(sql, function(err, rows, field) {
             if (err) {
                 if (err.code === "ER_NO_REFERENCED_ROW_") {

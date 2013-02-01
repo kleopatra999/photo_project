@@ -1,10 +1,11 @@
-var sqlUtils = require('../utils/sql');
+var sqlUtils = require('../utils/sql'),
+    _ = require('underscore');
 
 /**
  * Returns all the sets
  **/
 var getAll = function(req, done) {
-    var query = "SELECT * FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "'";
+    var query = "SELECT `set`.* FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "'";
     req.dbConnection.query(query, function(err, rows, field) {
         if (err) return done(err); // Unknown error
 
@@ -20,13 +21,14 @@ var getById = function(req, id, done) {
     // Check for valid inputs
     if (!id) return done(NO_ID, null);
 
-    var query = "SELECT * FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "' AND `set`.`id` = '" + id + "' LIMIT 1";
+    var query = "SELECT `set`.* FROM `set` JOIN `set_user` ON `set`.`id` = `set_user`.`set_id` WHERE `user_id` = '" + req.user.id + "' AND `set`.`id` = '" + id + "' LIMIT 1";
     req.dbConnection.query(query, function(err, rows, field) {
         // Check for errors
         if (err) return done(err);
         if (rows.length === 0) return done(SET_NOT_FOUND);
 
-        done(null, rows[0]);
+        var set = rows[0];
+        done(null, set);
     });
 };
 
