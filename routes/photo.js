@@ -1,5 +1,4 @@
-var sqlUtils = require('../utils/sql'),
-    filestore = require('../utils/filestore'),
+var filestore = require('../utils/filestore'),
     photoData = require('../data/photo'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
@@ -147,24 +146,6 @@ exports.del = function(req, res) {
         if (err) return _handleSinglePhotoError(err, res);
         // Delete successful
         res.json(200, {message: "Delete complete"});
-    });
-};
-
-var _getSingle = function(id, dbConnection, callback) {
-    // Make sure we have a valid set id
-    dbConnection.query("SELECT * FROM  `photo` WHERE `id` = '" + id + "' LIMIT 1", function(err, rows, field) {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-
-        // Nothing with that id
-        if (rows.length === 0) {
-            callback("Photo not found with that id", null);
-            return;
-        }
-
-        callback(null, rows[0]);
     });
 };
 
