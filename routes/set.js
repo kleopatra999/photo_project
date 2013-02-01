@@ -28,15 +28,22 @@ exports.list = function(req, res) {
  * TODO: Should only return a set if user has access to it
  */
 exports.single = function(req, res) {
-    req.dbConnection.query("SELECT * FROM  `set` WHERE `id` = '" + req.params.id + "' LIMIT 1", function(err, rows, field) {
-        if (err) throw err;
-
-        if (rows.length === 0) {
-            res.json(404, {error: "No set found with that id"});
-            return;
+    setData.getById(req, req.params.id, function(err, set) {
+        // Check for and handle errors
+        if (err) {
+            if (err == setData.NO_ID) {
+                return res.json(400, {error: "An id is required"});
+            }
+            else if (err == setData.SET_NOT_FOUND) {
+                return res.json(404, {error: "No set found with that id"});
+            }
+            else {
+                console.log("Set single error:", err);
+                return res.json(500, {error: "Unknown error"});
+            }
         }
 
-        var set = rows[0];
+        // Return the set data
         set.photoUrl = urls.getPhotoListUrl(req, set.id);
         res.json(set);
     });
