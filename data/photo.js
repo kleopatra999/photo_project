@@ -89,6 +89,30 @@ var deleteById = function(req, id, done) {
     });
 };
 
+var create = function(req, setId, description, urls, done) {
+    // Check for invalid inputs
+    if (!setId) return done(NO_SET_ID);
+    if (!urls) return done(NO_URLS);
+
+    // Wrap the description up correctly
+    description = sqlUtils.wrapQuotesOrNull(description);
+
+    var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + 1 + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
+    req.dbConnection.query(sql, function(err, rows, field) {
+        if (err) {
+            if (err.code === "ER_NO_REFERENCED_ROW_") {
+                return done(SET_NOT_FOUND);
+            }
+            else {
+                return done(err);
+            }
+        }
+
+        var newId = rows.insertId;
+        return done(null, newId);
+    });
+};
+
 /**
  * Errors
  **/
@@ -96,6 +120,7 @@ var NO_ID = "No id was supplied";
 var PHOTO_NOT_FOUND = "No photo found with that ID";
 var NO_DESCRIPTION = "No description was supplied";
 var NO_SET_ID = "No setId supplied";
+var NO_URLS = "No urls supplied";
 var SET_NOT_FOUND = "No set with that ID";
 
 /**
@@ -106,8 +131,10 @@ module.exports = {
     'getById': getById,
     'updateById': updateById,
     'deleteById': deleteById,
+    'create': create,
 
     'NO_SET_ID': NO_SET_ID,
+    'NO_URLS': NO_URLS,
     'NO_ID': NO_ID,
     'NO_DESCRIPTION': NO_DESCRIPTION,
     'SET_NOT_FOUND': SET_NOT_FOUND,
