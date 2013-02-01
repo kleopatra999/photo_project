@@ -56,6 +56,14 @@ describe('Set', function() {
                 .expect('Content-Type', /json/)
                 .end(done);
         });
+
+        it('should return 404 and json message for a set which no access is granted', function(done) {
+            request(app.server)
+                .get('/set/2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
     });
 
     describe('Creating', function() {
@@ -116,6 +124,14 @@ describe('Set', function() {
                         .end(done);
                 });
         });
+
+        it('should return 404 and json message for a set which no access is granted', function(done) {
+            request(app.server)
+                .del('/set/2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
     });
 
     describe('Updating', function() {
@@ -158,6 +174,23 @@ describe('Set', function() {
                             done();
                         });
                 });
+        });
+
+        it('should return 404 and json message for a set which no access is granted when no changes passed', function(done) {
+            request(app.server)
+                .post('/set/2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 and json message for a set which no access is granted when changes passed', function(done) {
+            request(app.server)
+                .post('/set/2')
+                .send({name: "Changed"})
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
         });
     });
 });

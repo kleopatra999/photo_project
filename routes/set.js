@@ -108,12 +108,14 @@ exports.update = function(req, res) {
 
     setData.updateById(req, req.params.id, req.body.name, req.body.start_date, req.body.end_date, function(err, result) {
         if (err) {
-            if (err == setData.NO_ID) {
+            switch (err) {
+            case setData.NO_ID:
                 return res.json(400, {error: "An id is required"});
-            }
-            else {
+            case setData.SET_NOT_FOUND:
+                return res.json(404, {error: "Set with that id not found"});
+            default:
                 console.log("Error while updating set:", err);
-                return res.json(500, {error: "Unknown error while creating set"});
+                return res.json(500, {error: "Unknown error while updating set"});
             }
         }
 
@@ -134,10 +136,12 @@ exports.del = function(req, res) {
     
     setData.deleteById(req, req.params.id, function(err, result) {
         if (err) {
-            if (err == setData.NO_ID) {
+            switch (err) {
+            case setData.NO_ID:
                 return res.json(400, {error: "An id is required"});
-            }
-            else {
+            case setData.SET_NOT_FOUND:
+                return res.json(404, {error: "Set with that id not found"});
+            default:
                 console.log("Error while deleting set:", err);
                 return res.json(500, {error: "Unknown error while deleting set"});
             }
