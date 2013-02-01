@@ -1,4 +1,5 @@
 var sqlUtils = require('../utils/sql'),
+    setData = require('../data/set'),
     urls = require('../utils/urls'),
     _ = require('underscore');
 
@@ -7,8 +8,8 @@ var sqlUtils = require('../utils/sql'),
  * TODO: Should only return sets user has access to
  */
 exports.list = function(req, res) {
-    req.dbConnection.query("SELECT * FROM  `set`", function(err, rows, field) {
-        if (err) throw err;
+    setData.getAll(req, function(err, rows) {
+        if (err) return res.json(500, {error: 'Unknown error while getting sets'});
 
         _.each(rows, function(row) {
             row.url = urls.getSetUrl(req, row.id);
