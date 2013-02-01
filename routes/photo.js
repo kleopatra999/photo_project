@@ -1,5 +1,6 @@
 var filestore = require('../utils/filestore'),
     photoData = require('../data/photo'),
+    setData = require('../data/set'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore');
@@ -82,34 +83,39 @@ exports.create = function(req, res) {
         return res.json(400, {error: "A image/jpeg photo file upload is required"});
     }
 
-    // Upload the images to the file store
-    filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
-        if (err) {
-            console.log('Error uploading image', err);
-            return res.json(500, {error: 'Cannot upload image'});
-        }
+    // Check by fetching that the set is accessible
+    setData.getById(req, req.query.set_id, function(err, set) {
+        if (err) return res.json(404, {error: "No set with that set_id found"});
 
-        // Create the images in the database
-        photoData.create(req, req.query.set_id, req.body.description, urls, function(err, newId) {
-            // Check for and deal with errors
+        // Upload the images to the file store
+        filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
             if (err) {
-                switch (err) {
-                case photoData.NO_SET_ID:
-                    return res.json(400, {error: "A set_id is required"});
-                case photoData.SET_NOT_FOUND:
-                    return res.json(404, {error: "No set with that set_id found"});
-                case photoData.NO_URLS:
-                    return res.json(500, {error: "Cannot upload image"});
-                default:
-                    console.log("Photo create:", err);
-                    return res.json(500, {error: "Unknown server error"});
-                }
+                console.log('Error uploading image', err);
+                return res.json(500, {error: 'Cannot upload image'});
             }
 
-            // A small hack so we can use the same single method
-            req.params.id = newId;
-            // Delegate to the single request to return the data
-            exports.singleWithStatus(req, res, 201);
+            // Create the images in the database
+            photoData.create(req, req.query.set_id, req.body.description, urls, function(err, newId) {
+                // Check for and deal with errors
+                if (err) {
+                    switch (err) {
+                    case photoData.NO_SET_ID:
+                        return res.json(400, {error: "A set_id is required"});
+                    case photoData.SET_NOT_FOUND:
+                        return res.json(404, {error: "No set with that set_id found"});
+                    case photoData.NO_URLS:
+                        return res.json(500, {error: "Cannot upload image"});
+                    default:
+                        console.log("Photo create:", err);
+                        return res.json(500, {error: "Unknown server error"});
+                    }
+                }
+
+                // A small hack so we can use the same single method
+                req.params.id = newId;
+                // Delegate to the single request to return the data
+                exports.singleWithStatus(req, res, 201);
+            });
         });
     });
 };

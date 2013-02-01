@@ -39,6 +39,14 @@ describe('Photo', function() {
                     done();
                 });
         });
+
+        it('should return 404 and json message for set where access is not granted', function(done) {
+            request(app.server)
+                .get('/photo?set_id=2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
     });
 
     describe('single', function() {
@@ -63,6 +71,14 @@ describe('Photo', function() {
                 .expect('Content-Type', /json/)
                 .end(done);
         });
+
+        it('should return 404 with json message for photo in set where access isn\'t granted', function(done) {
+            request(app.server)
+                .get('/photo/2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
     });
 
     describe('Creating', function() {
@@ -77,6 +93,15 @@ describe('Photo', function() {
         it('should return 404 if the set_id provided does not exist', function(done) {
             request(app.server)
                 .post('/photo/?set_id=1000')
+                .attach('photo', 'test/fixtures/uok.jpg')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 with json message when creating photo in set where access isn\'t granted', function(done) {
+            request(app.server)
+                .post('/photo?set_id=2')
                 .attach('photo', 'test/fixtures/uok.jpg')
                 .expect(404)
                 .expect('Content-Type', /json/)
@@ -120,6 +145,14 @@ describe('Photo', function() {
             request(app.server)
                 .del('/photo/1')
                 .expect(200)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 with json message when deleting photo in set where access isn\'t granted', function(done) {
+            request(app.server)
+                .del('/photo/2')
+                .expect(404)
                 .expect('Content-Type', /json/)
                 .end(done);
         });
@@ -179,6 +212,23 @@ describe('Photo', function() {
                             done();
                         });
                 });
+        });
+
+        it('should return 404 with json message when updating photo with no changes in set where access isn\'t granted', function(done) {
+            request(app.server)
+                .post('/photo/2')
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
+        });
+
+        it('should return 404 with json message when updating photo with changes in set where access isn\'t granted', function(done) {
+            request(app.server)
+                .post('/photo/2')
+                .send({description: "Changed"})
+                .expect(404)
+                .expect('Content-Type', /json/)
+                .end(done);
         });
     });
 });
