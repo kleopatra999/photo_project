@@ -5,11 +5,12 @@ App.routers.Router = Backbone.Router.extend({
         '': 'showHome',
         'home': 'showHome',
         'set/new': 'showNewSet',
-        'set/:setId/photos': 'showPhotoList'
+        'set/:setId/photos': 'showPhotoList',
+        'login': 'showLogin'
     },
 
     initialize: function (options) {
-        _.bindAll(this, 'showHome', '_handleAllSetsData', 'showNewSet', 'showPhotoList', '_handleAllPhotosData', '_handleAllSetsDataPhoto');
+        _.bindAll(this, 'showHome', '_handleAllSetsData', 'showNewSet', 'showPhotoList', '_handleAllPhotosData', '_handleAllSetsDataPhoto', 'showLogin');
     },
 
     // Home
@@ -65,5 +66,11 @@ App.routers.Router = Backbone.Router.extend({
     _handleAllPhotosData: function(sets) {
         App.dataController.unbind(App.dataController.PHOTOS_DATA_READY, this._handleAllPhotoData);
         this.showPhotoList(this._lastSetId);
+    },
+
+    // Login
+    showLogin: function() {
+        App.loginView.render();
+        App.viewController.showLoginView();
     }
 });

@@ -111,6 +111,29 @@
             {{/if}}
         </div>
     </script>
+    <script id="loginViewTemplate" type="text/x-handlebars-template">
+        <div class="container">
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" for="email">Email</label>
+                    <div class="controls">
+                        <input type="text" id="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="password">Password</label>
+                    <div class="controls">
+                        <input type="password" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
 
     <!-- LIBS -->
     <script src="js/libs/base64.js"></script>
@@ -138,6 +161,7 @@
     <script src="js/views/HomeView.js"></script>
     <script src="js/views/NewSetView.js"></script>
     <script src="js/views/PhotoListView.js"></script>
+    <script src="js/views/LoginView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -162,6 +186,7 @@
             <div id="homeView" class="view selected"></div>
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
+            <div id="loginView" class="view"></div>
         </div>
     </div>
 </body>

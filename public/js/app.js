@@ -36,6 +36,9 @@ App.appController = (function() {
             el: $('#photoListView'),
             model: App.models.Photo
         });
+        App.loginView = new App.views.LoginView({
+            el: $('#loginView')
+        });
 
         // Create the router
         App.router = new App.routers.Router();
