@@ -57,7 +57,7 @@ App.dataController = (function() {
         // Make the login request
         var loginRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Logged in');
-            self.trigger(USER_LOGGED_IN, user);
+            self.trigger(USER_LOGGED_IN, null); // TODO: Should pass back the user object from the API
         });
 
         // Set an error handler to listen out for incorrect logins

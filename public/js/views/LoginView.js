@@ -1,5 +1,6 @@
 App.views = App.views || {};
 
+// TODO: Should have some form of loading indication
 App.views.LoginView = Backbone.View.extend({
     template: Handlebars.compile($('#loginViewTemplate').html()),
 
@@ -17,11 +18,26 @@ App.views.LoginView = Backbone.View.extend({
     },
 
     _loginSubmitClicked: function() {
+        // Get the user details
         var email = this.$el.find('input#email').val();
         var password = this.$el.find('input#password').val();
-        console.log('Should now login...', email, password);
+
+        // Register for callbacks from the data controller
+        App.dataController.bind(App.dataController.USER_LOGGED_IN, this._loginComplete);
+        App.dataController.bind(App.dataController.USER_LOGIN_FAILED, this._loginFailed);
+
+        // Make the request
         App.dataController.login(email, password);
+
+        // Return false to keep us on the same page
         return false;
+    },
+    _loginComplete: function(user) {
+        console.log('View login complete');
+        App.router.navigate('/', {trigger: true});
+    },
+    _loginFailed: function() {
+        console.log('View login failed');
     }
 });
 
