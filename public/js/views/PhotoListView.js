@@ -18,6 +18,8 @@ App.views.PhotoListView = Backbone.View.extend({
         this.collection.bind('add', this.render);
         this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
+
+        App.localDataController.bind(App.localDataController.FILE_LOADED, this._saveNewPhoto);
     },
 
     render: function() {
@@ -87,35 +89,24 @@ App.views.PhotoListView = Backbone.View.extend({
                 continue;
             }
 
-            // Read the file in as a data url
-            var reader = new FileReader();
-            reader.onload = this._saveNewPhoto(file);
-            reader.readAsBinaryString(file);
+            App.localDataController.addToQueue(file);
         }
     },
-    _saveNewPhoto: function(file) {
+    _saveNewPhoto: function(file, base64String, exif) {
         var self = this;
-        return (function(theFile) {
-            return function(e) {
-                var fileString = e.target.result;
-                var base64String = 'data:image/png;base64,' + base64_encode(fileString);
-                var exif = EXIF.readFromBinaryFile(new BinaryFile(e.target.result));
-                console.log('EXIF', exif);
-
-                var newPhoto = new App.models.Photo({
-                    setId: self.setCollection.toJSON()[0].id,
-                    tempName: theFile.name,
-                    localFile: base64String,
-                    localFileBlob: theFile
-                });
-                self.collection.add(newPhoto);
-                newPhoto.save(null, {
-                    progress: function(progress) {
-                        var $progressBar = self.$el.find('.bar').filter('[data-file=' + theFile.name + ']');
-                        $progressBar.width(progress + '%');
-                    }
-                });
-            };
-        })(file);
+        
+        var newPhoto = new App.models.Photo({
+            setId: this.setCollection.toJSON()[0].id,
+            tempName: file.name,
+            localFile: base64String,
+            localFileBlob: file
+        });
+        this.collection.add(newPhoto);
+        newPhoto.save(null, {
+            progress: function(progress) {
+                var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
+                $progressBar.width(progress + '%');
+            }
+        });
     }
 });
