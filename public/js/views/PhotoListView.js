@@ -102,11 +102,11 @@ App.views.PhotoListView = Backbone.View.extend({
             localFileBlob: file
         });
         this.collection.add(newPhoto);
-        newPhoto.save(null, {
-            progress: function(progress) {
-                var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
-                $progressBar.width(progress + '%');
-            }
-        });
+        // newPhoto.save(null, {
+        //     progress: function(progress) {
+        //         var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
+        //         $progressBar.width(progress + '%');
+        //     }
+        // });
     }
 });
