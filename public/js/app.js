@@ -36,12 +36,22 @@ App.appController = (function() {
             el: $('#photoListView'),
             model: App.models.Photo
         });
+        App.loginView = new App.views.LoginView({
+            el: $('#loginView')
+        });
 
         // Create the router
         App.router = new App.routers.Router();
 
         // And start Backbone history
         Backbone.history.start();
+
+        // Setup a listener which will redirect to the login page whenever it gets an unauthorized request
+        $(document).ajaxError(function(event, request, settings) {
+            if (request.status === 401) {
+                App.router.navigate('/login', {trigger: true});
+            }
+        });
     };
 
     return {
