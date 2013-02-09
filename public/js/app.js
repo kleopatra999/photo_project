@@ -18,8 +18,9 @@ App.appController = (function() {
         App.currentPhotoStore = new App.collections.PhotoStore();
 
         // Initialise our controllers
-        App.viewController.init();
         App.dataController.init();
+        App.localDataController.init();
+        App.viewController.init();
 
         // Create our views
         App.homeView = new App.views.HomeView({
