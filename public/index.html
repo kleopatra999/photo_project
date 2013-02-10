@@ -109,15 +109,13 @@
             </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
-                <ul class="thumbnails">
-                    {{#each photos}}
-                        <li class="span12 thumbnail upload">
-                            <img src="{{localFile}}" alt="Uploading...">
-                            <p class="description">{{description}}</p>
-                            <p class="date">{{date_taken}}</p>
-                        </li>
-                    {{/each}}
-                </ul>
+                {{#each photos}}
+                    <div class="span12 thumbnail upload">
+                        <img src="{{localFile}}" alt="Uploading...">
+                        <p class="description">{{description}}</p>
+                        <p class="date">{{date_taken}}</p>
+                    </div>
+                {{/each}}
             {{else}}
                 <p>Drag & Drop to Add Photos</p>
             {{/if}}
