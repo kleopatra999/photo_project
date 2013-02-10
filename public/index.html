@@ -111,10 +111,10 @@
             {{#if photos}}
                 <ul class="thumbnails">
                     {{#each photos}}
-                        <li class="span12 thumbnail">
+                        <li class="span12 thumbnail upload">
                             <img src="{{localFile}}" alt="Uploading...">
-                            <p>{{description}}</p>
-                            <p>{{date_taken}}</p>
+                            <p class="description">{{description}}</p>
+                            <p class="date">{{date_taken}}</p>
                         </li>
                     {{/each}}
                 </ul>
