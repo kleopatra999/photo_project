@@ -2,15 +2,13 @@ App.views = App.views || {};
 
 App.views.PhotoListView = Backbone.View.extend({
     template: Handlebars.compile($('#photoListViewTemplate').html()),
-    $dropzone: null,
-    $fileUpload: null,
 
     events: {
         'click #uploadBtn': '_uploadClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_uploadFiles', '_saveNewPhoto');
+        _.bindAll(this, 'render', '_uploadClicked');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -32,81 +30,17 @@ App.views.PhotoListView = Backbone.View.extend({
             photos: photos
         }));
 
-        // Set the drag and drop listeners
-        this.$dropzone = this.$el.find('#dropzone');
-        var dropzone = this.$dropzone.get(0); // Gets the DOM element from jQuery. Not sure if this is actually quicker
-        dropzone.addEventListener('dragleave', this._handleDragLeave, false);
-        dropzone.addEventListener('dragover', this._handleDragOver, false);
-        dropzone.addEventListener('drop', this._handleDrop, false);
-
-        // Set the listeners for the manual file upload
-        this.$fileUpload = this.$el.find('#fileUpload');
-        var fileUpload = this.$fileUpload.get(0);
-        fileUpload.addEventListener('change', this._handleFileUpload, false);
-
         return this;
     },
 
     _uploadClicked: function() {
-        this.$fileUpload.click();
-    },
+        var set = this.setCollection.toJSON()[0];
 
-    _handleDragLeave: function(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-
-        this.$dropzone.removeClass('dragging');
-    },
-    _handleDragOver: function(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        evt.dataTransfer.dropEffect = "copy";
-
-        this.$dropzone.addClass('dragging');
-    },
-    _handleDrop: function(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-
-        this.$dropzone.removeClass('dragging');
-
-        var files = evt.dataTransfer.files; // FileList object
-        this._uploadFiles(files);
-    },
-    _handleFileUpload: function(evt) {
-        var files = evt.target.files; // FileList object
-        this._uploadFiles(files);
-    },
-    _uploadFiles: function(files) {
-        // Loop through the FileList and render image files as thumbnails.
-        var file;
-        for (var i = 0; i < files.length; i++) {
-            file = files[i];
-
-            // Only process image files.
-            if (!file.type.match('image/jpeg')) {
-                console.log("Ignoring:", file);
-                continue;
-            }
-
-            App.localDataController.addToQueue(file);
+        if (set) {
+            App.router.navigate('/set/' + set.id + '/upload', {trigger: true});
         }
-    },
-    _saveNewPhoto: function(file, base64String, exif) {
-        var self = this;
-        
-        var newPhoto = new App.models.Photo({
-            setId: this.setCollection.toJSON()[0].id,
-            tempName: file.name,
-            localFile: base64String,
-            localFileBlob: file
-        });
-        this.collection.add(newPhoto);
-        // newPhoto.save(null, {
-        //     progress: function(progress) {
-        //         var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
-        //         $progressBar.width(progress + '%');
-        //     }
-        // });
+        else {
+            console.log('We dont have a set...');
+        }
     }
 });

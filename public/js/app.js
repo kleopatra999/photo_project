@@ -37,6 +37,12 @@ App.appController = (function() {
             el: $('#photoListView'),
             model: App.models.Photo
         });
+        App.photoUploadView = new App.views.PhotoUploadView({
+            collection: App.currentPhotoStore,
+            setCollection: App.selectedSetStore,
+            el: $('#photoUploadView'),
+            model: App.models.Photo
+        });
         App.loginView = new App.views.LoginView({
             el: $('#loginView')
         });
