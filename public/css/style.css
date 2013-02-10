@@ -2,7 +2,7 @@ body {
     padding-top: 60px;
 }
 
-div#content {
+#content {
     position: relative;
 }
 
@@ -24,6 +24,23 @@ div#content {
     opacity: 0.25;
 }
 
-.pull-right.title-align {
+.title-align {
     margin-top: 16px;
+}
+
+/*.upload {
+}*/
+.upload img {
+    float: left;
+    width: 100px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+.upload .description {
+    font-size: 1.3em;
+    margin: 15px 0 5px 0;
+}
+.upload .date {
+    font-size: 1.1em;
+    font-style: italic;
 }

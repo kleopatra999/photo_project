@@ -19,6 +19,9 @@ App.viewController = (function() {
             photoList: {
                 el: $('#photoListView')
             },
+            photoUpload: {
+                el: $('#photoUploadView')
+            },
             login: {
                 el: $('#loginView')
             }
@@ -44,6 +47,9 @@ App.viewController = (function() {
     },
     showPhotoListView = function() {
         _showView('photoList');
+    },
+    showPhotoUploadView = function() {
+        _showView('photoUpload');
     },
     showLoginView = function() {
         _showView('login');
@@ -78,6 +84,7 @@ App.viewController = (function() {
         showHomeView: showHomeView,
         showNewSetView: showNewSetView,
         showPhotoListView: showPhotoListView,
+        showPhotoUploadView: showPhotoUploadView,
         showLoginView: showLoginView
     };
 

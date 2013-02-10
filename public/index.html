@@ -81,9 +81,8 @@
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
-        <div class="container" id="dropzone">
+        <div class="container">
             <div class="pull-right title-align">
-                <input id="fileUpload" type="file" style="visibility:hidden;"/>
                 <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
             </div>
             <h2>{{set.name}}</h2>
@@ -91,23 +90,34 @@
                 <ul class="thumbnails">
                     {{#each photos}}
                         <li class="clearfix span2">
-                            {{#if localFile}}
-                                <a href="" class="thumbnail">
-                                    <img src="{{localFile}}" class="processing" alt="Uploading...">
-                                    <div class="progress">
-                                        <div class="bar" data-file="{{tempName}}" style="width: 0%;"></div>
-                                    </div>
-                                </a>
-                            {{else}}
-                                <a href="#/photo/{{id}}" class="thumbnail">
-                                    <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
-                                </a>
-                            {{/if}}
+                            <a href="#/photo/{{id}}" class="thumbnail">
+                                <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
+                            </a>
                         </li>
                     {{/each}}
                 </ul>
             {{else}}
                 <p>No photos</p>
+            {{/if}}
+        </div>
+    </script>
+    <script id="photoUploadViewTemplate" type="text/x-handlebars-template">
+        <div class="container" id="dropzone">
+            <div class="pull-right title-align">
+                <input id="fileUpload" type="file" style="visibility:hidden;"/>
+                <button id="uploadBtn" class="btn btn-primary">Select Photos</button>
+            </div>
+            <h2>{{set.name}}</h2>
+            {{#if photos}}
+                {{#each photos}}
+                    <div class="span12 thumbnail upload">
+                        <img src="{{localFile}}" alt="Uploading...">
+                        <p class="description">{{description}}</p>
+                        <p class="date">{{date_taken}}</p>
+                    </div>
+                {{/each}}
+            {{else}}
+                <p>Drag & Drop to Add Photos</p>
             {{/if}}
         </div>
     </script>
@@ -140,6 +150,7 @@
     <script src="js/libs/json2.js"></script>
     <script src="js/libs/binaryajax.js"></script>
     <script src="js/libs/exif.js"></script>
+    <script src="js/libs/date.js"></script>
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="js/libs/bootstrap.js"></script>
     <script src="js/libs/bootstrap-datepicker.js"></script>
@@ -162,6 +173,7 @@
     <script src="js/views/HomeView.js"></script>
     <script src="js/views/NewSetView.js"></script>
     <script src="js/views/PhotoListView.js"></script>
+    <script src="js/views/PhotoUploadView.js"></script>
     <script src="js/views/LoginView.js"></script>
 
     <script>
@@ -184,9 +196,10 @@
         </div>
         <div id="content" class="row-fluid">
             <!--Body content-->
-            <div id="homeView" class="view selected"></div>
+            <div id="homeView" class="view"></div>
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
+            <div id="photoUploadView" class="view"></div>
             <div id="loginView" class="view"></div>
         </div>
     </div>
