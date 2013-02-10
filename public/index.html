@@ -16,9 +16,8 @@
 
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/bootstrap.css?v=1">
-    <link rel="stylesheet" href="css/datepicker.css?v=1">
-    <link rel="stylesheet" href="css/style.css?v=1">
+    <link rel="stylesheet" href="css/lib/simplegrid.css?v=1">
+    <link rel="stylesheet" href="css/bin/style.css?v=1">
 
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
@@ -183,25 +182,23 @@
     </script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <a class="brand" href="#">Shoto</a>
-                <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
-            </div>
+    <div class="navbar">
+        <ul class="items">
+            <li>
+                <a class="root" href="#">Shoto</a>
+            </li>
+            <li>
+                <a class="current">Album Title</a>
+            </li>
         </div>
-        <div id="content" class="row-fluid">
-            <!--Body content-->
-            <div id="homeView" class="view"></div>
-            <div id="newSetView" class="view"></div>
-            <div id="photoListView" class="view"></div>
-            <div id="photoUploadView" class="view"></div>
-            <div id="loginView" class="view"></div>
-        </div>
+    </div>
+    <div id="content" class="row-fluid">
+        <!--Body content-->
+        <div id="homeView" class="view"></div>
+        <div id="newSetView" class="view"></div>
+        <div id="photoListView" class="view"></div>
+        <div id="photoUploadView" class="view"></div>
+        <div id="loginView" class="view"></div>
     </div>
 </body>
 </html>
