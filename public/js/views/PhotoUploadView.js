@@ -6,11 +6,12 @@ App.views.PhotoUploadView = Backbone.View.extend({
     $fileUpload: null,
 
     events: {
+        'click #selectBtn': '_selectClicked',
         'click #uploadBtn': '_uploadClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_uploadFiles', '_saveNewPhoto');
+        _.bindAll(this, 'render', '_selectClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_loadFiles', '_createNewPhoto', '_uploadClicked', '_uploadComplete');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -19,7 +20,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
 
-        App.localDataController.bind(App.localDataController.FILE_LOADED, this._saveNewPhoto);
+        App.localDataController.bind(App.localDataController.FILE_LOADED, this._createNewPhoto);
     },
 
     render: function() {
@@ -53,7 +54,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         return this;
     },
 
-    _uploadClicked: function() {
+    _selectClicked: function() {
         this.$fileUpload.click();
     },
 
@@ -77,13 +78,13 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.$dropzone.removeClass('dragging');
 
         var files = evt.dataTransfer.files; // FileList object
-        this._uploadFiles(files);
+        this._loadFiles(files);
     },
     _handleFileUpload: function(evt) {
         var files = evt.target.files; // FileList object
-        this._uploadFiles(files);
+        this._loadFiles(files);
     },
-    _uploadFiles: function(files) {
+    _loadFiles: function(files) {
         // Loop through the FileList and render image files as thumbnails.
         var file;
         for (var i = 0; i < files.length; i++) {
@@ -98,7 +99,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
             App.localDataController.addToQueue(file);
         }
     },
-    _saveNewPhoto: function(file, base64String, exif) {
+    _createNewPhoto: function(file, base64String, exif) {
         var self = this;
 
         console.log(exif.DateTimeDigitized);
@@ -113,11 +114,34 @@ App.views.PhotoUploadView = Backbone.View.extend({
             localFileBlob: file
         });
         this.collection.add(newPhoto);
-        // newPhoto.save(null, {
-        //     progress: function(progress) {
-        //         var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
-        //         $progressBar.width(progress + '%');
-        //     }
-        // });
+    },
+
+    _expectedUploads: 0,
+    _returnedUploads: 0,
+    _uploadClicked: function() {
+        var self = this;
+
+        self._expectedUploads = this.collection.length;
+        self._returnedUploads = 0;
+
+        this.collection.each(function(model) {
+            model.save(null, {
+                success: self._uploadComplete
+            });
+        });
+    },
+    _uploadComplete: function() {
+        this._returnedUploads++;
+
+        if (self._returnedUploads == self._expectedUploads) {
+             var set = this.setCollection.toJSON()[0];
+
+            if (set) {
+                App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+            }
+            else {
+                console.log('We dont have a set...');
+            }
+        }
     }
 });
