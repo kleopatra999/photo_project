@@ -22,7 +22,7 @@
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
-        <div class="container">
+        <div class="grid grid-pad">
             <div class="pull-right title-align">
                 <button class="newSet btn btn-primary">New Album</button>
             </div>
@@ -182,8 +182,8 @@
     </script>
 </head>
 <body>
-    <div class="navbar">
-        <ul class="items">
+    <nav class="main">
+        <ul>
             <li>
                 <a class="root" href="#">Shoto</a>
             </li>
@@ -191,7 +191,7 @@
                 <a class="current">Album Title</a>
             </li>
         </div>
-    </div>
+    </nav>
     <div id="content" class="row-fluid">
         <!--Body content-->
         <div id="homeView" class="view"></div>
