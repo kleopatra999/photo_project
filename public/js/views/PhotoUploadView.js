@@ -11,7 +11,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_selectClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_loadFiles', '_createNewPhoto', '_uploadClicked', '_uploadComplete');
+        _.bindAll(this, 'render', '_selectClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_loadFiles', '_createNewPhoto', '_uploadClicked', '_nextUpload', '_uploadComplete');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -116,32 +116,39 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.collection.add(newPhoto);
     },
 
-    _expectedUploads: 0,
-    _returnedUploads: 0,
+    _uploadQueue: [],
     _uploadClicked: function() {
         var self = this;
 
-        self._expectedUploads = this.collection.length;
-        self._returnedUploads = 0;
-
         this.collection.each(function(model) {
-            model.save(null, {
-                success: self._uploadComplete
-            });
+            self._uploadQueue.push(model);
         });
+
+        this._nextUpload();
+    },
+    _nextUpload: function() {
+        console.log('_nextUpload', 'Queue length', this._uploadQueue.length);
+        if (this._uploadQueue.length > 0) {
+            var self = this;
+
+            var model = this._uploadQueue.pop();
+            model.save(null, {
+                success: self._nextUpload
+            });
+        }
+        else {
+            this._uploadComplete();
+        }
     },
     _uploadComplete: function() {
-        this._returnedUploads++;
+        console.log('_uploadComplete', 'Queue length', this._uploadQueue.length);
+        var set = this.setCollection.toJSON()[0];
 
-        if (self._returnedUploads == self._expectedUploads) {
-             var set = this.setCollection.toJSON()[0];
-
-            if (set) {
-                App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
-            }
-            else {
-                console.log('We dont have a set...');
-            }
+        if (set) {
+            App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+        }
+        else {
+            console.log('We dont have a set...');
         }
     }
 });
