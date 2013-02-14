@@ -29,11 +29,6 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
 
-        // Sort the photos by the timestamp in the EXIF metadata
-        photos = _.sortBy(photos, function(photo) {
-            return photo.date_taken;
-        });
-
         this.$el.html(this.template({
             set: set,
             photos: photos
