@@ -11,7 +11,17 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_selectClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_loadFiles', '_createNewPhoto', '_uploadClicked', '_nextUpload', '_uploadComplete');
+        _.bindAll(this, 'render',
+                        '_selectClicked',
+                        '_handleDragLeave',
+                        '_handleDragOver',
+                        '_handleDrop',
+                        '_handleFileUpload',
+                        '_loadFiles',
+                        '_createNewPhoto',
+                        '_uploadClicked',
+                        '_nextUpload',
+                        '_uploadComplete');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -24,6 +34,8 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     render: function() {
+        var self = this;
+
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
@@ -45,6 +57,15 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.$fileUpload = this.$el.find('#fileUpload');
         var fileUpload = this.$fileUpload.get(0);
         fileUpload.addEventListener('change', this._handleFileUpload, false);
+
+        $(".description").editable(function(value, settings) {
+            var $this = $(this);
+            var index = $this.parent().attr('data-index');
+            var photo = self.collection.at(index);
+            photo.set('description', value);
+
+            return value;
+        });
 
         return this;
     },
