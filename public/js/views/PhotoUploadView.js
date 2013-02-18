@@ -147,7 +147,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         if (this._uploadQueue.length > 0) {
             var self = this;
 
-            var model = this._uploadQueue.pop();
+            var model = this._uploadQueue.shift();
             model.save(null, {
                 success: self._nextUpload
             });
