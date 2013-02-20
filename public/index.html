@@ -105,17 +105,18 @@
         <div class="container" id="dropzone">
             <div class="pull-right title-align">
                 <input id="fileUpload" type="file" style="visibility:hidden;"/>
-                <button id="uploadBtn" class="btn btn-primary">Select Photos</button>
+                <button id="selectBtn" class="btn">Select Photos</button>
+                <button id="uploadBtn" class="btn btn-primary">Upload</button>
             </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
-                {{#each photos}}
-                    <div class="span12 thumbnail upload">
+                {{#iter photos}}
+                    <div class="span12 thumbnail upload" data-index="{{i}}">
                         <img src="{{localFile}}" alt="Uploading...">
                         <p class="description">{{description}}</p>
                         <p class="date">{{date_taken}}</p>
                     </div>
-                {{/each}}
+                {{/iter}}
             {{else}}
                 <p>Drag & Drop to Add Photos</p>
             {{/if}}
@@ -152,6 +153,7 @@
     <script src="js/libs/exif.js"></script>
     <script src="js/libs/date.js"></script>
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <script src="js/libs/jquery.jeditable.js"></script>
     <script src="js/libs/bootstrap.js"></script>
     <script src="js/libs/bootstrap-datepicker.js"></script>
     <script src="js/libs/handlebars.js"></script>

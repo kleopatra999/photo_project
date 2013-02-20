@@ -39,6 +39,10 @@ App.collections.PhotoStore = Backbone.Collection.extend({
     initialize: function() {
     },
 
+    comparator: function(photo) {
+        return photo.get('date_taken');
+    },
+
     getAll: function() {
         if (this.models.length === 0) {
             return null;

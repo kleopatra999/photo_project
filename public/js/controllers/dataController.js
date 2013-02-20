@@ -6,7 +6,7 @@ App.dataController = (function() {
     var USER_LOGIN_FAILED = "DATA_CONTROLLER_USER_LOGIN_FAILED";
 
     var init = function() {
-        _.bindAll(this, 'getSets', 'getPhotos', 'createSet', 'login');
+        _.bindAll(this, 'getSets', 'getPhotos', 'clearPhotos', 'createSet', 'login');
         _.extend(this, Backbone.Events);
     };
 
@@ -29,6 +29,12 @@ App.dataController = (function() {
                 self.trigger(PHOTOS_DATA_READY, collection, setId);
             }
         });
+    };
+
+    var clearPhotos = function() {
+        App.photoStore.setId = -1;
+        App.photoStore.fetched = false;
+        App.photoStore.reset();
     };
 
     var createSet = function(data) {
@@ -77,6 +83,7 @@ App.dataController = (function() {
         init: init,
         getSets: getSets,
         getPhotos: getPhotos,
+        clearPhotos: clearPhotos,
         createSet: createSet,
         login: login
     };

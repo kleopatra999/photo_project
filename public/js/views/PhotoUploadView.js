@@ -6,11 +6,22 @@ App.views.PhotoUploadView = Backbone.View.extend({
     $fileUpload: null,
 
     events: {
+        'click #selectBtn': '_selectClicked',
         'click #uploadBtn': '_uploadClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked', '_handleDragLeave', '_handleDragOver', '_handleDrop', '_handleFileUpload', '_uploadFiles', '_saveNewPhoto');
+        _.bindAll(this, 'render',
+                        '_selectClicked',
+                        '_handleDragLeave',
+                        '_handleDragOver',
+                        '_handleDrop',
+                        '_handleFileUpload',
+                        '_loadFiles',
+                        '_createNewPhoto',
+                        '_uploadClicked',
+                        '_nextUpload',
+                        '_uploadComplete');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -19,19 +30,16 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
 
-        App.localDataController.bind(App.localDataController.FILE_LOADED, this._saveNewPhoto);
+        App.localDataController.bind(App.localDataController.FILE_LOADED, this._createNewPhoto);
     },
 
     render: function() {
+        var self = this;
+
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
-
-        // Sort the photos by the timestamp in the EXIF metadata
-        photos = _.sortBy(photos, function(photo) {
-            return photo.date_taken;
-        });
 
         this.$el.html(this.template({
             set: set,
@@ -50,10 +58,19 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var fileUpload = this.$fileUpload.get(0);
         fileUpload.addEventListener('change', this._handleFileUpload, false);
 
+        $(".description").editable(function(value, settings) {
+            var $this = $(this);
+            var index = $this.parent().attr('data-index');
+            var photo = self.collection.at(index);
+            photo.set('description', value);
+
+            return value;
+        });
+
         return this;
     },
 
-    _uploadClicked: function() {
+    _selectClicked: function() {
         this.$fileUpload.click();
     },
 
@@ -77,13 +94,13 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.$dropzone.removeClass('dragging');
 
         var files = evt.dataTransfer.files; // FileList object
-        this._uploadFiles(files);
+        this._loadFiles(files);
     },
     _handleFileUpload: function(evt) {
         var files = evt.target.files; // FileList object
-        this._uploadFiles(files);
+        this._loadFiles(files);
     },
-    _uploadFiles: function(files) {
+    _loadFiles: function(files) {
         // Loop through the FileList and render image files as thumbnails.
         var file;
         for (var i = 0; i < files.length; i++) {
@@ -98,7 +115,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
             App.localDataController.addToQueue(file);
         }
     },
-    _saveNewPhoto: function(file, base64String, exif) {
+    _createNewPhoto: function(file, base64String, exif) {
         var self = this;
 
         console.log(exif.DateTimeDigitized);
@@ -113,11 +130,42 @@ App.views.PhotoUploadView = Backbone.View.extend({
             localFileBlob: file
         });
         this.collection.add(newPhoto);
-        // newPhoto.save(null, {
-        //     progress: function(progress) {
-        //         var $progressBar = self.$el.find('.bar').filter('[data-file=' + file.name + ']');
-        //         $progressBar.width(progress + '%');
-        //     }
-        // });
+    },
+
+    _uploadQueue: [],
+    _uploadClicked: function() {
+        var self = this;
+
+        this.collection.each(function(model) {
+            self._uploadQueue.push(model);
+        });
+
+        this._nextUpload();
+    },
+    _nextUpload: function() {
+        console.log('_nextUpload', 'Queue length', this._uploadQueue.length);
+        if (this._uploadQueue.length > 0) {
+            var self = this;
+
+            var model = this._uploadQueue.shift();
+            model.save(null, {
+                success: self._nextUpload
+            });
+        }
+        else {
+            this._uploadComplete();
+        }
+    },
+    _uploadComplete: function() {
+        console.log('_uploadComplete', 'Queue length', this._uploadQueue.length);
+        var set = this.setCollection.toJSON()[0];
+
+        if (set) {
+            App.dataController.clearPhotos();
+            App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+        }
+        else {
+            console.log('We dont have a set...');
+        }
     }
 });
