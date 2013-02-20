@@ -161,6 +161,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var set = this.setCollection.toJSON()[0];
 
         if (set) {
+            App.dataController.clearPhotos();
             App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
         }
         else {
