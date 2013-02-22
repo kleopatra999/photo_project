@@ -125,7 +125,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var newPhoto = new App.models.Photo({
             setId: this.setCollection.toJSON()[0].id,
             description: file.name,
-            date_taken: timestamp,
+            date_taken: timestamp.toISOString(),
             localFile: base64String,
             localFileBlob: file
         });

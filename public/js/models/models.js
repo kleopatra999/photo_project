@@ -46,6 +46,8 @@ App.models.Photo = Backbone.Model.extend({
                 }
             };
             formData.append('photo', this.get('localFileBlob'));
+            formData.append('description', this.get('description'));
+            formData.append('date_taken', this.get('date_taken'));
             // Initiate a multipart/form-data upload
             xhr.send(formData);
             return xhr;

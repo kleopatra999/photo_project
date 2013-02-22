@@ -105,19 +105,20 @@ var deleteById = function(req, id, done) {
 /**
  * Creates a photo with the given paramters
  **/
-var create = function(req, setId, description, urls, done) {
+var create = function(req, setId, description, dateTaken, urls, done) {
     // Check for invalid inputs
     if (!setId) return done(NO_SET_ID);
     if (!urls) return done(NO_URLS);
 
-    // Wrap the description up correctly
+    // Wrap the description and date taken up correctly
     description = sqlUtils.wrapQuotesOrNull(description);
+    dateTaken = sqlUtils.wrapQuotesOrNull(dateTaken);
 
     // Get the set data to validate that the user has access to this photo
     setData.getById(req, setId, function(err, set) {
         if (err) return done(SET_NOT_FOUND); // Make the user think the set doesn't exist
 
-        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + req.user.id + ", " + description + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
+        var sql = "INSERT INTO  `photo` (`set_id`, `owner_id`, `description`, `date_taken`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`) VALUES ('" + setId + "', " + req.user.id + ", " + description + ", " + dateTaken + ", '" + urls['orig'] + "', '" + urls['small'] + "', '" + urls['medium'] + "', '" + urls['large'] + "')";
         req.dbConnection.query(sql, function(err, rows, field) {
             if (err) {
                 if (err.code === "ER_NO_REFERENCED_ROW_") {
