@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `date_taken` datetime DEFAULT NULL,
   `location_lat` varchar(50) DEFAULT NULL,
   `location_lon` varchar(50) DEFAULT NULL,
+  `upload_group` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `owner_id` (`owner_id`),
   KEY `set_id` (`set_id`)
@@ -73,5 +74,5 @@ INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('2', 'user@two.me
 INSERT INTO `set_user` (`id`, `set_id`, `user_id`) VALUES ('1', '1', '1');
 INSERT INTO `set_user` (`id`, `set_id`, `user_id`) VALUES ('2', '2', '2');
 
-INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('1', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '1', '1', '2012-11-06 00:00:00', NULL, NULL);
-INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`) VALUES ('2', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '2', '2', '2012-11-06 00:00:00', NULL, NULL);
+INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`, `upload_group`) VALUES ('1', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '1', '1', '2012-11-06 00:00:00', NULL, NULL, '1');
+INSERT INTO `photo` (`id`, `description`, `orig_photo_url`, `small_photo_url`, `medium_photo_url`, `large_photo_url`, `owner_id`, `set_id`, `date_taken`, `location_lat`, `location_lon`, `upload_group`) VALUES ('2', 'A simple test', 'http://fake.com', 'http://fake.com', 'http://fake.com', 'http://fake.com', '2', '2', '2012-11-06 00:00:00', NULL, NULL, '2');

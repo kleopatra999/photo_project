@@ -12,6 +12,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
 
     initialize: function(options) {
         _.bindAll(this, 'render',
+                        'newUploadGroup',
                         '_selectClicked',
                         '_handleDragLeave',
                         '_handleDragOver',
@@ -20,8 +21,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
                         '_loadFiles',
                         '_createNewPhoto',
                         '_uploadClicked',
-                        '_nextUpload',
-                        '_uploadComplete');
+                        '_nextUpload');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -29,17 +29,18 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.collection.bind('add', this.render);
         this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
-
-        App.localDataController.bind(App.localDataController.FILE_LOADED, this._createNewPhoto);
     },
 
     render: function() {
+        console.log('Render PhotoUploadView');
         var self = this;
 
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
+
+        console.log(photos);
 
         this.$el.html(this.template({
             set: set,
@@ -58,7 +59,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var fileUpload = this.$fileUpload.get(0);
         fileUpload.addEventListener('change', this._handleFileUpload, false);
 
-        $(".description").editable(function(value, settings) {
+        $('.description').editable(function(value, settings) {
             var $this = $(this);
             var index = $this.parent().attr('data-index');
             var photo = self.collection.at(index);
@@ -67,7 +68,58 @@ App.views.PhotoUploadView = Backbone.View.extend({
             return value;
         });
 
+        $('.date-line').click(this._dateClicked);
+
         return this;
+    },
+
+    newUploadGroup: function() {
+        this.uploadGroup = Math.round(Math.random() * 1000000);
+    },
+
+    _dateClicked: function() {
+        var $el = $(this); // this refers to the DOM object clicked
+
+        if ($el.hasClass('active')) {
+            return true;
+        }
+        $el.addClass('active');
+
+        var timestamp = Date.parseExact($el.html(), 'HH:mm:ss dd-MM-yyyy');
+
+        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text" readonly=""><span class="add-on"><i class="icon-calendar"></i></span></div>');
+        $datePicker.attr('data-date', timestamp.toString('dd-MM-yyyy'));
+        $datePicker.find('input').val(timestamp.toString('dd-MM-yyyy'));
+        $el.html($datePicker);
+        $datePicker.datepicker();
+
+        var $hours = $('<input class="small-number" type="number" id="hours">');
+        $hours.val(timestamp.toString('HH'));
+        $el.append($hours);
+
+        var $minutes = $('<input class="small-number" type="number" id="minutes">');
+        $minutes.val(timestamp.toString('mm'));
+        $el.append($minutes);
+
+        var $seconds = $('<input class="small-number" type="number" id="seconds">');
+        $seconds.val(timestamp.toString('ss'));
+        $el.append($seconds);
+
+        var $okButton = $('<button class="btn">Ok</button>');
+        $el.append($okButton);
+        $okButton.click(function() {
+            $el.removeClass('active');
+
+            var newTimestamp = Date.parse($datePicker.find('input').val());
+            newTimestamp.set({
+                hour: parseInt($hours.val(), 10),
+                minute: parseInt($minutes.val(), 10),
+                second: parseInt($seconds.val(), 10)
+            });
+            $el.html(newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+
+            return false;
+        });
     },
 
     _selectClicked: function() {
@@ -112,60 +164,54 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 continue;
             }
 
-            App.localDataController.addToQueue(file);
+            this._createNewPhoto(file);
         }
     },
-    _createNewPhoto: function(file, base64String, exif) {
-        var self = this;
-
-        console.log(exif.DateTimeDigitized);
-        var timestamp = Date.parseExact(exif.DateTimeDigitized, "yyyy:MM:dd HH:mm:ss");
-        console.log(timestamp);
-        
+    _createNewPhoto: function(file) {
         var newPhoto = new App.models.Photo({
             setId: this.setCollection.toJSON()[0].id,
             description: file.name,
-            date_taken: timestamp,
-            localFile: base64String,
+            upload_group: this.uploadGroup,
             localFileBlob: file
         });
         this.collection.add(newPhoto);
+
+        this._uploadQueue.push(newPhoto);
+        this._nextUpload();
     },
 
     _uploadQueue: [],
-    _uploadClicked: function() {
-        var self = this;
-
-        this.collection.each(function(model) {
-            self._uploadQueue.push(model);
-        });
-
-        this._nextUpload();
-    },
+    _uploadBusy: false,
     _nextUpload: function() {
         console.log('_nextUpload', 'Queue length', this._uploadQueue.length);
-        if (this._uploadQueue.length > 0) {
+        if (this._uploadQueue.length > 0 && !this._uploadBusy) {
             var self = this;
+            this._uploadBusy = true;
 
             var model = this._uploadQueue.shift();
             model.save(null, {
-                success: self._nextUpload
+                success: function(model, response, options) {
+                    self._uploadBusy = false;
+                    self._nextUpload();
+                }
             });
         }
-        else {
-            this._uploadComplete();
-        }
     },
-    _uploadComplete: function() {
+    _uploadClicked: function() {
         console.log('_uploadComplete', 'Queue length', this._uploadQueue.length);
         var set = this.setCollection.toJSON()[0];
 
-        if (set) {
-            App.dataController.clearPhotos();
-            App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+        if (this._uploadQueue.length === 0 && !this._uploadBusy) {
+            if (set) {
+                App.dataController.clearPhotos();
+                App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+            }
+            else {
+                console.log('We dont have a set...');
+            }
         }
         else {
-            console.log('We dont have a set...');
+            console.log('Still busy...');
         }
     }
 });

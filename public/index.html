@@ -112,9 +112,9 @@
             {{#if photos}}
                 {{#iter photos}}
                     <div class="span12 thumbnail upload" data-index="{{i}}">
-                        <img src="{{localFile}}" alt="Uploading...">
+                        <img src="{{small_photo_url}}" alt="Uploading...">
                         <p class="description">{{description}}</p>
-                        <p class="date">{{date_taken}}</p>
+                        <p class="date-line">{{date_taken}}</p>
                     </div>
                 {{/iter}}
             {{else}}

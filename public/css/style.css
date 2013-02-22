@@ -40,7 +40,13 @@ body {
     font-size: 1.3em;
     margin: 15px 0 5px 0;
 }
-.upload .date {
+.upload .date-line {
     font-size: 1.1em;
     font-style: italic;
+}
+.upload .date {
+    display: inline;
+}
+.upload .small-number {
+    width: 30px;
 }

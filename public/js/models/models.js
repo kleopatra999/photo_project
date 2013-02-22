@@ -46,6 +46,7 @@ App.models.Photo = Backbone.Model.extend({
                 }
             };
             formData.append('photo', this.get('localFileBlob'));
+            formData.append('upload_group', this.get('upload_group'));
             // Initiate a multipart/form-data upload
             xhr.send(formData);
             return xhr;
