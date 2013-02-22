@@ -95,7 +95,7 @@ exports.create = function(req, res) {
             }
 
             // Create the images in the database
-            photoData.create(req, req.query.set_id, req.body.description, req.body.date_taken, urls, function(err, newId) {
+            photoData.create(req, req.query.set_id, req.body.description, req.body.date_taken, req.body.upload_group, urls, function(err, newId) {
                 // Check for and deal with errors
                 if (err) {
                     switch (err) {

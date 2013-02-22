@@ -90,6 +90,7 @@ App.routers.Router = Backbone.Router.extend({
 
         App.selectedSetStore.reset(set);
         App.currentPhotoStore.reset();
+        App.photoUploadView.newUploadGroup();
         App.viewController.showPhotoUploadView();
     },
     _handleAllSetsDataPhotoUpload: function(sets) {

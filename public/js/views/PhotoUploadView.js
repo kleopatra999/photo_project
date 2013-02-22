@@ -12,6 +12,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
 
     initialize: function(options) {
         _.bindAll(this, 'render',
+                        'newUploadGroup',
                         '_selectClicked',
                         '_handleDragLeave',
                         '_handleDragOver',
@@ -70,6 +71,10 @@ App.views.PhotoUploadView = Backbone.View.extend({
         return this;
     },
 
+    newUploadGroup: function() {
+        this.uploadGroup = Math.round(Math.random() * 1000000);
+    },
+
     _selectClicked: function() {
         this.$fileUpload.click();
     },
@@ -116,16 +121,15 @@ App.views.PhotoUploadView = Backbone.View.extend({
         }
     },
     _createNewPhoto: function(file, base64String, exif) {
-        var self = this;
-
-        console.log(exif.DateTimeDigitized);
         var timestamp = Date.parseExact(exif.DateTimeDigitized, "yyyy:MM:dd HH:mm:ss");
-        console.log(timestamp);
-        
+
+        console.log('Upload group', this.uploadGroup);
+
         var newPhoto = new App.models.Photo({
             setId: this.setCollection.toJSON()[0].id,
             description: file.name,
             date_taken: timestamp.toISOString(),
+            upload_group: this.uploadGroup,
             localFile: base64String,
             localFileBlob: file
         });
