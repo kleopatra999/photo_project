@@ -59,7 +59,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
         var fileUpload = this.$fileUpload.get(0);
         fileUpload.addEventListener('change', this._handleFileUpload, false);
 
-        $(".description").editable(function(value, settings) {
+        $('.description').editable(function(value, settings) {
             var $this = $(this);
             var index = $this.parent().attr('data-index');
             var photo = self.collection.at(index);
@@ -68,11 +68,58 @@ App.views.PhotoUploadView = Backbone.View.extend({
             return value;
         });
 
+        $('.date-line').click(this._dateClicked);
+
         return this;
     },
 
     newUploadGroup: function() {
         this.uploadGroup = Math.round(Math.random() * 1000000);
+    },
+
+    _dateClicked: function() {
+        var $el = $(this); // this refers to the DOM object clicked
+
+        if ($el.hasClass('active')) {
+            return true;
+        }
+        $el.addClass('active');
+
+        var timestamp = Date.parseExact($el.html(), 'HH:mm:ss dd-MM-yyyy');
+
+        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text" readonly=""><span class="add-on"><i class="icon-calendar"></i></span></div>');
+        $datePicker.attr('data-date', timestamp.toString('dd-MM-yyyy'));
+        $datePicker.find('input').val(timestamp.toString('dd-MM-yyyy'));
+        $el.html($datePicker);
+        $datePicker.datepicker();
+
+        var $hours = $('<input class="small-number" type="number" id="hours">');
+        $hours.val(timestamp.toString('HH'));
+        $el.append($hours);
+
+        var $minutes = $('<input class="small-number" type="number" id="minutes">');
+        $minutes.val(timestamp.toString('mm'));
+        $el.append($minutes);
+
+        var $seconds = $('<input class="small-number" type="number" id="seconds">');
+        $seconds.val(timestamp.toString('ss'));
+        $el.append($seconds);
+
+        var $okButton = $('<button class="btn">Ok</button>');
+        $el.append($okButton);
+        $okButton.click(function() {
+            $el.removeClass('active');
+
+            var newTimestamp = Date.parse($datePicker.find('input').val());
+            newTimestamp.set({
+                hour: parseInt($hours.val(), 10),
+                minute: parseInt($minutes.val(), 10),
+                second: parseInt($seconds.val(), 10)
+            });
+            $el.html(newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+
+            return false;
+        });
     },
 
     _selectClicked: function() {
@@ -129,6 +176,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
             setId: this.setCollection.toJSON()[0].id,
             description: file.name,
             date_taken: timestamp.toISOString(),
+            date_taken_human: timestamp.toString('HH:mm:ss dd-MM-yyyy'),
             upload_group: this.uploadGroup,
             localFile: base64String,
             localFileBlob: file
