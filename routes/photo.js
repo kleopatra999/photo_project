@@ -4,7 +4,8 @@ var filestore = require('../utils/filestore'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore'),
-    exif = require('exif2');
+    exif = require('exif2'),
+    dateFormat = require('dateFormat');
 
 /*
  * GET all photos in a set
@@ -60,6 +61,8 @@ exports.singleWithStatus = function(req, res, status) {
         // Handle any errors
         if (err) return _handleSinglePhotoError(err, res);
 
+        data.date_taken = dateFormat(Date.parse(data.date_taken), 'HH:MM:ss dd-mm-yyyy');
+
         // Return the data
         res.json(status, data);
     });
@@ -100,8 +103,6 @@ exports.create = function(req, res) {
                     console.log('Error getting image exif', err);
                     return res.json(500, {error: 'Cannot upload image'});
                 }
-                console.log(req.files.photo);
-                console.log(obj);
 
                 // Create the images in the database
                 photoData.create(req, req.query.set_id, req.files.photo.name, obj["date time original"], req.body.upload_group, urls, function(err, newId) {

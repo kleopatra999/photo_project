@@ -21,8 +21,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
                         '_loadFiles',
                         '_createNewPhoto',
                         '_uploadClicked',
-                        '_nextUpload',
-                        '_uploadComplete');
+                        '_nextUpload');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -30,17 +29,18 @@ App.views.PhotoUploadView = Backbone.View.extend({
         this.collection.bind('add', this.render);
         this.collection.bind('remove', this.render);
         this.setCollection.bind('reset', this.render);
-
-        App.localDataController.bind(App.localDataController.FILE_LOADED, this._createNewPhoto);
     },
 
     render: function() {
+        console.log('Render PhotoUploadView');
         var self = this;
 
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
+
+        console.log(photos);
 
         this.$el.html(this.template({
             set: set,
@@ -164,60 +164,54 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 continue;
             }
 
-            App.localDataController.addToQueue(file);
+            this._createNewPhoto(file);
         }
     },
-    _createNewPhoto: function(file, base64String, exif) {
-        var timestamp = Date.parseExact(exif.DateTimeDigitized, "yyyy:MM:dd HH:mm:ss");
-
-        console.log('Upload group', this.uploadGroup);
-
+    _createNewPhoto: function(file) {
         var newPhoto = new App.models.Photo({
             setId: this.setCollection.toJSON()[0].id,
             description: file.name,
-            date_taken: timestamp.toISOString(),
-            date_taken_human: timestamp.toString('HH:mm:ss dd-MM-yyyy'),
             upload_group: this.uploadGroup,
-            localFile: base64String,
             localFileBlob: file
         });
         this.collection.add(newPhoto);
+
+        this._uploadQueue.push(newPhoto);
+        this._nextUpload();
     },
 
     _uploadQueue: [],
-    _uploadClicked: function() {
-        var self = this;
-
-        this.collection.each(function(model) {
-            self._uploadQueue.push(model);
-        });
-
-        this._nextUpload();
-    },
+    _uploadBusy: false,
     _nextUpload: function() {
         console.log('_nextUpload', 'Queue length', this._uploadQueue.length);
-        if (this._uploadQueue.length > 0) {
+        if (this._uploadQueue.length > 0 && !this._uploadBusy) {
             var self = this;
+            this._uploadBusy = true;
 
             var model = this._uploadQueue.shift();
             model.save(null, {
-                success: self._nextUpload
+                success: function(model, response, options) {
+                    self._uploadBusy = false;
+                    self._nextUpload();
+                }
             });
         }
-        else {
-            this._uploadComplete();
-        }
     },
-    _uploadComplete: function() {
+    _uploadClicked: function() {
         console.log('_uploadComplete', 'Queue length', this._uploadQueue.length);
         var set = this.setCollection.toJSON()[0];
 
-        if (set) {
-            App.dataController.clearPhotos();
-            App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+        if (this._uploadQueue.length === 0 && !this._uploadBusy) {
+            if (set) {
+                App.dataController.clearPhotos();
+                App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+            }
+            else {
+                console.log('We dont have a set...');
+            }
         }
         else {
-            console.log('We dont have a set...');
+            console.log('Still busy...');
         }
     }
 });
