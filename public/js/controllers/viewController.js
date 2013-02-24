@@ -9,6 +9,7 @@ App.viewController = (function() {
     header,
     content,
     modal,
+    htmlRoot,
 
     init = function() {
         views = {
@@ -37,6 +38,7 @@ App.viewController = (function() {
         header = $('header');
         content = $('#content');
         modal = $('#modal');
+        htmlRoot = $('html');
         currentView = null;
         currentModalView = null;
         dimensions = {
@@ -86,7 +88,7 @@ App.viewController = (function() {
     _showModalView = function(view) {
         _removeModalContent();
 
-        modal.removeClass('hide');
+        htmlRoot.addClass('show-modal');
 
         currentModalView = view;
     },
@@ -97,7 +99,7 @@ App.viewController = (function() {
             currentModalView = null;
 
             if (andHide !== null && andHide) {
-                modal.addClass('hide');
+                htmlRoot.removeClass('show-modal');
             }
         }
     },
