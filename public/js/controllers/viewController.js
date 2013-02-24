@@ -45,9 +45,6 @@ App.viewController = (function() {
             width: views.home.el.width(),
             height: views.home.el.height()
         };
-
-        _addEventHandlersAndTransitions();
-        _handleResize();
     },
 
     showHomeView = function() {
@@ -73,15 +70,22 @@ App.viewController = (function() {
         _removeModalContent(true);
 
         if (currentView != view) {
+            var showNew = function() {
+                views[view].el.fadeIn('fast', function() {
+                    $(this).addClass('selected');
+                });
+            };
+
             if (currentView) {
                 views[currentView].el.fadeOut('fast', function() {
                     $(this).removeClass('selected');
+                    showNew();
                 });
             }
-
-            views[view].el.fadeIn('fast', function() {
-                $(this).addClass('selected');
-            });
+            else {
+                showNew();
+            }
+            
 
             currentView = view;
         }
@@ -106,16 +110,6 @@ App.viewController = (function() {
                 htmlRoot.removeClass('show-modal');
             }
         }
-    },
-
-    _addEventHandlersAndTransitions = function() {
-        $(window).bind('resize', _handleResize);
-    },
-
-    _handleResize = function() {
-        content.css({
-            height: document.documentElement.clientHeight
-        });
     };
 
     return {
