@@ -5,7 +5,7 @@ var filestore = require('../utils/filestore'),
     fs = require('fs'),
     _ = require('underscore'),
     exif = require('exif2'),
-    dateFormat = require('dateFormat');
+    dateFormat = require('dateformat');
 
 /*
  * GET all photos in a set

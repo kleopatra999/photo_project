@@ -72,17 +72,19 @@ App.viewController = (function() {
     _showView = function(view) {
         _removeModalContent(true);
 
-        if (currentView) {
-            views[currentView].el.fadeOut('fast', function() {
-                $(this).removeClass('selected');
+        if (currentView != view) {
+            if (currentView) {
+                views[currentView].el.fadeOut('fast', function() {
+                    $(this).removeClass('selected');
+                });
+            }
+
+            views[view].el.fadeIn('fast', function() {
+                $(this).addClass('selected');
             });
+
+            currentView = view;
         }
-
-        views[view].el.fadeIn('fast', function() {
-            $(this).addClass('selected');
-        });
-
-        currentView = view;
     },
 
     _showModalView = function(view) {
@@ -95,7 +97,9 @@ App.viewController = (function() {
 
     _removeModalContent = function(andHide) {
         if (currentModalView) {
-            modalViews[currentModalView].el.html(''); // Remove the content
+            setTimeout(function() {
+                modalViews[currentModalView].el.html(''); // Remove the content
+            }, 300);
             currentModalView = null;
 
             if (andHide !== null && andHide) {
