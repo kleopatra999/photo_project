@@ -32,15 +32,12 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     render: function() {
-        console.log('Render PhotoUploadView');
         var self = this;
 
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
-
-        console.log(photos);
 
         this.$el.html(this.template({
             set: set,
@@ -78,6 +75,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     _dateClicked: function() {
+        var self = App.photoUploadView;
         var $el = $(this); // this refers to the DOM object clicked
 
         if ($el.hasClass('active')) {
@@ -117,6 +115,14 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 second: parseInt($seconds.val(), 10)
             });
             $el.html(newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+
+            var set = self.setCollection.toJSON()[0];
+            App.router.navigate('/set/' + set.id + '/upload/changeall', {trigger: true});
+            App.changeAllDatesView.bind(App.changeAllDatesView.CLICKED, function(allPhotos) {
+                App.changeAllDatesView.unbind(App.changeAllDatesView.CLICKED, this);
+
+                App.router.navigate('/set/' + set.id + '/upload', {trigger: true});
+            });
 
             return false;
         });

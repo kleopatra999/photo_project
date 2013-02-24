@@ -26,6 +26,7 @@ App.routers.Router = Backbone.Router.extend({
 
     // Home
     showHome: function() {
+        App.selectedSetStore.uploadSetId = null;
         if (App.allSetStore.fetched) {
             var sets = App.allSetStore.getAll();
             App.currentSetStore.reset(sets);
@@ -43,6 +44,7 @@ App.routers.Router = Backbone.Router.extend({
 
     // New Set
     showNewSet: function() {
+        App.selectedSetStore.uploadSetId = null;
         App.newSetView.render();
         App.viewController.showNewSetView();
     },
@@ -50,6 +52,7 @@ App.routers.Router = Backbone.Router.extend({
     // Photo list
     _lastSetId: null,
     showPhotoList: function(setId) {
+        App.selectedSetStore.uploadSetId = null;
         this._lastSetId = setId;
 
         var set = App.allSetStore.getById(setId);
@@ -90,9 +93,12 @@ App.routers.Router = Backbone.Router.extend({
             return;
         }
 
-        App.selectedSetStore.reset(set);
-        App.currentPhotoStore.reset();
-        App.photoUploadView.newUploadGroup();
+        if (App.selectedSetStore.uploadSetId != setId) {
+            App.selectedSetStore.reset(set);
+            App.currentPhotoStore.reset();
+            App.photoUploadView.newUploadGroup();
+        }
+        App.selectedSetStore.uploadSetId = setId;
         App.viewController.showPhotoUploadView();
     },
     _handleAllSetsDataPhotoUpload: function(sets) {
@@ -102,6 +108,7 @@ App.routers.Router = Backbone.Router.extend({
 
     // Login
     showLogin: function() {
+        App.selectedSetStore.uploadSetId = null;
         App.loginView.render();
         App.viewController.showLoginView();
     },

@@ -99,8 +99,8 @@ App.viewController = (function() {
         if (currentModalView) {
             setTimeout(function() {
                 modalViews[currentModalView].el.html(''); // Remove the content
+                currentModalView = null;
             }, 300);
-            currentModalView = null;
 
             if (andHide !== null && andHide) {
                 htmlRoot.removeClass('show-modal');
