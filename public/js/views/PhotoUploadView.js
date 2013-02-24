@@ -87,7 +87,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
 
         var timestamp = Date.parseExact($el.html(), 'HH:mm:ss dd-MM-yyyy');
 
-        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text" readonly=""><span class="add-on"><i class="icon-calendar"></i></span></div>');
+        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text"><span class="add-on"><i class="icon-calendar"></i></span></div>');
         $datePicker.attr('data-date', timestamp.toString('dd-MM-yyyy'));
         $datePicker.find('input').val(timestamp.toString('dd-MM-yyyy'));
         $el.html($datePicker);

@@ -7,7 +7,8 @@ App.routers.Router = Backbone.Router.extend({
         'set/new': 'showNewSet',
         'set/:setId/photos': 'showPhotoList',
         'set/:setId/upload': 'showPhotoUpload',
-        'login': 'showLogin'
+        'login': 'showLogin',
+        'set/:setId/upload/changeall': 'showChangeAllDates'
     },
 
     initialize: function (options) {
@@ -19,7 +20,8 @@ App.routers.Router = Backbone.Router.extend({
                         '_handleAllSetsDataPhoto',
                         'showPhotoUpload',
                         '_handleAllSetsDataPhotoUpload',
-                        'showLogin');
+                        'showLogin',
+                        'showChangeAllDates');
     },
 
     // Home
@@ -102,5 +104,10 @@ App.routers.Router = Backbone.Router.extend({
     showLogin: function() {
         App.loginView.render();
         App.viewController.showLoginView();
+    },
+
+    showChangeAllDates: function() {
+        App.changeAllDatesView.render();
+        App.viewController.showChangeAllDatesView();
     }
 });

@@ -63,6 +63,9 @@ App.appController = (function() {
         App.loginView = new App.views.LoginView({
             el: $('#loginView')
         });
+        App.changeAllDatesView = new App.views.ChangeAllDatesView({
+            el: $('#changeAllDatesView')
+        });
 
         // Create the router
         App.router = new App.routers.Router();

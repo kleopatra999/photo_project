@@ -145,6 +145,19 @@
             </form>
         </div>
     </script>
+    <script id="changeAllDatesViewTemplate" type="text/x-handlebars-template">
+        <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+            <h3>Update all dates?</h3>
+        </div>
+        <div class="modal-body">
+            <p>Would you like to alter all photo timestamps by the same amount, or just this photo?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn">Just This Photo</a>
+            <a href="#" class="btn btn-primary">All Photos</a>
+        </div>
+    </script>
 
     <!-- LIBS -->
     <script src="js/libs/base64.js"></script>
@@ -177,6 +190,7 @@
     <script src="js/views/PhotoListView.js"></script>
     <script src="js/views/PhotoUploadView.js"></script>
     <script src="js/views/LoginView.js"></script>
+    <script src="js/views/ChangeAllDatesView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -204,6 +218,9 @@
             <div id="photoUploadView" class="view"></div>
             <div id="loginView" class="view"></div>
         </div>
+    </div>
+    <div id="modal" class="modal hide">
+        <div id="changeAllDatesView"></div>
     </div>
 </body>
 </html>
