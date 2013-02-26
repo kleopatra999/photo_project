@@ -77,6 +77,9 @@ App.views.PhotoUploadView = Backbone.View.extend({
     _dateClicked: function() {
         var self = App.photoUploadView;
         var $el = $(this); // this refers to the DOM object clicked
+        var modelIndex = $el.parent().attr('data-index');
+        var model = self.collection.at(modelIndex);
+        console.log(model);
 
         if ($el.hasClass('active')) {
             return true;
@@ -114,14 +117,23 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 minute: parseInt($minutes.val(), 10),
                 second: parseInt($seconds.val(), 10)
             });
-            $el.html(newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+            model.set('date_taken', newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
 
             var set = self.setCollection.toJSON()[0];
             App.router.navigate('/set/' + set.id + '/upload/changeall', {trigger: true});
-            App.changeAllDatesView.bind(App.changeAllDatesView.CLICKED, function(allPhotos) {
-                App.changeAllDatesView.unbind(App.changeAllDatesView.CLICKED, this);
-
+            App.changeAllDatesView.bind(App.changeAllDatesView.CLICKED, function(props) {
+                App.changeAllDatesView.unbind(App.changeAllDatesView.CLICKED);
                 App.router.navigate('/set/' + set.id + '/upload', {trigger: true});
+
+                if (props.allPhotos) {
+                    var diff = (newTimestamp.getTime() - timestamp.getTime()) / 1000;
+                    self.collection.forEach(function(photo) {
+                        var currentDateTaken = photo.get('date_taken');
+                        var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
+                        currentDateTakenTimestamp.addSeconds(diff);
+                        photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+                    });
+                }
             });
 
             return false;
