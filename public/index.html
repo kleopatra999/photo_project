@@ -23,10 +23,10 @@
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <button class="newSet btn btn-primary">New Album</button>
+        </div>
         <div class="container">
-            <div class="pull-right title-align">
-                <button class="newSet btn btn-primary">New Album</button>
-            </div>
             <h2>Your Albums</h2>
             {{#if sets}}
                 <ul>
@@ -81,10 +81,10 @@
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
+        </div>
         <div class="container">
-            <div class="pull-right title-align">
-                <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
-            </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
                 <ul class="thumbnails">
@@ -102,12 +102,12 @@
         </div>
     </script>
     <script id="photoUploadViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <input id="fileUpload" type="file" style="visibility:hidden;"/>
+            <button id="selectBtn" class="btn">Select Photos</button>
+            <button id="uploadBtn" class="btn btn-primary">Finish Upload</button>
+        </div>
         <div class="container" id="dropzone">
-            <div class="pull-right title-align">
-                <input id="fileUpload" type="file" style="visibility:hidden;"/>
-                <button id="selectBtn" class="btn">Select Photos</button>
-                <button id="uploadBtn" class="btn btn-primary">Upload</button>
-            </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
                 {{#iter photos}}
@@ -199,14 +199,9 @@
     </script>
 </head>
 <body>
-    <div class="navbar navbar-static-top">
+    <div class="navbar navbar-static-top navbar-inverse">
         <div class="navbar-inner">
             <a class="brand" href="#">Shoto</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
-            </ul>
         </div>
     </div>
     <div class="container-fluid">
