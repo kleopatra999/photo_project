@@ -3,10 +3,13 @@ App.viewController = (function() {
 
     dimensions = {},
     views = {},
+    modalViews = {},
     currentView,
     wrapper,
     header,
     content,
+    modal,
+    htmlRoot,
 
     init = function() {
         views = {
@@ -26,17 +29,22 @@ App.viewController = (function() {
                 el: $('#loginView')
             }
         };
+        modalViews = {
+            changeAllDates: {
+                el: $('#changeAllDatesView')
+            }
+        };
         wrapper = $('#wrapper');
         header = $('header');
         content = $('#content');
+        modal = $('#modal');
+        htmlRoot = $('html');
         currentView = null;
+        currentModalView = null;
         dimensions = {
             width: views.home.el.width(),
             height: views.home.el.height()
         };
-
-        _addEventHandlersAndTransitions();
-        _handleResize();
     },
 
     showHomeView = function() {
@@ -54,28 +62,54 @@ App.viewController = (function() {
     showLoginView = function() {
         _showView('login');
     },
+    showChangeAllDatesView = function() {
+        _showModalView('changeAllDates');
+    },
 
     _showView = function(view) {
-        if (currentView) {
-            views[currentView].el.fadeOut('fast', function() {
-                $(this).removeClass('selected');
-            });
+        _removeModalContent(true);
+
+        if (currentView != view) {
+            var showNew = function() {
+                views[view].el.fadeIn('fast', function() {
+                    $(this).addClass('selected');
+                });
+            };
+
+            if (currentView) {
+                views[currentView].el.fadeOut('fast', function() {
+                    $(this).removeClass('selected');
+                    showNew();
+                });
+            }
+            else {
+                showNew();
+            }
+            
+
+            currentView = view;
         }
-        views[view].el.fadeIn('fast', function() {
-            $(this).addClass('selected');
-        });
-
-        currentView = view;
     },
 
-    _addEventHandlersAndTransitions = function() {
-        $(window).bind('resize', _handleResize);
+    _showModalView = function(view) {
+        _removeModalContent();
+
+        htmlRoot.addClass('show-modal');
+
+        currentModalView = view;
     },
 
-    _handleResize = function() {
-        content.css({
-            height: document.documentElement.clientHeight
-        });
+    _removeModalContent = function(andHide) {
+        if (currentModalView) {
+            setTimeout(function() {
+                modalViews[currentModalView].el.html(''); // Remove the content
+                currentModalView = null;
+            }, 300);
+
+            if (andHide !== null && andHide) {
+                htmlRoot.removeClass('show-modal');
+            }
+        }
     };
 
     return {
@@ -85,7 +119,8 @@ App.viewController = (function() {
         showNewSetView: showNewSetView,
         showPhotoListView: showPhotoListView,
         showPhotoUploadView: showPhotoUploadView,
-        showLoginView: showLoginView
+        showLoginView: showLoginView,
+        showChangeAllDatesView: showChangeAllDatesView
     };
 
 }());

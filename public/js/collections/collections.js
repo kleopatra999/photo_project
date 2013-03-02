@@ -40,7 +40,7 @@ App.collections.PhotoStore = Backbone.Collection.extend({
     },
 
     comparator: function(photo) {
-        return photo.get('date_taken');
+        return Date.parseExact(photo.get('date_taken'), 'HH:mm:ss dd-MM-yyyy');
     },
 
     getAll: function() {

@@ -7,7 +7,8 @@ App.routers.Router = Backbone.Router.extend({
         'set/new': 'showNewSet',
         'set/:setId/photos': 'showPhotoList',
         'set/:setId/upload': 'showPhotoUpload',
-        'login': 'showLogin'
+        'login': 'showLogin',
+        'set/:setId/upload/changeall': 'showChangeAllDates'
     },
 
     initialize: function (options) {
@@ -19,11 +20,13 @@ App.routers.Router = Backbone.Router.extend({
                         '_handleAllSetsDataPhoto',
                         'showPhotoUpload',
                         '_handleAllSetsDataPhotoUpload',
-                        'showLogin');
+                        'showLogin',
+                        'showChangeAllDates');
     },
 
     // Home
     showHome: function() {
+        App.selectedSetStore.uploadSetId = null;
         if (App.allSetStore.fetched) {
             var sets = App.allSetStore.getAll();
             App.currentSetStore.reset(sets);
@@ -41,6 +44,7 @@ App.routers.Router = Backbone.Router.extend({
 
     // New Set
     showNewSet: function() {
+        App.selectedSetStore.uploadSetId = null;
         App.newSetView.render();
         App.viewController.showNewSetView();
     },
@@ -48,6 +52,7 @@ App.routers.Router = Backbone.Router.extend({
     // Photo list
     _lastSetId: null,
     showPhotoList: function(setId) {
+        App.selectedSetStore.uploadSetId = null;
         this._lastSetId = setId;
 
         var set = App.allSetStore.getById(setId);
@@ -88,9 +93,12 @@ App.routers.Router = Backbone.Router.extend({
             return;
         }
 
-        App.selectedSetStore.reset(set);
-        App.currentPhotoStore.reset();
-        App.photoUploadView.newUploadGroup();
+        if (App.selectedSetStore.uploadSetId != setId) {
+            App.selectedSetStore.reset(set);
+            App.currentPhotoStore.reset();
+            App.photoUploadView.newUploadGroup();
+        }
+        App.selectedSetStore.uploadSetId = setId;
         App.viewController.showPhotoUploadView();
     },
     _handleAllSetsDataPhotoUpload: function(sets) {
@@ -100,7 +108,13 @@ App.routers.Router = Backbone.Router.extend({
 
     // Login
     showLogin: function() {
+        App.selectedSetStore.uploadSetId = null;
         App.loginView.render();
         App.viewController.showLoginView();
+    },
+
+    showChangeAllDates: function() {
+        App.changeAllDatesView.render();
+        App.viewController.showChangeAllDatesView();
     }
 });

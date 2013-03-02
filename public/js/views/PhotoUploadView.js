@@ -32,15 +32,12 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     render: function() {
-        console.log('Render PhotoUploadView');
         var self = this;
 
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
-
-        console.log(photos);
 
         this.$el.html(this.template({
             set: set,
@@ -78,7 +75,11 @@ App.views.PhotoUploadView = Backbone.View.extend({
     },
 
     _dateClicked: function() {
+        var self = App.photoUploadView;
         var $el = $(this); // this refers to the DOM object clicked
+        var modelIndex = $el.parent().attr('data-index');
+        var model = self.collection.at(modelIndex);
+        console.log(model);
 
         if ($el.hasClass('active')) {
             return true;
@@ -87,7 +88,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
 
         var timestamp = Date.parseExact($el.html(), 'HH:mm:ss dd-MM-yyyy');
 
-        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text" readonly=""><span class="add-on"><i class="icon-calendar"></i></span></div>');
+        var $datePicker = $('<div class="input-append date" data-date-format="dd-mm-yyyy"><input class="span2" type="text"><span class="add-on"><i class="icon-calendar"></i></span></div>');
         $datePicker.attr('data-date', timestamp.toString('dd-MM-yyyy'));
         $datePicker.find('input').val(timestamp.toString('dd-MM-yyyy'));
         $el.html($datePicker);
@@ -116,7 +117,29 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 minute: parseInt($minutes.val(), 10),
                 second: parseInt($seconds.val(), 10)
             });
-            $el.html(newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+            model.set('date_taken', newTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+
+            var set = self.setCollection.toJSON()[0];
+            App.router.navigate('/set/' + set.id + '/upload/changeall', {trigger: true});
+            App.changeAllDatesView.bind(App.changeAllDatesView.CLICKED, function(props) {
+                App.changeAllDatesView.unbind(App.changeAllDatesView.CLICKED);
+                App.router.navigate('/set/' + set.id + '/upload', {trigger: true});
+
+                if (props.allPhotos) {
+                    var diff = (newTimestamp.getTime() - timestamp.getTime()) / 1000;
+                    self.collection.forEach(function(photo) {
+                        if (photo !== model) {
+                            var currentDateTaken = photo.get('date_taken');
+                            var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
+                            currentDateTakenTimestamp.addSeconds(diff);
+                            photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+                        }
+                    });
+
+                }
+            });
+
+            self.collection.sort();
 
             return false;
         });
@@ -192,6 +215,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
             model.save(null, {
                 success: function(model, response, options) {
                     self._uploadBusy = false;
+                    self.collection.sort();
                     self._nextUpload();
                 }
             });

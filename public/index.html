@@ -112,7 +112,7 @@
             {{#if photos}}
                 {{#iter photos}}
                     <div class="span12 thumbnail upload" data-index="{{i}}">
-                        <img src="{{small_photo_url}}" alt="Uploading...">
+                        <img src="{{small_photo_url}}">
                         <p class="description">{{description}}</p>
                         <p class="date-line">{{date_taken}}</p>
                     </div>
@@ -143,6 +143,19 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </script>
+    <script id="changeAllDatesViewTemplate" type="text/x-handlebars-template">
+        <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+            <h3>Update all dates?</h3>
+        </div>
+        <div class="modal-body">
+            <p>Would you like to alter all photo timestamps by the same amount, or just this photo?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" id="single">Just This Photo</a>
+            <a href="#" class="btn btn-primary" id="all">All Photos</a>
         </div>
     </script>
 
@@ -177,6 +190,7 @@
     <script src="js/views/PhotoListView.js"></script>
     <script src="js/views/PhotoUploadView.js"></script>
     <script src="js/views/LoginView.js"></script>
+    <script src="js/views/ChangeAllDatesView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -185,17 +199,17 @@
     </script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <a class="brand" href="#">Shoto</a>
-                <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
-            </div>
+    <div class="navbar navbar-static-top">
+        <div class="navbar-inner">
+            <a class="brand" href="#">Shoto</a>
+            <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Link</a></li>
+                <li><a href="#">Link</a></li>
+            </ul>
         </div>
+    </div>
+    <div class="container-fluid">
         <div id="content" class="row-fluid">
             <!--Body content-->
             <div id="homeView" class="view"></div>
@@ -204,6 +218,10 @@
             <div id="photoUploadView" class="view"></div>
             <div id="loginView" class="view"></div>
         </div>
+    </div>
+    <div class="modal-shade"></div>
+    <div id="modal" class="modal">
+        <div id="changeAllDatesView"></div>
     </div>
 </body>
 </html>
