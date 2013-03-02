@@ -58,8 +58,8 @@
                 <div class="control-group" id="startDateGroup">
                     <label class="control-label" for="inputStartDate">Start Date of Event</label>
                     <div class="controls">
-                        <div class="input-append date" id="inputStartDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
-                            <input class="span6" type="text" readonly="">
+                        <div class="input-append date" id="inputStartDate" data-date="2013-01-01" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                            <input class="span6" type="text">
                             <span class="add-on"><i class="icon-calendar"></i></span>
                         </div>
                     </div>
@@ -67,8 +67,8 @@
                 <div class="control-group" id="endDateGroup">
                     <label class="control-label" for="inputEndDate">End Date of Event</label>
                     <div class="controls">
-                        <div class="input-append date" id="inputEndDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
-                            <input class="span6" type="text" readonly="">
+                        <div class="input-append date" id="inputEndDate" data-date="2013-01-01" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                            <input class="span6" type="text">
                             <span class="add-on"><i class="icon-calendar"></i></span>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
             <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
         </div>
         <div class="container">
-            <h2>{{set.name}}</h2>
+            <h2>{{set.name}} <small>{{set.description}}</small></h2>
             {{#if photos}}
                 <ul>
                     {{#each photos}}
