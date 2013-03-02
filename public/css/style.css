@@ -46,6 +46,33 @@ body {
     right: 0;
 }
 
+/*Photo list */
+.photos {
+    margin: 0 auto;
+}
+.photo {
+    list-style-type: none;
+    float: left;
+    width: -webkit-calc(22.5% - 10px);
+    height: 175px;
+    overflow: hidden;
+    margin: 10px;
+    border: 5px solid #EEE;
+
+    -webkit-transition: .3s -webkit-transform cubic-bezier(0.25,.46,.45,.94);
+    -ms-transition: .3s -ms-transform cubic-bezier(0.25,.46,.45,.94);
+    -o-transition: .3s -o-transform cubic-bezier(0.25,.46,.45,.94);
+    -moz-transition: .3s -moz-transform cubic-bezier(0.25,.46,.45,.94);
+    transition: .3s transform cubic-bezier(0.25,.46,.45,.94);
+}
+.photo:hover {
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
 /*.upload {
 }*/
 .upload img {

@@ -8,8 +8,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Photo Project</title>
-    <meta name="description" content="An as yet unnamed photo sharing project for small groups">
+    <title>Shoto</title>
+    <meta name="description" content="Shoto is a photo sharing service which combines photos from multiple cameras into a single photo stream.">
     <meta name="author" content="Matt Oakes">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,10 +87,10 @@
         <div class="container">
             <h2>{{set.name}}</h2>
             {{#if photos}}
-                <ul class="thumbnails">
+                <ul>
                     {{#each photos}}
-                        <li class="clearfix span2">
-                            <a href="#/photo/{{id}}" class="thumbnail">
+                        <li class="photo">
+                            <a href="#/photo/{{id}}" class="">
                                 <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
                             </a>
                         </li>

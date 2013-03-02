@@ -4,8 +4,7 @@ var filestore = require('../utils/filestore'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore'),
-    exif = require('exif2'),
-    dateFormat = require('dateformat');
+    exif = require('exif2');
 
 /*
  * GET all photos in a set
@@ -60,8 +59,6 @@ exports.singleWithStatus = function(req, res, status) {
     photoData.getById(req, req.params.id, function(err, data) {
         // Handle any errors
         if (err) return _handleSinglePhotoError(err, res);
-
-        data.date_taken = dateFormat(Date.parse(data.date_taken), 'HH:MM:ss dd-mm-yyyy');
 
         // Return the data
         res.json(status, data);
