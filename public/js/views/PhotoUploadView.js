@@ -128,13 +128,18 @@ App.views.PhotoUploadView = Backbone.View.extend({
                 if (props.allPhotos) {
                     var diff = (newTimestamp.getTime() - timestamp.getTime()) / 1000;
                     self.collection.forEach(function(photo) {
-                        var currentDateTaken = photo.get('date_taken');
-                        var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
-                        currentDateTakenTimestamp.addSeconds(diff);
-                        photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+                        if (photo !== model) {
+                            var currentDateTaken = photo.get('date_taken');
+                            var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
+                            currentDateTakenTimestamp.addSeconds(diff);
+                            photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+                        }
                     });
+
                 }
             });
+
+            self.collection.sort();
 
             return false;
         });
@@ -210,6 +215,7 @@ App.views.PhotoUploadView = Backbone.View.extend({
             model.save(null, {
                 success: function(model, response, options) {
                     self._uploadBusy = false;
+                    self.collection.sort();
                     self._nextUpload();
                 }
             });
