@@ -42,15 +42,11 @@ var create = function(req, name, description, startDate, endDate, done) {
     if (!startDate) return done(NO_START_DATE);
     if (!endDate) return done(NO_END_DATE);
 
-    console.log(startDate);
-
     // Get the values ready for adding to SQL
     name = sqlUtils.wrapQuotesOrNull(name);
     description = sqlUtils.wrapQuotesOrNull(description);
     startDate = sqlUtils.wrapQuotesOrNull(startDate);
     endDate = sqlUtils.wrapQuotesOrNull(endDate);
-
-    console.log(startDate);
 
     // Make the request
     var sql = "INSERT INTO `set` (`name`, `description`, `start_date`, `end_date`) VALUES (" + name + ", " + description + ", " + startDate + ", " + endDate + ")";
