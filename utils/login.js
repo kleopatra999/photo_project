@@ -25,7 +25,7 @@ var getAndCheckUser = function(email, password, done) {
 
         // Check password is correct
         var shasum = crypto.createHash('sha1');
-        shasum.update(password);
+        shasum.update(user.salt + password);
         var userPasswordHash = shasum.digest('hex');
         var dbPasswordHash = user.password;
         if (userPasswordHash != dbPasswordHash) {

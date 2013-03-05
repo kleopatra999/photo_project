@@ -63,6 +63,9 @@ App.appController = (function() {
         App.loginView = new App.views.LoginView({
             el: $('#loginView')
         });
+        App.registerView = new App.views.RegisterView({
+            el: $('#registerView')
+        });
         App.changeAllDatesView = new App.views.ChangeAllDatesView({
             el: $('#changeAllDatesView')
         });

@@ -78,6 +78,7 @@ app.post('/set/:id', set.update);
 app.del('/set/:id', set.del);
 // Users
 app.get('/user', user.list);
+app.post('/user/register', user.register);
 if (module.exports.testing) {
     // Test filestore route
     var knoxMock = require('./test/fixtures/knoxMock');
