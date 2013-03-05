@@ -8,6 +8,15 @@ exports.list = function(req, res){
     res.send("respond with a resource");
 };
 
+exports.getCurrentUser = function(req, res) {
+    if (req.user) {
+        res.json(req.user);
+    }
+    else {
+        res.json({error: 'Not logged in'});
+    }
+};
+
 exports.register = function(req, res) {
     userData.create(req.body.email, req.body.password, req.body.name, function(err, newId) {
         if (err) {

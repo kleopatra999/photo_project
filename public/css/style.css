@@ -43,7 +43,34 @@ body {
 .navbar-buttons {
     position: absolute;
     top: -36px;
-    right: 0;
+    right: 60px;
+}
+
+.user-profile {
+    display: block;
+    margin-top: 4px;
+    padding: 5px;
+    color: #FFF;
+    border-radius: 3px;
+}
+.user-profile:hover {
+    background: #333;
+    background: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+}
+.user-profile img {
+    width: 22px;
+    height: 22px;
+}
+.user-profile .caret {
+    border-top-color: #FFF;
+    border-bottom-color: #FFF;
+}
+.nav li.user-profile > a {
+    padding: 0;
+}
+.navbar-inverse .nav li.dropdown.open > .dropdown-toggle {
+    background-color: transparent;
 }
 
 /*Photo list */

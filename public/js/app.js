@@ -66,6 +66,9 @@ App.appController = (function() {
         App.registerView = new App.views.RegisterView({
             el: $('#registerView')
         });
+        App.profileView = new App.views.ProfileView({
+            el: $('#profileView')
+        });
         App.changeAllDatesView = new App.views.ChangeAllDatesView({
             el: $('#changeAllDatesView')
         });
@@ -82,6 +85,9 @@ App.appController = (function() {
                 App.router.navigate('/login', {trigger: true});
             }
         });
+
+        // Load the current user
+        App.dataController.getCurrentUser();
     };
 
     return {

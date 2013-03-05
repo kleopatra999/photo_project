@@ -65,7 +65,9 @@ App.dataController = (function() {
         // Make the login request
         var loginRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Logged in');
+            App.user = data;
             self.trigger(USER_LOGGED_IN, null); // TODO: Should pass back the user object from the API
+            App.profileView.render();
         });
 
         // Set an error handler to listen out for incorrect logins
@@ -99,6 +101,18 @@ App.dataController = (function() {
         });
     };
 
+    var getCurrentUser = function() {
+        // Setup the variables for the request
+        var url = '/user/current';
+        // Make the login request
+        var userRequest = $.get(url, function(data, textStatus, jqXHR) {
+            if (!data.error) {
+                App.user = data;
+                App.profileView.render();
+            }
+        });
+    };
+
     return {
         SETS_DATA_READY: SETS_DATA_READY,
         PHOTOS_DATA_READY: PHOTOS_DATA_READY,
@@ -114,7 +128,8 @@ App.dataController = (function() {
         clearPhotos: clearPhotos,
         createSet: createSet,
         register: register,
-        login: login
+        login: login,
+        getCurrentUser: getCurrentUser
     };
 
 }());
