@@ -123,7 +123,10 @@
         </div>
     </script>
     <script id="loginViewTemplate" type="text/x-handlebars-template">
-        <div class="container">
+        <div class="modal-header">
+            <h3>Login</h3>
+        </div>
+        <div class="modal-body">
             <form class="form-horizontal">
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
@@ -137,12 +140,10 @@
                         <input type="password" id="password" placeholder="Password">
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button type="submit" class="btn loginSubmit">Sign in</button>
-                    </div>
-                </div>
             </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn loginSubmit">Sign in</button>
         </div>
     </script>
     <script id="changeAllDatesViewTemplate" type="text/x-handlebars-template">
@@ -211,11 +212,11 @@
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
             <div id="photoUploadView" class="view"></div>
-            <div id="loginView" class="view"></div>
         </div>
     </div>
     <div class="modal-shade"></div>
     <div id="modal" class="modal">
+        <div id="loginView"></div>
         <div id="changeAllDatesView"></div>
     </div>
 </body>
