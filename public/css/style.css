@@ -73,20 +73,31 @@ body {
     transform: scale(1.2);
 }
 
-/*.upload {
-}*/
+/* Upload */
+.upload {
+    position: relative;
+    margin: 5px;
+    border: 1px solid #EEE;
+    min-height: 150px;
+}
 .upload img {
-    float: left;
-    width: 100px;
-    min-height: 60px;
+    display: block;
+    width: 200px;
+    min-height: 150px;
     margin-right: 10px;
     background: #DDD;
 }
 .upload .description {
+    position: absolute;
+    top: 0;
+    left: 215px;
     font-size: 1.3em;
     margin: 15px 0 5px 0;
 }
 .upload .date-line {
+    position: absolute;
+    top: 40px;
+    left: 215px;
     font-size: 1.1em;
     font-style: italic;
 }
