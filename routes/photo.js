@@ -1,10 +1,11 @@
-var filestore = require('../utils/filestore'),
+var app = require('../app'),
+    filestore = require('../utils/filestore'),
     photoData = require('../data/photo'),
     setData = require('../data/set'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore'),
-    exif = require('exif2');
+    exif = (app.testing) ? require('../test/fixtures/exifMock') : require('exif2');
 
 /*
  * GET all photos in a set

@@ -70,7 +70,7 @@ describe('Set', function() {
         it('should return 201 and json message after creating', function(done) {
             request(app.server)
                 .post('/set/')
-                .send({name: "Testing", start_date: '2012-01-01', end_date: '2012-01-07'})
+                .send({name: "Testing", description: "Test", start_date: '2012-01-01', end_date: '2012-01-07'})
                 .expect(201)
                 .expect('Content-Type', /json/)
                 .end(done);
@@ -79,7 +79,7 @@ describe('Set', function() {
         it('should be get 200 and json data after creating', function(done) {
             request(app.server)
                 .post('/set/')
-                .send({name: "Testing", start_date: '2012-01-01', end_date: '2012-01-07'})
+                .send({name: "Testing", description: "Test", start_date: '2012-01-01', end_date: '2012-01-07'})
                 .end(function(err, res) {
                     if (err) throw err;
                     var newId = res.body.id;
@@ -94,7 +94,7 @@ describe('Set', function() {
         it('should be get the correct set after creating', function(done) {
             request(app.server)
                 .post('/set/')
-                .send({name: "Testing", start_date: '2012-01-01', end_date: '2012-01-07'})
+                .send({name: "Testing", description: "Test", start_date: '2012-01-01', end_date: '2012-01-07'})
                 .end(function(err, res) {
                     if (err) throw err;
                     assert.equal(res.body.name, 'Testing');
