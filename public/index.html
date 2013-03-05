@@ -8,8 +8,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Photo Project</title>
-    <meta name="description" content="An as yet unnamed photo sharing project for small groups">
+    <title>Shoto</title>
+    <meta name="description" content="Shoto is a photo sharing service which combines photos from multiple cameras into a single photo stream.">
     <meta name="author" content="Matt Oakes">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,10 +23,10 @@
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <button class="newSet btn btn-primary">New Album</button>
+        </div>
         <div class="container">
-            <div class="pull-right title-align">
-                <button class="newSet btn btn-primary">New Album</button>
-            </div>
             <h2>Your Albums</h2>
             {{#if sets}}
                 <ul>
@@ -58,8 +58,8 @@
                 <div class="control-group" id="startDateGroup">
                     <label class="control-label" for="inputStartDate">Start Date of Event</label>
                     <div class="controls">
-                        <div class="input-append date" id="inputStartDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
-                            <input class="span6" type="text" readonly="">
+                        <div class="input-append date" id="inputStartDate" data-date="2013-01-01" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                            <input class="span6" type="text">
                             <span class="add-on"><i class="icon-calendar"></i></span>
                         </div>
                     </div>
@@ -67,8 +67,8 @@
                 <div class="control-group" id="endDateGroup">
                     <label class="control-label" for="inputEndDate">End Date of Event</label>
                     <div class="controls">
-                        <div class="input-append date" id="inputEndDate" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
-                            <input class="span6" type="text" readonly="">
+                        <div class="input-append date" id="inputEndDate" data-date="2013-01-01" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                            <input class="span6" type="text">
                             <span class="add-on"><i class="icon-calendar"></i></span>
                         </div>
                     </div>
@@ -81,16 +81,16 @@
         </div>
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
+        </div>
         <div class="container">
-            <div class="pull-right title-align">
-                <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
-            </div>
-            <h2>{{set.name}}</h2>
+            <h2>{{set.name}} <small>{{set.description}}</small></h2>
             {{#if photos}}
-                <ul class="thumbnails">
+                <ul>
                     {{#each photos}}
-                        <li class="clearfix span2">
-                            <a href="#/photo/{{id}}" class="thumbnail">
+                        <li class="photo">
+                            <a href="#/photo/{{id}}" class="">
                                 <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
                             </a>
                         </li>
@@ -102,16 +102,16 @@
         </div>
     </script>
     <script id="photoUploadViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <input id="fileUpload" type="file" style="visibility:hidden;"/>
+            <button id="selectBtn" class="btn">Select Photos</button>
+            <button id="uploadBtn" class="btn btn-primary">Finish Upload</button>
+        </div>
         <div class="container" id="dropzone">
-            <div class="pull-right title-align">
-                <input id="fileUpload" type="file" style="visibility:hidden;"/>
-                <button id="selectBtn" class="btn">Select Photos</button>
-                <button id="uploadBtn" class="btn btn-primary">Upload</button>
-            </div>
             <h2>{{set.name}}</h2>
             {{#if photos}}
                 {{#iter photos}}
-                    <div class="span12 thumbnail upload" data-index="{{i}}">
+                    <div class="upload" data-index="{{i}}">
                         <img src="{{small_photo_url}}">
                         <p class="description">{{description}}</p>
                         <p class="date-line">{{date_taken}}</p>
@@ -123,7 +123,10 @@
         </div>
     </script>
     <script id="loginViewTemplate" type="text/x-handlebars-template">
-        <div class="container">
+        <div class="modal-header">
+            <h3>Login</h3>
+        </div>
+        <div class="modal-body">
             <form class="form-horizontal">
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
@@ -137,12 +140,10 @@
                         <input type="password" id="password" placeholder="Password">
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button type="submit" class="btn loginSubmit">Sign in</button>
-                    </div>
-                </div>
             </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn loginSubmit">Sign in</button>
         </div>
     </script>
     <script id="changeAllDatesViewTemplate" type="text/x-handlebars-template">
@@ -199,14 +200,9 @@
     </script>
 </head>
 <body>
-    <div class="navbar navbar-static-top">
+    <div class="navbar navbar-static-top navbar-inverse">
         <div class="navbar-inner">
             <a class="brand" href="#">Shoto</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
-            </ul>
         </div>
     </div>
     <div class="container-fluid">
@@ -216,11 +212,11 @@
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
             <div id="photoUploadView" class="view"></div>
-            <div id="loginView" class="view"></div>
         </div>
     </div>
     <div class="modal-shade"></div>
     <div id="modal" class="modal">
+        <div id="loginView"></div>
         <div id="changeAllDatesView"></div>
     </div>
 </body>

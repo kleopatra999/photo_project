@@ -24,14 +24,14 @@ App.viewController = (function() {
             },
             photoUpload: {
                 el: $('#photoUploadView')
-            },
-            login: {
-                el: $('#loginView')
             }
         };
         modalViews = {
             changeAllDates: {
                 el: $('#changeAllDatesView')
+            },
+            login: {
+                el: $('#loginView')
             }
         };
         wrapper = $('#wrapper');
@@ -60,7 +60,7 @@ App.viewController = (function() {
         _showView('photoUpload');
     },
     showLoginView = function() {
-        _showView('login');
+        _showModalView('login');
     },
     showChangeAllDatesView = function() {
         _showModalView('changeAllDates');
@@ -85,7 +85,6 @@ App.viewController = (function() {
             else {
                 showNew();
             }
-            
 
             currentView = view;
         }

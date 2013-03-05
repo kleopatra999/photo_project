@@ -35,19 +35,25 @@ var getById = function(req, id, done) {
 /**
  * Creates a new set and returns the new id
  **/
-var create = function(req, name, startDate, endDate, done) {
+var create = function(req, name, description, startDate, endDate, done) {
     // Check for valid inputs
     if (!name || name.length === 0) return done(NO_NAME);
+    if (!description || description.length === 0) return done(NO_DESCRIPTION);
     if (!startDate) return done(NO_START_DATE);
     if (!endDate) return done(NO_END_DATE);
 
+    console.log(startDate);
+
     // Get the values ready for adding to SQL
     name = sqlUtils.wrapQuotesOrNull(name);
+    description = sqlUtils.wrapQuotesOrNull(description);
     startDate = sqlUtils.wrapQuotesOrNull(startDate);
     endDate = sqlUtils.wrapQuotesOrNull(endDate);
 
+    console.log(startDate);
+
     // Make the request
-    var sql = "INSERT INTO `set` (`name`, `start_date`, `end_date`) VALUES (" + name + ", " + startDate + ", " + endDate + ")";
+    var sql = "INSERT INTO `set` (`name`, `description`, `start_date`, `end_date`) VALUES (" + name + ", " + description + ", " + startDate + ", " + endDate + ")";
     req.dbConnection.query(sql, function(err, rows, field) {
         if (err) done(err);
 
@@ -124,6 +130,7 @@ var deleteById = function(req, id, done) {
 var NO_ID = "No id provided";
 var SET_NOT_FOUND = "No set with that ID";
 var NO_NAME = "A name is required";
+var NO_DESCRIPTION = "A description is required";
 var NO_START_DATE = "A start date is required";
 var NO_END_DATE = "A end date is required";
 
@@ -140,6 +147,7 @@ module.exports = {
     'NO_ID': NO_ID,
     'SET_NOT_FOUND': SET_NOT_FOUND,
     'NO_NAME': NO_NAME,
+    'NO_DESCRIPTION': NO_DESCRIPTION,
     'NO_START_DATE': NO_START_DATE,
     'NO_END_DATE': NO_END_DATE
 };

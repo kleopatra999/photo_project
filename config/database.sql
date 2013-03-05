@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
 CREATE TABLE IF NOT EXISTS `set` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
+  `description` TEXT NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -65,8 +66,8 @@ ALTER TABLE `set_user`
 
 
 
-INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('1', 'Testing', '2012-11-01', '2012-11-02');
-INSERT INTO `set` (`id`, `name`, `start_date`, `end_date`) VALUES ('2', 'Only for user 2', '2012-11-01', '2012-11-02');
+INSERT INTO `set` (`id`, `name`, `description`, `start_date`, `end_date`) VALUES ('1', 'Testing', 'Testing', '2012-11-01', '2012-11-02');
+INSERT INTO `set` (`id`, `name`, `description`, `start_date`, `end_date`) VALUES ('2', 'Only for user 2', 'User 2 set', '2012-11-01', '2012-11-02');
 
 INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('1', 'default@user.me', SHA1('default'), 'Default User');
 INSERT INTO `user` (`id`, `email`, `password`, `name`) VALUES ('2', 'user@two.me', SHA1('boom'), 'User 2');

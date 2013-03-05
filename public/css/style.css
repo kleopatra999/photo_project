@@ -40,28 +40,64 @@ body {
     background-color: rgba(0, 0, 0, 0.25);
 }
 
-.processing {
-    opacity: 0.25;
+.navbar-buttons {
+    position: absolute;
+    top: -36px;
+    right: 0;
 }
 
-.title-align {
-    margin-top: 16px;
+/*Photo list */
+.photos {
+    margin: 0 auto;
 }
-
-/*.upload {
-}*/
-.upload img {
+.photo {
+    list-style-type: none;
     float: left;
-    width: 100px;
-    min-height: 60px;
+    width: -webkit-calc(22.5% - 10px);
+    height: 175px;
+    overflow: hidden;
+    margin: 10px;
+    border: 5px solid #EEE;
+
+    -webkit-transition: .3s -webkit-transform cubic-bezier(0.25,.46,.45,.94);
+    -ms-transition: .3s -ms-transform cubic-bezier(0.25,.46,.45,.94);
+    -o-transition: .3s -o-transform cubic-bezier(0.25,.46,.45,.94);
+    -moz-transition: .3s -moz-transform cubic-bezier(0.25,.46,.45,.94);
+    transition: .3s transform cubic-bezier(0.25,.46,.45,.94);
+}
+.photo:hover {
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+/* Upload */
+.upload {
+    position: relative;
+    margin: 5px;
+    border: 1px solid #EEE;
+    min-height: 150px;
+}
+.upload img {
+    display: block;
+    width: 200px;
+    min-height: 150px;
     margin-right: 10px;
     background: #DDD;
 }
 .upload .description {
+    position: absolute;
+    top: 0;
+    left: 215px;
     font-size: 1.3em;
     margin: 15px 0 5px 0;
 }
 .upload .date-line {
+    position: absolute;
+    top: 40px;
+    left: 215px;
     font-size: 1.1em;
     font-style: italic;
 }

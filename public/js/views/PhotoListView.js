@@ -24,7 +24,9 @@ App.views.PhotoListView = Backbone.View.extend({
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
+        console.log(this.collection);
         var photos = this.collection.toJSON();
+        console.log(photos);
         this.$el.html(this.template({
             set: set,
             photos: photos

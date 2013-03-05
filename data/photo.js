@@ -1,5 +1,7 @@
 var sqlUtils = require('../utils/sql'),
-    setData = require('./set');
+    setData = require('./set'),
+    _ = require('underscore'),
+    dateFormat = require('dateformat');
 
 /**
  * Returns all the photos under a specific setId
@@ -15,6 +17,10 @@ var getAllBySetId = function(req, setId, done) {
         var photoQuery = "SELECT * FROM `photo` WHERE `set_id` = '" + setId + "'";
         req.dbConnection.query(photoQuery, function(err, rows, field) {
             if (err) return done(err);
+
+            _.each(rows, function(row) {
+                row.date_taken = dateFormat(Date.parse(row.date_taken), 'HH:MM:ss dd-mm-yyyy');
+            });
 
             done(null, rows);
         });
@@ -39,6 +45,10 @@ var getById = function(req, id, done) {
         // Get the set data to validate that the user has access to this photo
         setData.getById(req, photo.set_id, function(err, set) {
             if (err) return done(PHOTO_NOT_FOUND); // Hide that auth is the error, send 404
+
+            _.each(rows, function(row) {
+                row.date_taken = dateFormat(Date.parse(row.date_taken), 'HH:MM:ss dd-mm-yyyy');
+            });
 
             // Return the data
             done(null, photo);

@@ -70,12 +70,14 @@ exports.create = function(req, res) {
     // Check for user login
     if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
 
-    setData.create(req, req.body.name, req.body.start_date, req.body.end_date, function(err, newId) {
+    setData.create(req, req.body.name, req.body.description, req.body.start_date, req.body.end_date, function(err, newId) {
         // Check for and handle errors
         if (err) {
             switch (err) {
             case setData.NO_NAME:
                 return res.json(400, {error: "A name is required"});
+            case setData.NO_DESCRIPTION:
+                return res.json(400, {error: "A description is required"});
             case setData.NO_START_DATE:
                 return res.json(400, {error: "A start data is required"});
             case setData.NO_END_DATE:
