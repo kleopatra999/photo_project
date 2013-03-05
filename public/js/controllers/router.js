@@ -8,6 +8,7 @@ App.routers.Router = Backbone.Router.extend({
         'set/:setId/photos': 'showPhotoList',
         'set/:setId/upload': 'showPhotoUpload',
         'login': 'showLogin',
+        'register': 'showRegister',
         'set/:setId/upload/changeall': 'showChangeAllDates'
     },
 
@@ -21,6 +22,7 @@ App.routers.Router = Backbone.Router.extend({
                         'showPhotoUpload',
                         '_handleAllSetsDataPhotoUpload',
                         'showLogin',
+                        'showRegister',
                         'showChangeAllDates');
     },
 
@@ -111,6 +113,11 @@ App.routers.Router = Backbone.Router.extend({
         App.selectedSetStore.uploadSetId = null;
         App.loginView.render();
         App.viewController.showLoginView();
+    },
+
+    showRegister: function() {
+        App.registerView.render();
+        App.viewController.showRegisterView();
     },
 
     showChangeAllDates: function() {

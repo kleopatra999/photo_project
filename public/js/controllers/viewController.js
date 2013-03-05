@@ -24,6 +24,9 @@ App.viewController = (function() {
             },
             photoUpload: {
                 el: $('#photoUploadView')
+            },
+            register: {
+                el: $('#registerView')
             }
         };
         modalViews = {
@@ -64,6 +67,9 @@ App.viewController = (function() {
     },
     showChangeAllDatesView = function() {
         _showModalView('changeAllDates');
+    },
+    showRegisterView = function() {
+        _showView('register');
     },
 
     _showView = function(view) {
@@ -119,6 +125,7 @@ App.viewController = (function() {
         showPhotoListView: showPhotoListView,
         showPhotoUploadView: showPhotoUploadView,
         showLoginView: showLoginView,
+        showRegisterView: showRegisterView,
         showChangeAllDatesView: showChangeAllDatesView
     };
 
