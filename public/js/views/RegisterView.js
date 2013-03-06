@@ -35,7 +35,7 @@ App.views.RegisterView = Backbone.View.extend({
     },
     _registrationComplete: function(user) {
         console.log('Registration complete');
-        App.router.navigate('/', {trigger: true});
+        App.router.navigate('/set', {trigger: true});
     },
     _registrationFailed: function() {
         console.log('Registration failed');

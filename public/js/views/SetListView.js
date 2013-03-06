@@ -1,7 +1,7 @@
 App.views = App.views || {};
 
-App.views.HomeView = Backbone.View.extend({
-    template: Handlebars.compile($('#homeViewTemplate').html()),
+App.views.SetListView = Backbone.View.extend({
+    template: Handlebars.compile($('#setListViewTemplate').html()),
 
     events: {
         'click .btn.newSet': '_newSetClicked'
@@ -21,7 +21,7 @@ App.views.HomeView = Backbone.View.extend({
     },
 
     _newSetClicked: function() {
-        App.router.navigate('set/new', {trigger: true});
+        App.router.navigate('/set/new', {trigger: true});
     }
 });
 

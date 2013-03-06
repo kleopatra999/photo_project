@@ -40,8 +40,8 @@ App.appController = (function() {
         App.viewController.init();
 
         // Create our views
-        App.homeView = new App.views.HomeView({
-            el: $('#homeView'),
+        App.setListView = new App.views.SetListView({
+            el: $('#setListView'),
             model: App.models.Set,
             collection: App.currentSetStore
         });
