@@ -22,6 +22,16 @@
 
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
+    <script id="homeViewTemplate" type="text/x-handlebars-template">
+        <div class="home navbar-buttons">
+            <button class="login btn">Login</button>
+            <button class="register btn btn-primary">Register</button>
+        </div>
+        <div class="container">
+            <h2>Homepage</h2>
+            <p>There should be some info here about Shoto...</p>
+        </div>
+    </script>
     <script id="setListViewTemplate" type="text/x-handlebars-template">
         <div class="navbar-buttons">
             <button class="newSet btn btn-primary">New Album</button>
@@ -225,6 +235,7 @@
     <script src="js/controllers/router.js"></script>
 
     <!-- APP VIEWS -->
+    <script src="js/views/HomeView.js"></script>
     <script src="js/views/SetListView.js"></script>
     <script src="js/views/NewSetView.js"></script>
     <script src="js/views/PhotoListView.js"></script>
@@ -253,6 +264,7 @@
     <div class="container-fluid">
         <div id="content" class="row-fluid">
             <!--Body content-->
+            <div id="homeView" class="view"></div>
             <div id="setListView" class="view"></div>
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>

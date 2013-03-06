@@ -65,8 +65,9 @@ App.dataController = (function() {
         // Make the login request
         var loginRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Logged in');
-            App.user = data;
             self.trigger(USER_LOGGED_IN, null); // TODO: Should pass back the user object from the API
+
+            App.user = data;
             App.profileView.render();
         });
 
@@ -92,6 +93,9 @@ App.dataController = (function() {
         var registerRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Regisgtered');
             self.trigger(USER_REGISTERED, null); // TODO: Should pass back the user object from the API
+
+            App.user = data;
+            App.profileView.render();
         });
 
         // Set an error handler to listen out for incorrect logins

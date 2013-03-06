@@ -2,6 +2,7 @@ App.routers = {};
 
 App.routers.Router = Backbone.Router.extend({
     routes: {
+        '': 'showHome',
         'set': 'showSetList',
         'set/new': 'showNewSet',
         'set/:setId/photos': 'showPhotoList',
@@ -12,7 +13,8 @@ App.routers.Router = Backbone.Router.extend({
     },
 
     initialize: function (options) {
-        _.bindAll(this, 'showSetList',
+        _.bindAll(this, 'showHome',
+                        'showSetList',
                         '_handleAllSetsData',
                         'showNewSet',
                         'showPhotoList',
@@ -26,6 +28,12 @@ App.routers.Router = Backbone.Router.extend({
     },
 
     // Home
+    showHome: function() {
+        App.homeView.render();
+        App.viewController.showHomeView();
+    },
+
+    // Sets
     showSetList: function() {
         App.selectedSetStore.uploadSetId = null;
         if (App.allSetStore.fetched) {

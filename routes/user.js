@@ -33,7 +33,7 @@ exports.register = function(req, res) {
                     return res.json(500, {error: 'Cannot create user'});
                 }
 
-                return res.json(200, {'newId': newId});
+                return res.json(200, user);
             });
         });
     });

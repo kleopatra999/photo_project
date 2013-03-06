@@ -45,6 +45,9 @@ body {
     top: -36px;
     right: 60px;
 }
+.home.navbar-buttons {
+    right: 0;
+}
 
 .user-profile {
     display: block;

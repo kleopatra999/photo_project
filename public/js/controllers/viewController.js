@@ -12,6 +12,9 @@ App.viewController = (function() {
 
     init = function() {
         views = {
+            home: {
+                el: $('#homeView')
+            },
             setList: {
                 el: $('#setListView')
             },
@@ -45,6 +48,9 @@ App.viewController = (function() {
         currentModalView = null;
     },
 
+    showHomeView = function() {
+        _showView('home');
+    },
     showSetListView = function() {
         _showView('setList');
     },
@@ -115,6 +121,7 @@ App.viewController = (function() {
     return {
         init: init,
         views: views,
+        showHomeView: showHomeView,
         showSetListView: showSetListView,
         showNewSetView: showNewSetView,
         showPhotoListView: showPhotoListView,
