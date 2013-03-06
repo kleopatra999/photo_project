@@ -34,7 +34,7 @@ App.views.LoginView = Backbone.View.extend({
     },
     _loginComplete: function(user) {
         console.log('View login complete');
-        App.router.navigate('/', {trigger: true});
+        App.router.navigate('/set', {trigger: true});
     },
     _loginFailed: function() {
         console.log('View login failed');

@@ -1,7 +1,6 @@
 App.viewController = (function() {
     var
 
-    dimensions = {},
     views = {},
     modalViews = {},
     currentView,
@@ -15,6 +14,9 @@ App.viewController = (function() {
         views = {
             home: {
                 el: $('#homeView')
+            },
+            setList: {
+                el: $('#setListView')
             },
             newSet: {
                 el: $('#newSetView')
@@ -44,14 +46,13 @@ App.viewController = (function() {
         htmlRoot = $('html');
         currentView = null;
         currentModalView = null;
-        dimensions = {
-            width: views.home.el.width(),
-            height: views.home.el.height()
-        };
     },
 
     showHomeView = function() {
         _showView('home');
+    },
+    showSetListView = function() {
+        _showView('setList');
     },
     showNewSetView = function() {
         _showView('newSet');
@@ -121,6 +122,7 @@ App.viewController = (function() {
         init: init,
         views: views,
         showHomeView: showHomeView,
+        showSetListView: showSetListView,
         showNewSetView: showNewSetView,
         showPhotoListView: showPhotoListView,
         showPhotoUploadView: showPhotoUploadView,

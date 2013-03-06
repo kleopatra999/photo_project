@@ -62,7 +62,9 @@ app.configure('development', function(){
 
 // Setup the routes
 // User login
-app.post('/login', login.postLoginRoute);
+app.post('/login', login.postLoginRoute, function(req, res) {
+    res.json(req.user);
+});
 app.get('/logout', login.logoutRoute);
 // Photos
 app.get('/photo', photo.list);
@@ -78,6 +80,7 @@ app.post('/set/:id', set.update);
 app.del('/set/:id', set.del);
 // Users
 app.get('/user', user.list);
+app.get('/user/current', user.getCurrentUser);
 app.post('/user/register', user.register);
 if (module.exports.testing) {
     // Test filestore route

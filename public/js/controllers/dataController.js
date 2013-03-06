@@ -66,6 +66,9 @@ App.dataController = (function() {
         var loginRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Logged in');
             self.trigger(USER_LOGGED_IN, null); // TODO: Should pass back the user object from the API
+
+            App.user = data;
+            App.profileView.render();
         });
 
         // Set an error handler to listen out for incorrect logins
@@ -90,12 +93,27 @@ App.dataController = (function() {
         var registerRequest = $.post(url, data, function(data, textStatus, jqXHR) {
             console.log('Regisgtered');
             self.trigger(USER_REGISTERED, null); // TODO: Should pass back the user object from the API
+
+            App.user = data;
+            App.profileView.render();
         });
 
         // Set an error handler to listen out for incorrect logins
         registerRequest.fail(function() {
             console.log('Registration failed');
             self.trigger(USER_REGISTRATION_FAILED);
+        });
+    };
+
+    var getCurrentUser = function() {
+        // Setup the variables for the request
+        var url = '/user/current';
+        // Make the login request
+        var userRequest = $.get(url, function(data, textStatus, jqXHR) {
+            if (!data.error) {
+                App.user = data;
+                App.profileView.render();
+            }
         });
     };
 
@@ -114,7 +132,8 @@ App.dataController = (function() {
         clearPhotos: clearPhotos,
         createSet: createSet,
         register: register,
-        login: login
+        login: login,
+        getCurrentUser: getCurrentUser
     };
 
 }());

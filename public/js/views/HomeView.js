@@ -4,24 +4,23 @@ App.views.HomeView = Backbone.View.extend({
     template: Handlebars.compile($('#homeViewTemplate').html()),
 
     events: {
-        'click .btn.newSet': '_newSetClicked'
+        'click .btn.login': '_loginClicked',
+        'click .btn.register': '_registerClicked'
     },
 
     initialize: function() {
-        _.bindAll(this, 'render', '_newSetClicked');
-        this.collection.bind('reset', this.render);
+        _.bindAll(this, 'render', '_loginClicked', '_registerClicked');
     },
 
     render: function() {
-        var sets = this.collection.toJSON();
-        this.$el.html(this.template({
-            sets: sets
-        }));
+        this.$el.html(this.template());
         return this;
     },
 
-    _newSetClicked: function() {
-        App.router.navigate('set/new', {trigger: true});
+    _loginClicked: function() {
+        App.router.navigate('/login', {trigger: true});
+    },
+    _registerClicked: function() {
+        App.router.navigate('/register', {trigger: true});
     }
 });
-

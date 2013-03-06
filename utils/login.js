@@ -48,7 +48,7 @@ var deserializeUser = function(id, done) {
 };
 
 // A route to use when the user makes a POST request to login
-var postLoginRoute = passport.authenticate('local', {successRedirect: '/'});
+var postLoginRoute = passport.authenticate('local');
 
 // A route to use when the user makes a GET request to logout
 var logoutRoute = function(req, res) {

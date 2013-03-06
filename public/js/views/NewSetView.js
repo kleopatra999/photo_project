@@ -39,11 +39,11 @@ App.views.NewSetView = Backbone.View.extend({
     },
     _handleSetCreated: function(set) {
         App.dataController.unbind(App.dataController.SET_DATA_CREATED, this._handleSetCreated);
-        App.router.navigate('set/' + set.id + '/photos', {trigger: true});
+        App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
     },
 
     formCancel: function() {
-        App.router.navigate('', {trigger: true});
+        App.router.navigate('/set', {trigger: true});
     },
 
     _doesFormValidate: function() {
