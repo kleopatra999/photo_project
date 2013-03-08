@@ -5,7 +5,8 @@ App.views.LoginView = Backbone.View.extend({
     template: Handlebars.compile($('#loginViewTemplate').html()),
 
     events: {
-        'click .loginSubmit': '_loginSubmitClicked'
+        'click .loginSubmit': '_loginSubmitClicked',
+        'click .cancel': '_cancelClicked'
     },
 
     initialize: function() {
@@ -38,6 +39,11 @@ App.views.LoginView = Backbone.View.extend({
     },
     _loginFailed: function() {
         console.log('View login failed');
+    },
+
+    _cancelClicked: function() {
+        App.router.navigate('/', {trigger: true});
+        return false;
     }
 });
 

@@ -46,7 +46,8 @@ body {
     right: 60px;
 }
 .home.navbar-buttons {
-    right: 0;
+    right: 20px;
+    top: 5px;
 }
 
 .user-profile {
@@ -180,4 +181,24 @@ body {
 /* Login */
 .login-form {
     margin: 0;
+}
+
+/* Homepage */
+.homepage-hero {
+    min-height: 150px;
+    padding: 130px 60px 20px 60px;
+    background: url('../img/homepage.jpg');
+    background-size: 100% auto;
+    color: #000;
+    border-radius: 0;
+}
+.features > .row {
+    margin-bottom: 40px;
+}
+.features > .row > div {
+    text-align: center;
+}
+.features .large-icon {
+    color: #444;
+    font-size: 8em;
 }
