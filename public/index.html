@@ -24,10 +24,12 @@
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
     <script id="homeViewTemplate" type="text/x-handlebars-template">
-        <div class="home navbar-buttons">
-            <button class="login btn">Login</button>
-            <button class="register btn btn-primary">Register</button>
-        </div>
+        {{#if showButtons}}
+            <div class="home navbar-buttons">
+                <button class="login btn">Login</button>
+                <button class="register btn btn-primary">Register</button>
+            </div>
+        {{/if}}
         <div class="hero-unit homepage-hero">
             <h1>Shoto</h1>
             <p>Create albums together</p>
@@ -242,6 +244,8 @@
             <li class="user-profile dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{gravatar}}" /> <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
+                    <li><a tabindex="-1" id="albums">Albums</a></li>
+                    <li role="presentation" class="divider"></li>
                     <li><a tabindex="-1" href="/logout">Logout</a></li>
                 </ul>
             </li>

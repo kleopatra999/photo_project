@@ -10,10 +10,16 @@ App.views.HomeView = Backbone.View.extend({
 
     initialize: function() {
         _.bindAll(this, 'render', '_loginClicked', '_registerClicked');
+
+        App.profileView.bind(App.profileView.RENDER, this.render);
     },
 
     render: function() {
-        this.$el.html(this.template());
+        console.log('Render home');
+        var showButtons = (App.user) ? false : true;
+        this.$el.html(this.template({
+            showButtons: showButtons
+        }));
         return this;
     },
 

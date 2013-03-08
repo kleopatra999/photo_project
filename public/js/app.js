@@ -40,6 +40,9 @@ App.appController = (function() {
         App.viewController.init();
 
         // Create our views
+        App.profileView = new App.views.ProfileView({
+            el: $('#profileView')
+        });
         App.homeView = new App.views.HomeView({
             el: $('#homeView')
         });
@@ -68,9 +71,6 @@ App.appController = (function() {
         });
         App.registerView = new App.views.RegisterView({
             el: $('#registerView')
-        });
-        App.profileView = new App.views.ProfileView({
-            el: $('#profileView')
         });
         App.changeAllDatesView = new App.views.ChangeAllDatesView({
             el: $('#changeAllDatesView')
