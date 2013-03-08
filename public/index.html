@@ -17,6 +17,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="css/bootstrap.css?v=1">
+    <link rel="stylesheet" href="css/elusive-webfont.css?v=1">
     <link rel="stylesheet" href="css/datepicker.css?v=1">
     <link rel="stylesheet" href="css/style.css?v=1">
 
@@ -27,9 +28,46 @@
             <button class="login btn">Login</button>
             <button class="register btn btn-primary">Register</button>
         </div>
-        <div class="container">
-            <h2>Homepage</h2>
-            <p>There should be some info here about Shoto...</p>
+        <div class="hero-unit homepage-hero">
+            <h1>Shoto</h1>
+            <p>Create albums together</p>
+            <button class="register btn btn-primary btn-large">Register</button>
+        </div>
+        <div class="container features">
+            <div class="row">
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-group"></i></p>
+                    <h2>Share With Groups</h2>
+                    <p>Everyone who attended an event with have some photos to share. Shoto allows everyone yo put their own photos into a single album for everyone to see. No more hunting around checking who has that special photo you want to see.</p>
+                </div>
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-time"></i></p>
+                    <h2>Single Shared Album</h2>
+                    <p>No need to find the album of the person who uploaded that special photo you want, everyones photos from the event are stored in a single cronological album. Simple.</p>
+                </div>
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-wrench"></i></p>
+                    <h2>Fix Photo Metadata</h2>
+                    <p>It's enevitable - someone forgot to change their camera time and messed up the order of the photo album. Even a few seconds can make a difference. Shoto allows you to very easily fix any problems with the metadata and makes the album flow better.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-upload"></i></p>
+                    <h2>Upload Easily</h2>
+                    <p>Upload is as simple as dragging and dropping into your browser. While the upload is happening you can change the description of photos and fix the metadata if needed.</p>
+                </div>
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-eye-open"></i></p>
+                    <h2>Original Quality</h2>
+                    <p>Even though your photos are being stored in the cloud, everyone will still be able to download the origional quality images for printing.</p>
+                </div>
+                <div class="span4">
+                    <p class="large-icon"><i class="icon-smiley-alt"></i></p>
+                    <h2>Easy To Use</h2>
+                    <p>Simple interface and easy to use upload. Just drag and drop to get going.</p>
+                </div>
+            </div>
         </div>
     </script>
     <script id="setListViewTemplate" type="text/x-handlebars-template">
@@ -282,10 +320,10 @@
             </div>
         </div>
     </div>
+    <div id="homeView" class="view"></div>
     <div class="container-fluid">
         <div id="content" class="row-fluid">
             <!--Body content-->
-            <div id="homeView" class="view"></div>
             <div id="setListView" class="view"></div>
             <div id="newSetView" class="view"></div>
             <div id="photoListView" class="view"></div>
