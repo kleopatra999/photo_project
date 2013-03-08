@@ -135,7 +135,7 @@ exports.update = function(req, res) {
 exports.del = function(req, res) {
     // Check for user login
     if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
-    
+
     setData.deleteById(req, req.params.id, function(err, result) {
         if (err) {
             switch (err) {
@@ -150,5 +150,30 @@ exports.del = function(req, res) {
         }
 
         res.json(200, {message: "Delete complete"});
+    });
+};
+
+exports.share = function(req, res) {
+    // Check for user login
+    if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
+
+    setData.shareById(req, req.params.id, req.body.email, function(err, result) {
+        if (err) {
+            switch (err) {
+            case setData.NO_ID:
+                return res.json(400, {error: "An id is required"});
+            case setData.NO_EMAIL:
+                return res.json(400, {error: "An email is required"});
+            case setData.SET_NOT_FOUND:
+                return res.json(404, {error: "Set with that id not found"});
+            case setData.EMAIL_NOT_FOUND:
+                return res.json(404, {error: "No user with that email"});
+            default:
+                console.log("Error while sharing set:", err);
+                return res.json(500, {error: "Unknown error while sharing set"});
+            }
+        }
+
+        res.json(200, {message: "Share complete"});
     });
 };

@@ -4,11 +4,12 @@ App.views.PhotoListView = Backbone.View.extend({
     template: Handlebars.compile($('#photoListViewTemplate').html()),
 
     events: {
-        'click #uploadBtn': '_uploadClicked'
+        'click #uploadBtn': '_uploadClicked',
+        'click #shareBtn': '_shareClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked');
+        _.bindAll(this, 'render', '_uploadClicked', '_shareClicked');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -40,6 +41,17 @@ App.views.PhotoListView = Backbone.View.extend({
 
         if (set) {
             App.router.navigate('/set/' + set.id + '/upload', {trigger: true});
+        }
+        else {
+            console.log('We dont have a set...');
+        }
+    },
+
+    _shareClicked: function() {
+        var set = this.setCollection.toJSON()[0];
+
+        if (set) {
+            App.router.navigate('/set/' + set.id + '/share', {trigger: true});
         }
         else {
             console.log('We dont have a set...');

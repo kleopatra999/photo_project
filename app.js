@@ -78,6 +78,7 @@ app.post('/set', set.create);
 app.get('/set/:id', set.single);
 app.post('/set/:id', set.update);
 app.del('/set/:id', set.del);
+app.post('/set/:id/share', set.share);
 // Users
 app.get('/user', user.list);
 app.get('/user/current', user.getCurrentUser);

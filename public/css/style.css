@@ -139,7 +139,6 @@ body {
 }
 
 /* Modal */
-
 .show-modal body {
     -webkit-transform: scale(0.9);
     -ms-transform: scale(0.9);
@@ -149,6 +148,7 @@ body {
 }
 .modal {
     opacity: 0;
+    top: 350px;
     -webkit-transition: .3s all cubic-bezier(0.25,.46,.45,.94);
 }
 .show-modal .modal {
@@ -175,4 +175,9 @@ body {
 .show-modal .modal-shade {
     opacity: 1;
     visibility: visible;
+}
+
+/* Login */
+.login-form {
+    margin: 0;
 }

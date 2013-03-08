@@ -37,6 +37,9 @@ App.viewController = (function() {
             },
             login: {
                 el: $('#loginView')
+            },
+            share: {
+                el: $('#shareView')
             }
         };
         wrapper = $('#wrapper');
@@ -68,6 +71,9 @@ App.viewController = (function() {
     },
     showChangeAllDatesView = function() {
         _showModalView('changeAllDates');
+    },
+    showShareView = function() {
+        _showModalView('share');
     },
     showRegisterView = function() {
         _showView('register');
@@ -128,7 +134,8 @@ App.viewController = (function() {
         showPhotoUploadView: showPhotoUploadView,
         showLoginView: showLoginView,
         showRegisterView: showRegisterView,
-        showChangeAllDatesView: showChangeAllDatesView
+        showChangeAllDatesView: showChangeAllDatesView,
+        showShareView: showShareView
     };
 
 }());

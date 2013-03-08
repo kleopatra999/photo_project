@@ -92,6 +92,7 @@
     </script>
     <script id="photoListViewTemplate" type="text/x-handlebars-template">
         <div class="navbar-buttons">
+            <button id="shareBtn" class="btn">Share Album</button>
             <button id="uploadBtn" class="btn btn-primary">Upload Photos</button>
         </div>
         <div class="container">
@@ -136,8 +137,8 @@
         <div class="modal-header">
             <h3>Login</h3>
         </div>
-        <div class="modal-body">
-            <form class="form-horizontal">
+        <form class="form-horizontal login-form">
+            <div class="modal-body">
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
                     <div class="controls">
@@ -150,11 +151,11 @@
                         <input type="password" id="password" placeholder="Password">
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn loginSubmit">Sign in</button>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary loginSubmit">Sign in</button>
+            </div>
+        </form>
     </script>
     <script id="registerViewTemplate" type="text/x-handlebars-template">
         <div class="container">
@@ -207,6 +208,25 @@
             </li>
         </ul>
     </script>
+    <script id="shareViewTemplate" type="text/x-handlebars-template">
+        <div class="modal-header">
+            <h3>Share Album</h3>
+        </div>
+        <form class="form-horizontal login-form">
+            <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="email">Email</label>
+                    <div class="controls">
+                        <input type="text" id="email" placeholder="Email">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn shareCancel">Cancel</button>
+                <button type="submit" class="btn btn-primary shareSubmit">Share</button>
+            </div>
+        </form>
+    </script>
 
     <!-- LIBS -->
     <script src="js/libs/base64.js"></script>
@@ -244,6 +264,7 @@
     <script src="js/views/ProfileView.js"></script>
     <script src="js/views/RegisterView.js"></script>
     <script src="js/views/ChangeAllDatesView.js"></script>
+    <script src="js/views/ShareView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -276,6 +297,7 @@
     <div id="modal" class="modal">
         <div id="loginView"></div>
         <div id="changeAllDatesView"></div>
+        <div id="shareView"></div>
     </div>
 </body>
 </html>

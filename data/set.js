@@ -1,4 +1,5 @@
 var sqlUtils = require('../utils/sql'),
+    userData = require('./user');
     _ = require('underscore');
 
 /**
@@ -121,14 +122,38 @@ var deleteById = function(req, id, done) {
 };
 
 /**
+ * Shared the given set with the users email
+ **/
+var shareById = function(req, id, email, done) {
+    // Check for valid inputs
+    if (!id) return done(NO_ID);
+    if (!email) return done(NO_EMAIL);
+
+    userData.getByEmail(email, function(err, user) {
+        if (err) return done(EMAIL_NOT_FOUND);
+
+        // Make the request
+        var sql = "INSERT INTO `set_user` (`set_id`, `user_id`) VALUES ('" + id + "', '" + user.id + "')";
+        req.dbConnection.query(sql, function(err, rows, field) {
+            if (err) done(err);
+
+            var newSetId = rows.insertId;
+            done(null, newSetId);
+        });
+    });
+};
+
+/**
  * Errors
  **/
 var NO_ID = "No id provided";
 var SET_NOT_FOUND = "No set with that ID";
+var EMAIL_NOT_FOUND = "No user with that email";
 var NO_NAME = "A name is required";
 var NO_DESCRIPTION = "A description is required";
 var NO_START_DATE = "A start date is required";
 var NO_END_DATE = "A end date is required";
+var NO_EMAIL = "An email is required";
 
 /**
  * Exports
@@ -139,11 +164,14 @@ module.exports = {
     'create': create,
     'updateById': updateById,
     'deleteById': deleteById,
+    'shareById': shareById,
 
     'NO_ID': NO_ID,
     'SET_NOT_FOUND': SET_NOT_FOUND,
+    'EMAIL_NOT_FOUND': EMAIL_NOT_FOUND,
     'NO_NAME': NO_NAME,
     'NO_DESCRIPTION': NO_DESCRIPTION,
     'NO_START_DATE': NO_START_DATE,
-    'NO_END_DATE': NO_END_DATE
+    'NO_END_DATE': NO_END_DATE,
+    'NO_EMAIL': NO_EMAIL
 };
