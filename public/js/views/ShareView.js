@@ -5,11 +5,12 @@ App.views.ShareView = Backbone.View.extend({
     template: Handlebars.compile($('#shareViewTemplate').html()),
 
     events: {
-        'click .shareSubmit': '_shareClicked'
+        'click .shareSubmit': '_shareClicked',
+        'click .shareCancel': '_cancelClicked'
     },
 
     initialize: function() {
-        _.bindAll(this, 'render', '_shareClicked', '_shareComplete', '_shareFailed');
+        _.bindAll(this, 'render', '_shareClicked', '_shareComplete', '_shareFailed', '_cancelClicked');
     },
 
     render: function() {
@@ -50,6 +51,18 @@ App.views.ShareView = Backbone.View.extend({
         App.dataController.unbind(App.dataController.SET_SHARE_FAILED);
 
         console.log('Share Failed');
+        return false;
+    },
+
+    _cancelClicked: function() {
+        var set = App.photoListView.setCollection.toJSON()[0];
+        console.log(set);
+        if (set) {
+            App.router.navigate('/set/' + set.id + '/photos', {trigger: true});
+        }
+        else {
+            console.log('We dont have a set...');
+        }
         return false;
     }
 });
