@@ -148,6 +148,7 @@ body {
 }
 .modal {
     opacity: 0;
+    top: 350px;
     -webkit-transition: .3s all cubic-bezier(0.25,.46,.45,.94);
 }
 .show-modal .modal {

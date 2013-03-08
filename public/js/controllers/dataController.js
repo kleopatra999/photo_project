@@ -6,6 +6,8 @@ App.dataController = (function() {
     var USER_LOGIN_FAILED = "DATA_CONTROLLER_USER_LOGIN_FAILED";
     var USER_REGISTERED = "DATA_CONTROLLER_USER_REGISTERED";
     var USER_REGISTRATION_FAILED = "DATA_CONTROLLER_USER_REGISTRATION_FAILED";
+    var SET_SHARED = "DATA_CONTROLLER_SET_SHARED";
+    var SET_SHARE_FAILED = "DATA_CONTROLLER_SET_SHARE_FAILED";
 
     var init = function() {
         _.bindAll(this, 'getSets', 'getPhotos', 'clearPhotos', 'createSet', 'login');
@@ -117,6 +119,28 @@ App.dataController = (function() {
         });
     };
 
+    var shareSet = function(id, email) {
+        var self = this;
+
+        // Setup the variables for the request
+        var url = '/set/' + id + '/share';
+        var data = {
+            email: email
+        };
+
+        // Make the login request
+        var shareRequest = $.post(url, data, function(data, textStatus, jqXHR) {
+            console.log('Set shared');
+            self.trigger(SET_SHARED);
+        });
+
+        // Set an error handler to listen out for incorrect logins
+        shareRequest.fail(function() {
+            console.log('Share failed');
+            self.trigger(SET_SHARE_FAILED);
+        });
+    };
+
     return {
         SETS_DATA_READY: SETS_DATA_READY,
         PHOTOS_DATA_READY: PHOTOS_DATA_READY,
@@ -125,6 +149,8 @@ App.dataController = (function() {
         USER_LOGIN_FAILED: USER_LOGIN_FAILED,
         USER_REGISTERED: USER_REGISTERED,
         USER_REGISTRATION_FAILED: USER_REGISTRATION_FAILED,
+        SET_SHARED: SET_SHARED,
+        SET_SHARE_FAILED: SET_SHARE_FAILED,
 
         init: init,
         getSets: getSets,
@@ -133,7 +159,8 @@ App.dataController = (function() {
         createSet: createSet,
         register: register,
         login: login,
-        getCurrentUser: getCurrentUser
+        getCurrentUser: getCurrentUser,
+        shareSet: shareSet
     };
 
 }());

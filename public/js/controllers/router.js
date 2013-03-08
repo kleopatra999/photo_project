@@ -9,7 +9,8 @@ App.routers.Router = Backbone.Router.extend({
         'set/:setId/upload': 'showPhotoUpload',
         'login': 'showLogin',
         'register': 'showRegister',
-        'set/:setId/upload/changeall': 'showChangeAllDates'
+        'set/:setId/upload/changeall': 'showChangeAllDates',
+        'set/:setId/share': 'showShare'
     },
 
     initialize: function (options) {
@@ -24,7 +25,8 @@ App.routers.Router = Backbone.Router.extend({
                         '_handleAllSetsDataPhotoUpload',
                         'showLogin',
                         'showRegister',
-                        'showChangeAllDates');
+                        'showChangeAllDates',
+                        'showShare');
     },
 
     // Home
@@ -130,5 +132,11 @@ App.routers.Router = Backbone.Router.extend({
     showChangeAllDates: function() {
         App.changeAllDatesView.render();
         App.viewController.showChangeAllDatesView();
+    },
+
+    showShare: function(setId) {
+        App.shareView.setId = setId;
+        App.shareView.render();
+        App.viewController.showShareView();
     }
 });

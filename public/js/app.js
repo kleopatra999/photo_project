@@ -75,6 +75,9 @@ App.appController = (function() {
         App.changeAllDatesView = new App.views.ChangeAllDatesView({
             el: $('#changeAllDatesView')
         });
+        App.shareView = new App.views.ShareView({
+            el: $('#shareView')
+        });
 
         // Create the router
         App.router = new App.routers.Router();
