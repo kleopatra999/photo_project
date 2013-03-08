@@ -139,7 +139,6 @@ body {
 }
 
 /* Modal */
-
 .show-modal body {
     -webkit-transform: scale(0.9);
     -ms-transform: scale(0.9);
@@ -175,4 +174,9 @@ body {
 .show-modal .modal-shade {
     opacity: 1;
     visibility: visible;
+}
+
+/* Login */
+.login-form {
+    margin: 0;
 }
