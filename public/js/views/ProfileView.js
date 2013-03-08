@@ -11,7 +11,6 @@ App.views.ProfileView = Backbone.View.extend({
         this.$el.html(this.template({
             gravatar: get_gravatar(App.user.email, 22)
         }));
-        console.log(this.$el.html());
         return this;
     }
 });
