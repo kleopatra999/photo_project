@@ -10,7 +10,8 @@ App.routers.Router = Backbone.Router.extend({
         'login': 'showLogin',
         'register': 'showRegister',
         'set/:setId/upload/changeall': 'showChangeAllDates',
-        'set/:setId/share': 'showShare'
+        'set/:setId/share': 'showShare',
+        'set/:setId/align': 'showPhotoAlign'
     },
 
     initialize: function (options) {
@@ -26,6 +27,7 @@ App.routers.Router = Backbone.Router.extend({
                         'showLogin',
                         'showRegister',
                         'showChangeAllDates',
+                        'showPhotoAlign',
                         'showShare');
     },
 
@@ -138,5 +140,11 @@ App.routers.Router = Backbone.Router.extend({
         App.shareView.setId = setId;
         App.shareView.render();
         App.viewController.showShareView();
+    },
+
+    showPhotoAlign: function(setId) {
+        App.photoAlignView.setId = setId;
+        App.photoAlignView.render();
+        App.viewController.showPhotoAlignView();
     }
 });

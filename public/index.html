@@ -271,6 +271,14 @@
             </div>
         </form>
     </script>
+    <script id="photoAlignViewTemplate" type="text/x-handlebars-template">
+        <div class="navbar-buttons">
+            <button id="doneBtn" class="btn btn-primary">Done</button>
+        </div>
+        <div class="container">
+            <h2>Photo Align</h2>
+        </div>
+    </script>
 
     <!-- LIBS -->
     <script src="js/libs/base64.js"></script>
@@ -309,6 +317,7 @@
     <script src="js/views/RegisterView.js"></script>
     <script src="js/views/ChangeAllDatesView.js"></script>
     <script src="js/views/ShareView.js"></script>
+    <script src="js/views/PhotoAlignView.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -335,6 +344,7 @@
             <div id="photoListView" class="view"></div>
             <div id="photoUploadView" class="view"></div>
             <div id="registerView" class="view"></div>
+            <div id="photoAlignView" class="view"></div>
         </div>
     </div>
     <div class="modal-shade"></div>
