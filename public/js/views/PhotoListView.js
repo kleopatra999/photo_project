@@ -5,11 +5,12 @@ App.views.PhotoListView = Backbone.View.extend({
 
     events: {
         'click #uploadBtn': '_uploadClicked',
+        'click #alignBtn': '_alignClicked',
         'click #shareBtn': '_shareClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked', '_shareClicked');
+        _.bindAll(this, 'render', '_uploadClicked', '_shareClicked', '_alignClicked');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -56,5 +57,9 @@ App.views.PhotoListView = Backbone.View.extend({
         else {
             console.log('We dont have a set...');
         }
+    },
+
+    _alignClicked: function() {
+        console.log('Align clicked');
     }
 });
