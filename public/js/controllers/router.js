@@ -28,7 +28,9 @@ App.routers.Router = Backbone.Router.extend({
                         'showRegister',
                         'showChangeAllDates',
                         'showPhotoAlign',
-                        'showShare');
+                        'showShare',
+                        '_handlePhotoAlignSetData',
+                        '_handlePhotoAlignPhotoData');
     },
 
     // Home
@@ -143,8 +145,33 @@ App.routers.Router = Backbone.Router.extend({
     },
 
     showPhotoAlign: function(setId) {
-        App.photoAlignView.setId = setId;
-        App.photoAlignView.render();
+        App.selectedSetStore.uploadSetId = null;
+        this._lastSetId = setId;
+
+        var set = App.allSetStore.getById(setId);
+        if (!set) {
+            App.dataController.bind(App.dataController.SETS_DATA_READY, this._handlePhotoAlignSetData);
+            App.dataController.getSets();
+            return;
+        }
+
+        if (App.photoStore.setId != setId || !App.photoStore.fetched) {
+            App.dataController.bind(App.dataController.PHOTOS_DATA_READY, this._handlePhotoAlignPhotoData);
+            App.dataController.getPhotos(setId);
+            return;
+        }
+
+        var photos = App.photoStore.getAll();
+        App.selectedSetStore.reset(set);
+        App.currentPhotoStore.reset(photos);
         App.viewController.showPhotoAlignView();
+    },
+    _handlePhotoAlignSetData: function(sets) {
+        App.dataController.unbind(App.dataController.SETS_DATA_READY, this._handlePhotoAlignSetData);
+        this.showPhotoAlign(this._lastSetId);
+    },
+    _handlePhotoAlignPhotoData: function(sets) {
+        App.dataController.unbind(App.dataController.PHOTOS_DATA_READY, this._handlePhotoAlignPhotoData);
+        this.showPhotoAlign(this._lastSetId);
     }
 });
