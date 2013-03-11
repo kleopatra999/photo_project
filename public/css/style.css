@@ -5,11 +5,11 @@ html {
 }
 
 body {
-    -webkit-transform-origin: 50% 100%;
-    -ms-transform-origin: 50% 100%;
-    -o-transform-origin: 50% 100%;
-    -moz-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
+    -webkit-transform-origin: 50% 700px;
+    -ms-transform-origin: 50% 700px;
+    -o-transform-origin: 50% 700px;
+    -moz-transform-origin: 50% 700px;
+    transform-origin: 50% 700px;
 
     -webkit-transition: .3s -webkit-transform cubic-bezier(0.25,.46,.45,.94);
     -ms-transition: .3s -ms-transform cubic-bezier(0.25,.46,.45,.94);
@@ -217,9 +217,9 @@ body {
 }
 .upload-group .group-photos .group-photo {
     float: left;
-    width: 100px;
-    height: 75px;
-    margin: 0 10px 10px 10px;
+    width: 200px;
+    height: 150px;
+    margin: 0 5px 15px 5px;
     border: 5px solid #EEE;
     overflow: hidden;
 }
