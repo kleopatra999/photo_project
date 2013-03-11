@@ -206,7 +206,16 @@ body {
 /* Photo align */
 .upload-group {
     overflow: hidden;
+    padding: 5px;
     margin-bottom: 10px;
+    -webkit-transition: .3s background-color cubic-bezier(0.25,.46,.45,.94);
+}
+.upload-group h3 {
+    margin-left: 10px;
+}
+.step1 .upload-group:hover {
+    background-color: #EEE;
+    cursor: pointer;
 }
 .upload-group .group-photos {
     width: 100%;
@@ -219,7 +228,13 @@ body {
     float: left;
     width: 200px;
     height: 150px;
-    margin: 0 5px 15px 5px;
+    margin: 0 5px 10px 5px;
     border: 5px solid #EEE;
     overflow: hidden;
+}
+.step1-message {
+    display: none;
+}
+.step1 .step1-message {
+    display: block;
 }
