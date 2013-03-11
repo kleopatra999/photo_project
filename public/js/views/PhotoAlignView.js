@@ -3,7 +3,9 @@ App.views = App.views || {};
 App.views.PhotoAlignView = Backbone.View.extend({
     template: Handlebars.compile($('#photoAlignViewTemplate').html()),
     step: 1,
-    masterGroup: null,
+    masterGroupName: null,
+    masterGroupPhotos: null,
+    groupDivs: [],
 
     events: {
         'click #doneBtn': '_doneClicked'
@@ -47,19 +49,38 @@ App.views.PhotoAlignView = Backbone.View.extend({
 
             this.$el.find('.upload-group').click(function() {
                 var $this = $(this);
-                var name = $this.attr('data-name');
-                self.masterGroup = _.find(uploadGroups, function(group) {
-                    return group.name == name;
+                self.masterGroupName = $this.attr('data-name');
+                self.masterGroupPhotos = _.find(uploadGroupModels, function(group, key) {
+                    return key == self.masterGroupName;
                 });
-                console.log(self.masterGroup);
+                console.log(self.masterGroupName);
 
                 self.$el.removeClass('step1');
                 self.step++;
                 self.trigger('stepchange');
             });
         }
+        else if (this.step == 2) {
+            this.$el.addClass('step2');
+
+            // Move the master group to the top
+            this.$el.find('.upload-group[data-name="' + this.masterGroupName + '"]').detach().prependTo('.upload-groups');
+
+            this.groupDivs = [];
+            this.$el.find('.upload-group[data-name!="' + this.masterGroupName + '"]').each(function() {
+                var $this = $(this);
+                $this.detach();
+                self.groupDivs.push($this);
+            });
+
+            this._showNextComparison();
+        }
 
         return this;
+    },
+
+    _showNextComparison: function() {
+
     },
 
     _doneClicked: function() {

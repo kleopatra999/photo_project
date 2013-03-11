@@ -232,9 +232,12 @@ body {
     border: 5px solid #EEE;
     overflow: hidden;
 }
-.step1-message {
+.step1-message, .step2-message {
     display: none;
 }
 .step1 .step1-message {
+    display: block;
+}
+.step2 .step2-message {
     display: block;
 }
