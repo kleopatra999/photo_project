@@ -202,3 +202,24 @@ body {
     color: #444;
     font-size: 8em;
 }
+
+/* Photo align */
+.upload-group {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.upload-group .group-photos {
+    width: 100%;
+    overflow: scroll;
+}
+.upload-group .group-photos .group-photos-inner {
+    width: 9999999999px;
+}
+.upload-group .group-photos .group-photo {
+    float: left;
+    width: 100px;
+    height: 75px;
+    margin: 0 10px 10px 10px;
+    border: 5px solid #EEE;
+    overflow: hidden;
+}

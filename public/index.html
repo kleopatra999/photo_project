@@ -277,6 +277,22 @@
         </div>
         <div class="container">
             <h2>Photo Align</h2>
+            {{#if uploadGroups}}
+                {{#iter uploadGroups}}
+                    <div class="upload-group">
+                        <h3>{{name}}</h3>
+                        <div class="group-photos">
+                            <div class="group-photos-inner">
+                                {{#iter photos}}
+                                    <div class="group-photo"><img src="{{small_photo_url}}" alt="{{description}}" /></div>
+                                {{/iter}}
+                            </div>
+                        </div>
+                    </div>
+                {{/iter}}
+            {{else}}
+                <p>No Uploads</p>
+            {{/if}}
         </div>
     </script>
 

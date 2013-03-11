@@ -19,10 +19,21 @@ App.views.PhotoAlignView = Backbone.View.extend({
     },
 
     render: function() {
-        var uploadGroups = this._getUploadGroups();
-        console.log(uploadGroups);
+        var uploadGroupModels = this._getUploadGroups();
+        var uploadGroups = [];
+        for (var key in uploadGroupModels) {
+            var models = new App.collections.PhotoStore();
+            models.reset(uploadGroupModels[key]);
+            var json = models.toJSON();
+            uploadGroups.push({
+                name: key,
+                photos: json
+            });
+        }
 
-        this.$el.html(this.template());
+        this.$el.html(this.template({
+            uploadGroups: uploadGroups
+        }));
         return this;
     },
 
