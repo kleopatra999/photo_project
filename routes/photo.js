@@ -5,6 +5,7 @@ var app = require('../app'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore'),
+    moment = require('moment'),
     exif = (app.testing) ? require('../test/fixtures/exifMock') : require('exif2');
 
 /*
@@ -142,7 +143,11 @@ exports.update = function(req, res) {
     if (!req.user) return res.json(401, {error: "Need to be logged in to make this request"});
 
     // Update the data
-    photoData.updateById(req, req.params.id, req.body.description, function(err) {
+    console.log(req.body.date_taken);
+    var dateTaken = moment(req.body.date_taken, 'HH:mm:ss DD-MM-YYYY');
+    dateTaken = dateTaken.format('YYYY-MM-DD HH:mm:ss');
+    console.log(dateTaken);
+    photoData.updateById(req, req.params.id, req.body.description, dateTaken, function(err) {
         // Handle any errors
         if (err) {
             if (err === photoData.NO_DESCRIPTION) {

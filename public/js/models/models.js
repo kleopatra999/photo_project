@@ -6,10 +6,10 @@ App.models.Set = Backbone.Model.extend({
 
 App.models.Photo = Backbone.Model.extend({
     url: function() {
-        if (!this.get('setId')) {
-            throw "Need to set a setId on the collection before fetching";
+        if (this.get('setId')) {
+            return '/photo?set_id=' + this.get('setId');
         }
-        return '/photo?set_id=' + this.get('setId');
+        return '/photo/' + this.get('id');
     },
 
     sync: function(method, model, options) {

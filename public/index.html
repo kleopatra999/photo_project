@@ -287,7 +287,7 @@
                             <div class="group-photos">
                                 <div class="group-photos-inner">
                                     {{#iter photos}}
-                                        <div class="group-photo"><img src="{{medium_photo_url}}" alt="{{description}}" /></div>
+                                        <div class="group-photo" data-id="{{id}}"><img src="{{medium_photo_url}}" alt="{{description}}" /></div>
                                     {{/iter}}
                                 </div>
                             </div>
@@ -314,6 +314,7 @@
     <script src="js/libs/underscore.js"></script>
     <script src="js/libs/backbone.js"></script>
     <script src="js/libs/gravatar.js"></script>
+    <script src="js/libs/moment.js"></script>
 
     <!-- APP -->
     <script src="js/app.js"></script>
