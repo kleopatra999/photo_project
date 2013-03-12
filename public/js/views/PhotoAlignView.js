@@ -6,13 +6,15 @@ App.views.PhotoAlignView = Backbone.View.extend({
     masterGroupName: null,
     masterGroupPhotos: null,
     groupDivs: [],
+    currentlySelectedMaster: null,
+    currentlySelectedOther: null,
 
     events: {
         'click #doneBtn': '_doneClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_doneClicked', '_getUploadGroups');
+        _.bindAll(this, 'render', '_doneClicked', '_getUploadGroups', '_showNextComparison');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -80,7 +82,32 @@ App.views.PhotoAlignView = Backbone.View.extend({
     },
 
     _showNextComparison: function() {
+        var self = this;
 
+        var $group = this.groupDivs.shift();
+        $group.appendTo('.upload-groups');
+
+        this.$el.find('.upload-group[data-name="' + this.masterGroupName + '"]').find('.group-photo').click(function() {
+            var $this = $(this);
+
+            if (self.currentlySelectedMaster) {
+                self.currentlySelectedMaster.removeClass('selected');
+            }
+
+            $this.addClass('selected');
+            self.currentlySelectedMaster = $this;
+        });
+
+        $group.find('.group-photo').click(function() {
+            var $this = $(this);
+
+            if (self.currentlySelectedOther) {
+                self.currentlySelectedOther.removeClass('selected');
+            }
+
+            $this.addClass('selected');
+            self.currentlySelectedOther = $this;
+        });
     },
 
     _doneClicked: function() {

@@ -231,6 +231,7 @@ body {
     margin: 0 5px 10px 5px;
     border: 5px solid #EEE;
     overflow: hidden;
+    -webkit-transition: .3s border-color cubic-bezier(0.25,.46,.45,.94);
 }
 .step1-message, .step2-message {
     display: none;
@@ -240,4 +241,7 @@ body {
 }
 .step2 .step2-message {
     display: block;
+}
+.step2 .upload-group .group-photos .group-photo.selected {
+    border-color: #468847;
 }
