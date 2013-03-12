@@ -50,6 +50,13 @@ body {
     top: 5px;
 }
 
+.small-number {
+    width: 30px;
+}
+.small-select {
+    width: 75px;
+}
+
 .user-profile {
     display: block;
     margin-top: 4px;
@@ -134,9 +141,6 @@ body {
 }
 .upload .date {
     display: inline;
-}
-.upload .small-number {
-    width: 30px;
 }
 
 /* Modal */
@@ -244,4 +248,7 @@ body {
 }
 .step2 .upload-group .group-photos .group-photo.selected {
     border-color: #468847;
+}
+.changes-form input, .changes-form select, .changes-form button {
+    margin: 0 5px;
 }

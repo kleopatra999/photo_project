@@ -8,13 +8,14 @@ App.views.PhotoAlignView = Backbone.View.extend({
     groupDivs: [],
     currentlySelectedMaster: null,
     currentlySelectedOther: null,
+    shownAlready: false,
 
     events: {
         'click #doneBtn': '_doneClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_doneClicked', '_getUploadGroups', '_showNextComparison');
+        _.bindAll(this, 'render', 'reset', '_doneClicked', '_getUploadGroups', '_showNextComparison', '_checkIfFormShouldShow', '_showTimingForm');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -26,9 +27,22 @@ App.views.PhotoAlignView = Backbone.View.extend({
         this.bind('stepchange', this.render);
     },
 
+    reset: function() {
+        this.step = 1;
+        this.masterGroupName = null;
+        this.masterGroupPhotos = null;
+        this.groupDivs = [];
+        this.currentlySelectedMaster = null;
+        this.currentlySelectedOther = null;
+        this.shownAlready = false;
+    },
+
     render: function() {
         console.log('align render step', this.step);
         var self = this;
+
+        this.$el.removeClass('step1');
+        this.$el.removeClass('step2');
 
         var uploadGroupModels = this._getUploadGroups();
         var uploadGroups = [];
@@ -96,6 +110,8 @@ App.views.PhotoAlignView = Backbone.View.extend({
 
             $this.addClass('selected');
             self.currentlySelectedMaster = $this;
+
+            self._checkIfFormShouldShow();
         });
 
         $group.find('.group-photo').click(function() {
@@ -107,7 +123,68 @@ App.views.PhotoAlignView = Backbone.View.extend({
 
             $this.addClass('selected');
             self.currentlySelectedOther = $this;
+
+            self._checkIfFormShouldShow();
         });
+    },
+
+    _checkIfFormShouldShow: function() {
+        if (this.currentlySelectedMaster && this.currentlySelectedOther && !this.shownAlready) {
+            this.shownAlready = true;
+            this._showTimingForm();
+        }
+    },
+
+    _showTimingForm: function() {
+        var $form = $('<div class="changes-form"></div>');
+
+        $form.append('<h4>What is the difference in time between when the first and second photo was taken?</h4>');
+        $form.append('Second photo was taken');
+
+        var $days = $('<input class="small-number" type="number" id="days">');
+        $days.val('0');
+        $form.append($days);
+        $form.append('days');
+
+        var $hours = $('<input class="small-number" type="number" id="hours">');
+        $hours.val('0');
+        $form.append($hours);
+        $form.append('hours');
+
+        var $minutes = $('<input class="small-number" type="number" id="minutes">');
+        $minutes.val('0');
+        $form.append($minutes);
+        $form.append('minutes and');
+
+        var $seconds = $('<input class="small-number" type="number" id="seconds">');
+        $seconds.val('0');
+        $form.append($seconds);
+        $form.append('seconds');
+
+        var $beforeAfter = $('<select class="small-select" id="beforeAfter"><option value="before">Before</option><option value="after">After</value></option>');
+        $form.append($beforeAfter);
+
+        $form.append('the first');
+
+        var $okButton = $('<button class="btn">Done</button>');
+        $form.append($okButton);
+
+        $form.insertAfter('.upload-groups');
+
+        $okButton.click(function() {
+            self._makeOffsetChanges();
+        });
+    },
+
+    _makeOffsetChanges: function() {
+        // self.collection.forEach(function(photo) {
+        //     if (photo !== model) {
+        //         var currentDateTaken = photo.get('date_taken');
+        //         var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
+        //         currentDateTakenTimestamp.addSeconds(diff);
+        //         photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
+        //     }
+        // });
     },
 
     _doneClicked: function() {

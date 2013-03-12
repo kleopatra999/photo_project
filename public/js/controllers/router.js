@@ -162,7 +162,7 @@ App.routers.Router = Backbone.Router.extend({
         }
 
         var photos = App.photoStore.getAll();
-        App.photoAlignView.step = 1;
+        App.photoAlignView.reset();
         App.selectedSetStore.reset(set);
         App.currentPhotoStore.reset(photos);
         App.viewController.showPhotoAlignView();
