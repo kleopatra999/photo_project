@@ -18,7 +18,7 @@ App.views.PhotoAlignView = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', 'reset', '_doneClicked', '_getUploadGroups', '_showNextComparison', '_checkIfFormShouldShow', '_showTimingForm', '_makeOffsetChanges');
+        _.bindAll(this, 'render', 'reset', '_doneClicked', '_skipClicked', '_getUploadGroups', '_showNextComparison', '_checkIfFormShouldShow', '_showTimingForm', '_makeOffsetChanges');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -91,6 +91,8 @@ App.views.PhotoAlignView = Backbone.View.extend({
                 self.groupDivs.push($this);
             });
 
+            this.$el.find('.skip-button .btn').click(this._skipClicked);
+
             this._showNextComparison();
         }
 
@@ -99,6 +101,9 @@ App.views.PhotoAlignView = Backbone.View.extend({
 
     _showNextComparison: function() {
         var self = this;
+
+        this.$el.find('.upload-group[data-name!="' + this.masterGroupName + '"]').remove();
+        this.$el.find('.skip-button .btn').show();
 
         var $group = this.groupDivs.shift();
         $group.appendTo('.upload-groups');
@@ -135,9 +140,20 @@ App.views.PhotoAlignView = Backbone.View.extend({
         });
     },
 
+    _skipClicked: function() {
+        console.log('Skip');
+        if (this.groupDivs.length > 0) {
+            this._showNextComparison();
+        }
+        else {
+            this._doneClicked();
+        }
+    },
+
     _checkIfFormShouldShow: function() {
         if (this.currentlySelectedMaster && this.currentlySelectedOther && !this.shownAlready) {
             this.shownAlready = true;
+            this.$el.find('.skip-button .btn').hide();
             this._showTimingForm();
         }
     },
@@ -252,14 +268,12 @@ App.views.PhotoAlignView = Backbone.View.extend({
         this.currentlySelectedOther = null;
         this.shownAlready = false;
 
-        // self.collection.forEach(function(photo) {
-        //     if (photo !== model) {
-        //         var currentDateTaken = photo.get('date_taken');
-        //         var currentDateTakenTimestamp = Date.parseExact(currentDateTaken, 'HH:mm:ss dd-MM-yyyy');
-        //         currentDateTakenTimestamp.addSeconds(diff);
-        //         photo.set('date_taken', currentDateTakenTimestamp.toString('HH:mm:ss dd-MM-yyyy'));
-        //     }
-        // });
+        if (this.groupDivs.length > 0) {
+            this._showNextComparison();
+        }
+        else {
+            this._doneClicked();
+        }
     },
 
     _doneClicked: function() {

@@ -256,6 +256,12 @@ body {
 .step2 .step2-message {
     display: block;
 }
+.skip-button {
+    display: none;
+}
+.step2 .skip-button {
+    display: block;
+}
 .step2 .upload-group .group-photos .group-photo.selected {
     border-color: #468847;
 }
