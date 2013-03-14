@@ -91,7 +91,7 @@ exports.create = function(req, res) {
         if (err) return res.json(404, {error: "No set with that set_id found"});
 
         // Upload the images to the file store
-        filestore.uploadPhoto(req.files.photo.path, function(err, urls) {
+        filestore.uploadPhoto(req, req.files.photo.path, function(err, urls) {
             if (err) {
                 console.log('Error uploading image', err);
                 return res.json(500, {error: 'Cannot upload image'});
