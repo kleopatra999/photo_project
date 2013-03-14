@@ -55,6 +55,7 @@ App.views.PhotoAlignView = Backbone.View.extend({
             var json = models.toJSON();
             uploadGroups.push({
                 name: key,
+                uploader: json[0].uploader.name,
                 photos: json
             });
         }
