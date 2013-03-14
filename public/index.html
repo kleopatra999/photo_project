@@ -287,7 +287,10 @@
                             <div class="group-photos">
                                 <div class="group-photos-inner">
                                     {{#iter photos}}
-                                        <div class="group-photo" data-id="{{id}}"><img src="{{medium_photo_url}}" alt="{{description}}" /></div>
+                                        <div class="group-photo" data-id="{{id}}">
+                                            <img src="{{medium_photo_url}}" alt="{{description}}" />
+                                            <p class="taken">{{time}} on {{date}}</p>
+                                        </div>
                                     {{/iter}}
                                 </div>
                             </div>
@@ -321,7 +324,7 @@
 
     <!-- FancyBox -->
     <link rel="stylesheet" href="js/libs/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
-    <script type="text/javascript" src="js/libs/jquery.fancybox.pack.js?v=2.1.4"></script>
+    <script type="text/javascript" src="js/libs/jquery.fancybox.js?v=2.1.4"></script>
     <!-- Optionally add helpers - button, thumbnail and/or media -->
     <link rel="stylesheet" href="js/libs/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
     <script type="text/javascript" src="js/libs/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
@@ -368,10 +371,12 @@
                         y: pageYOffset
                     };
                     $('html').addClass('show-modal');
+                    $('#modal').hide();
                     window.scrollTo(0, 0);
                 },
                 beforeClose: function() {
                     $('html').removeClass('show-modal');
+                    $('#modal').show();
                     window.scrollTo(savedPosition.x, savedPosition.y);
                 }
             });

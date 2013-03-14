@@ -239,6 +239,7 @@ body {
     width: 9999999999px;
 }
 .upload-group .group-photos .group-photo {
+    position: relative;
     float: left;
     width: 200px;
     height: 150px;
@@ -246,6 +247,16 @@ body {
     border: 5px solid #EEE;
     overflow: hidden;
     -webkit-transition: .3s border-color cubic-bezier(0.25,.46,.45,.94);
+}
+.upload-group .group-photos .group-photo .taken {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 130px;
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 0.9em;
 }
 .step1-message, .step2-message {
     display: none;

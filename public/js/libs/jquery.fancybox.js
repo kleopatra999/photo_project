@@ -1411,7 +1411,7 @@
 				rez.left += viewport.x;
 			}
 
-			rez.top  = getValue(Math.max(rez.top,  rez.top  + ((viewport.h - height) * current.topRatio)));
+			rez.top  = getValue(-20);
 			rez.left = getValue(Math.max(rez.left, rez.left + ((viewport.w - width)  * current.leftRatio)));
 
 			return rez;

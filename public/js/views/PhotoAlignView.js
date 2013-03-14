@@ -53,6 +53,12 @@ App.views.PhotoAlignView = Backbone.View.extend({
             var models = new App.collections.PhotoStore();
             models.reset(this.uploadGroupModels[key]);
             var json = models.toJSON();
+
+            _.each(json, function(photo) {
+                photo.date = moment(photo.date_taken, 'HH:mm:ss DD-MM-YYYY').format('DD/MM/YYYY');
+                photo.time = moment(photo.date_taken, 'HH:mm:ss DD-MM-YYYY').format('HH:mm:ss');
+            });
+
             uploadGroups.push({
                 name: key,
                 uploader: json[0].uploader.name,
