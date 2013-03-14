@@ -354,7 +354,23 @@
         $(document).ready(function() {
             App.appController.init();
 
+            var savedPosition;
             $(".fancybox").fancybox({
+                helpers: {
+                    overlay : false
+                },
+                beforeShow: function() {
+                    savedPosition = {
+                        x: pageXOffset,
+                        y: pageYOffset
+                    };
+                    $('html').addClass('show-modal');
+                    window.scrollTo(0, 0);
+                },
+                beforeClose: function() {
+                    $('html').removeClass('show-modal');
+                    window.scrollTo(savedPosition.x, savedPosition.y);
+                }
             });
         });
     </script>
