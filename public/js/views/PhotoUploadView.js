@@ -208,26 +208,21 @@ App.views.PhotoUploadView = Backbone.View.extend({
     _nextUpload: function() {
         var self = this;
         console.log('_nextUpload', 'Queue length', this._uploadQueue.length);
-        console.log(this._uploadQueue, this._uploadBusy);
         if (this._uploadQueue.length > 0 && !this._uploadBusy) {
             this._uploadBusy = true;
 
             var model = this._uploadQueue.shift();
-            console.log(model, this._uploadBusy);
             model.save(null, {
                 success: function(model, response, options) {
                     console.log('Success');
                     self._uploadBusy = false;
-                    console.log(model, self._uploadBusy);
                     self.collection.sort();
                     self._nextUpload();
                 }
             });
-            console.log('Saving...');
         }
     },
     _uploadClicked: function() {
-        console.log('_uploadComplete', 'Queue length', this._uploadQueue.length);
         var set = this.setCollection.toJSON()[0];
 
         if (this._uploadQueue.length === 0 && !this._uploadBusy) {

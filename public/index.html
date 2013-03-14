@@ -142,8 +142,8 @@
                 <ul>
                     {{#each photos}}
                         <li class="photo">
-                            <a href="{{large_photo_url}}" class="fancybox" rel="group">
-                                <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
+                            <a href="{{large_photo_url}}" class="fancybox" rel="group" title="Taken at {{time}} on {{date}}. Uploaded by {{uploader.name}}">
+                                <img src="{{medium_photo_url}}" alt="">
                             </a>
                         </li>
                     {{/each}}
@@ -353,7 +353,9 @@
     <script>
         $(document).ready(function() {
             App.appController.init();
-            $(".fancybox").fancybox();
+
+            $(".fancybox").fancybox({
+            });
         });
     </script>
 </head>

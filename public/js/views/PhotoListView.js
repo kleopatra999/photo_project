@@ -27,6 +27,13 @@ App.views.PhotoListView = Backbone.View.extend({
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
         var photos = this.collection.toJSON();
+
+        photo = _.each(photos, function(photo) {
+            console.log(photo);
+            photo.date = moment(photo.date_taken, 'HH:mm:ss DD-MM-YYYY').format('DD/MM/YYYY');
+            photo.time = moment(photo.date_taken, 'HH:mm:ss DD-MM-YYYY').format('HH:mm:ss');
+        });
+
         this.$el.html(this.template({
             set: set,
             photos: photos

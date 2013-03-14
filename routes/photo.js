@@ -2,6 +2,7 @@ var app = require('../app'),
     filestore = require('../utils/filestore'),
     photoData = require('../data/photo'),
     setData = require('../data/set'),
+    userData = require('../data/user'),
     urlUtils = require('../utils/urls'),
     fs = require('fs'),
     _ = require('underscore'),
@@ -62,8 +63,15 @@ exports.singleWithStatus = function(req, res, status) {
         // Handle any errors
         if (err) return _handleSinglePhotoError(err, res);
 
-        // Return the data
-        res.json(status, data);
+        userData.getById(data.owner_id, function(err, user) {
+            // Handle any errors
+            if (err) return _handleSinglePhotoError(err, res);
+
+            data.uploader = user;
+
+            // Return the data
+            res.json(status, data);
+        });
     });
 };
 
