@@ -35,6 +35,8 @@ App.routers.Router = Backbone.Router.extend({
 
     // Home
     showHome: function() {
+        if (App.user) return this.showSetList();
+
         App.homeView.render();
         App.viewController.showHomeView();
     },
