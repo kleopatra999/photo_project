@@ -1,5 +1,6 @@
 var sqlUtils = require('../utils/sql'),
     setData = require('./set'),
+    userData = require('./user'),
     _ = require('underscore'),
     dateFormat = require('dateformat');
 
@@ -18,11 +19,24 @@ var getAllBySetId = function(req, setId, done) {
         req.dbConnection.query(photoQuery, function(err, rows, field) {
             if (err) return done(err);
 
+            var expectedRows = rows.length;
+            var returnedRows = 0;
+
             _.each(rows, function(row) {
                 row.date_taken = dateFormat(Date.parse(row.date_taken), 'HH:MM:ss dd-mm-yyyy');
+
+                userData.getById(row.owner_id, function(err, user) {
+                    if (err) return done(err);
+
+                    row.uploader = user;
+                    returnedRows++;
+
+                    if (expectedRows == returnedRows) {
+                        done(null, rows);
+                    }
+                });
             });
 
-            done(null, rows);
         });
     });
 };

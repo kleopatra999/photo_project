@@ -142,8 +142,8 @@
                 <ul>
                     {{#each photos}}
                         <li class="photo">
-                            <a href="#/photo/{{id}}" class="">
-                                <img src="{{medium_photo_url}}" alt="Photo - {{description}}">
+                            <a href="{{large_photo_url}}" class="fancybox" rel="group" title="Taken at {{time}} on {{date}}. Uploaded by {{uploader.name}}">
+                                <img src="{{medium_photo_url}}" alt="">
                             </a>
                         </li>
                     {{/each}}
@@ -316,6 +316,16 @@
     <script src="js/libs/gravatar.js"></script>
     <script src="js/libs/moment.js"></script>
 
+    <!-- FancyBox -->
+    <link rel="stylesheet" href="js/libs/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/libs/jquery.fancybox.pack.js?v=2.1.4"></script>
+    <!-- Optionally add helpers - button, thumbnail and/or media -->
+    <link rel="stylesheet" href="js/libs/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/libs/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+    <script type="text/javascript" src="js/libs/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+    <link rel="stylesheet" href="js/libs/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/libs/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
     <!-- APP -->
     <script src="js/app.js"></script>
     <script src="js/models/models.js"></script>
@@ -343,6 +353,25 @@
     <script>
         $(document).ready(function() {
             App.appController.init();
+
+            var savedPosition;
+            $(".fancybox").fancybox({
+                helpers: {
+                    overlay : false
+                },
+                beforeShow: function() {
+                    savedPosition = {
+                        x: pageXOffset,
+                        y: pageYOffset
+                    };
+                    $('html').addClass('show-modal');
+                    window.scrollTo(0, 0);
+                },
+                beforeClose: function() {
+                    $('html').removeClass('show-modal');
+                    window.scrollTo(savedPosition.x, savedPosition.y);
+                }
+            });
         });
     </script>
 </head>

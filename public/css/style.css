@@ -181,6 +181,16 @@ body {
     opacity: 1;
     visibility: visible;
 }
+.fancybox-wrap {
+    -webkit-transition: .3s -webkit-transform cubic-bezier(0.25,.46,.45,.94);
+}
+.show-modal .fancybox-wrap {
+    -webkit-transform: scale(1.111);
+    -o-transform: scale(1.111);
+    -ms-transform: scale(1.111);
+    -moz-transform: scale(1.111);
+    transform: scale(1.111);
+}
 
 /* Login */
 .login-form {
