@@ -78,6 +78,12 @@ App.appController = (function() {
         App.shareView = new App.views.ShareView({
             el: $('#shareView')
         });
+        App.photoAlignView = new App.views.PhotoAlignView({
+            el: $('#photoAlignView'),
+            collection: App.currentPhotoStore,
+            setCollection: App.selectedSetStore,
+            model: App.models.Photo
+        });
 
         // Create the router
         App.router = new App.routers.Router();

@@ -5,11 +5,11 @@ html {
 }
 
 body {
-    -webkit-transform-origin: 50% 100%;
-    -ms-transform-origin: 50% 100%;
-    -o-transform-origin: 50% 100%;
-    -moz-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
+    -webkit-transform-origin: 50% 700px;
+    -ms-transform-origin: 50% 700px;
+    -o-transform-origin: 50% 700px;
+    -moz-transform-origin: 50% 700px;
+    transform-origin: 50% 700px;
 
     -webkit-transition: .3s -webkit-transform cubic-bezier(0.25,.46,.45,.94);
     -ms-transition: .3s -ms-transform cubic-bezier(0.25,.46,.45,.94);
@@ -48,6 +48,13 @@ body {
 .home.navbar-buttons {
     right: 20px;
     top: 5px;
+}
+
+.small-number {
+    width: 30px;
+}
+.small-select {
+    width: 75px;
 }
 
 .user-profile {
@@ -135,9 +142,6 @@ body {
 .upload .date {
     display: inline;
 }
-.upload .small-number {
-    width: 30px;
-}
 
 /* Modal */
 .show-modal body {
@@ -201,4 +205,50 @@ body {
 .features .large-icon {
     color: #444;
     font-size: 8em;
+}
+
+/* Photo align */
+.upload-group {
+    overflow: hidden;
+    padding: 5px;
+    margin-bottom: 10px;
+    -webkit-transition: .3s background-color cubic-bezier(0.25,.46,.45,.94);
+}
+.upload-group h3 {
+    margin-left: 10px;
+}
+.step1 .upload-group:hover {
+    background-color: #EEE;
+    cursor: pointer;
+}
+.upload-group .group-photos {
+    width: 100%;
+    overflow: scroll;
+}
+.upload-group .group-photos .group-photos-inner {
+    width: 9999999999px;
+}
+.upload-group .group-photos .group-photo {
+    float: left;
+    width: 200px;
+    height: 150px;
+    margin: 0 5px 10px 5px;
+    border: 5px solid #EEE;
+    overflow: hidden;
+    -webkit-transition: .3s border-color cubic-bezier(0.25,.46,.45,.94);
+}
+.step1-message, .step2-message {
+    display: none;
+}
+.step1 .step1-message {
+    display: block;
+}
+.step2 .step2-message {
+    display: block;
+}
+.step2 .upload-group .group-photos .group-photo.selected {
+    border-color: #468847;
+}
+.changes-form input, .changes-form select, .changes-form button {
+    margin: 0 5px;
 }

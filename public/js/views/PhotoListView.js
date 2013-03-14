@@ -5,11 +5,12 @@ App.views.PhotoListView = Backbone.View.extend({
 
     events: {
         'click #uploadBtn': '_uploadClicked',
+        'click #alignBtn': '_alignClicked',
         'click #shareBtn': '_shareClicked'
     },
 
     initialize: function(options) {
-        _.bindAll(this, 'render', '_uploadClicked', '_shareClicked');
+        _.bindAll(this, 'render', '_uploadClicked', '_shareClicked', '_alignClicked');
         this.setCollection = options.setCollection;
 
         this.collection.bind('reset', this.render);
@@ -25,9 +26,7 @@ App.views.PhotoListView = Backbone.View.extend({
         // Set the html
         var sets = this.setCollection.toJSON();
         var set = (sets) ? sets[0] : null;
-        console.log(this.collection);
         var photos = this.collection.toJSON();
-        console.log(photos);
         this.$el.html(this.template({
             set: set,
             photos: photos
@@ -52,6 +51,17 @@ App.views.PhotoListView = Backbone.View.extend({
 
         if (set) {
             App.router.navigate('/set/' + set.id + '/share', {trigger: true});
+        }
+        else {
+            console.log('We dont have a set...');
+        }
+    },
+
+    _alignClicked: function() {
+        var set = this.setCollection.toJSON()[0];
+
+        if (set) {
+            App.router.navigate('/set/' + set.id + '/align', {trigger: true});
         }
         else {
             console.log('We dont have a set...');

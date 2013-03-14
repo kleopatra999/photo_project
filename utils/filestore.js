@@ -1,7 +1,8 @@
 var fs = require('fs'),
     im = require('imagemagick'),
     knox = require('knox'),
-    app = require('../app');
+    app = require('../app'),
+    urls = require('./urls');
 
 var sizeNames = ["small", "medium", "large"];
 var sizeNumbers = [100, 300, 800];
@@ -13,7 +14,7 @@ var client = knox.createClient({
     region: 'eu-west-1'
 });
 
-var uploadPhoto = function(path, callback) {
+var uploadPhoto = function(req, path, callback) {
     // If we're testing then basically do nothing
     if (app.testing) {
         callback(null, {
@@ -31,28 +32,26 @@ var uploadPhoto = function(path, callback) {
     var filesReturned = 0;
 
     // Push the origional file to S3
-    fs.readFile(path, function(err, buffer) {
-        pushToS3(prefix + 'orig.jpg', buffer, function(err, file) {
-            out_files['orig'] = file;
+    copyFile(path, getFilePath(prefix + 'orig.jpg'), function(err) {
+        out_files['orig'] = getPublicFilePath(req, prefix + 'orig.jpg');
 
-            // Make the thumbnails and upload to S3
-            for (var i = 0; i < sizeNumbers.length; i++) {
-                uploadThumbnail(path, prefix, sizeNumbers[i], sizeNames[i], function(err, sizeName, file) {
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-                    out_files[sizeName] = file;
-                    filesReturned++;
+        // Make the thumbnails and upload to S3
+        for (var i = 0; i < sizeNumbers.length; i++) {
+            uploadThumbnail(req, path, prefix, sizeNumbers[i], sizeNames[i], function(err, sizeName, file) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                out_files[sizeName] = file;
+                filesReturned++;
 
-                    // Check if all thumbnails are uploaded
-                    if (filesReturned == sizeNumbers.length) {
-                        // Make the callback
-                        callback(null, out_files);
-                    }
-                });
-            }
-        });
+                // Check if all thumbnails are uploaded
+                if (filesReturned == sizeNumbers.length) {
+                    // Make the callback
+                    callback(null, out_files);
+                }
+            });
+        }
     });
 };
 
@@ -84,7 +83,7 @@ module.exports = {
     'deleteAllFiles': deleteAllFiles
 };
 
-function uploadThumbnail(inFile, prefix, sizeNumber, sizeName, callback) {
+function uploadThumbnail(req, inFile, prefix, sizeNumber, sizeName, callback) {
     var filename = prefix + sizeName + ".jpg";
 
     im.resize({
@@ -96,49 +95,42 @@ function uploadThumbnail(inFile, prefix, sizeNumber, sizeName, callback) {
             callback(err);
             return;
         }
-
-        fs.readFile(getFilePath(filename), function(err, buffer) {
-            // If we have an error then go no further
-            if (err) {
-                callback(err);
-                return;
-            }
-
-            pushToS3(filename, buffer, function(err, file) {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-                callback(null, sizeName, file);
-            });
-        });
+        callback(null, sizeName, getPublicFilePath(req, filename));
     });
 }
 
-function pushToS3(filename, buffer, callback) {
-    // Make an amazon S3 request
-    var req = client.put('/' + filename, {
-        'Content-Length': buffer.length,
-        'Content-Type': 'image/jpeg',
-        'x-amz-acl': 'public-read'
-    });
+function copyFile(source, target, callback) {
+    console.log(source);
+    console.log(target);
+    var callbackCalled = false;
 
-    // When the S3 request responds
-    req.on('response', function(res) {
-        if (200 == res.statusCode) {
-            callback(null, req.url);
-        }
-        else {
-            callback('Error', null);
-        }
+    var readStream = fs.createReadStream(source);
+    readStream.on("error", function(err) {
+        done(err);
     });
+    var writeStream = fs.createWriteStream(target);
+    writeStream.on("error", function(err) {
+        done(err);
+    });
+    writeStream.on("close", function(ex) {
+        done();
+    });
+    readStream.pipe(writeStream);
 
-    // Send the data!
-    req.end(buffer);
+    function done(err) {
+        if (!callbackCalled) {
+            callback(err);
+            callbackCalled = true;
+        }
+    }
 }
 
 function getFilePath(filename) {
-    return '/tmp/' + filename;
+    return './public/img/photos/' + filename;
+}
+
+function getPublicFilePath(req, filename) {
+    return urls.getBaseServerUrl(req) + 'img/photos/' + filename;
 }
 
 function genRandonNumber() {

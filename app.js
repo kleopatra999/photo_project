@@ -70,12 +70,14 @@ app.get('/logout', login.logoutRoute);
 app.get('/photo', photo.list);
 app.post('/photo', photo.create);
 app.get('/photo/:id', photo.single);
+app.put('/photo/:id', photo.update);
 app.post('/photo/:id', photo.update);
 app.del('/photo/:id', photo.del);
 // Sets
 app.get('/set', set.list);
 app.post('/set', set.create);
 app.get('/set/:id', set.single);
+app.put('/set/:id', set.update);
 app.post('/set/:id', set.update);
 app.del('/set/:id', set.del);
 app.post('/set/:id/share', set.share);

@@ -59,7 +59,7 @@ var getById = function(req, id, done) {
 /**
  * Updates the photo with the given ID
  **/
-var updateById = function(req, id, description, done) {
+var updateById = function(req, id, description, dateTaken, done) {
     // Check for invalid inputs
     if (!id) return done(NO_ID);
     if (!description) return done(NO_DESCRIPTION);
@@ -68,12 +68,13 @@ var updateById = function(req, id, description, done) {
 
     // Wrap the description in quotes for the SQL statement
     description = sqlUtils.wrapQuotesOrNull(description);
+    dateTaken = sqlUtils.wrapQuotesOrNull(dateTaken);
 
     // Get the photo first to validate that the user has access to this photo
     getById(req, id, function(err, photo) {
         if (err) return done(PHOTO_NOT_FOUND); // Unauthorised
 
-        var query = "UPDATE `photo` SET `description` = " + description + " WHERE `id` = '" + id + "' LIMIT 1";
+        var query = "UPDATE `photo` SET `description` = " + description + ", `date_taken` = " + dateTaken + " WHERE `id` = '" + id + "' LIMIT 1";
         req.dbConnection.query(query, function(err, rows, field) {
             // Unknown error
             if (err) return done(err);

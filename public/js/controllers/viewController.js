@@ -29,6 +29,9 @@ App.viewController = (function() {
             },
             register: {
                 el: $('#registerView')
+            },
+            photoAlign: {
+                el: $('#photoAlignView')
             }
         };
         modalViews = {
@@ -77,6 +80,9 @@ App.viewController = (function() {
     },
     showRegisterView = function() {
         _showView('register');
+    },
+    showPhotoAlignView = function() {
+        _showView('photoAlign');
     },
 
     _showView = function(view) {
@@ -135,7 +141,8 @@ App.viewController = (function() {
         showLoginView: showLoginView,
         showRegisterView: showRegisterView,
         showChangeAllDatesView: showChangeAllDatesView,
-        showShareView: showShareView
+        showShareView: showShareView,
+        showPhotoAlignView: showPhotoAlignView
     };
 
 }());

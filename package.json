@@ -16,7 +16,8 @@
     "passport": "~0.1.15",
     "passport-local": "~0.1.6",
     "exif2": "0.0.1",
-    "dateformat": "~1.0.4-1.2.3"
+    "dateformat": "~1.0.4-1.2.3",
+    "moment": "~2.0.0"
   },
   "devDependencies": {
     "mocha": "~1.6.0",
