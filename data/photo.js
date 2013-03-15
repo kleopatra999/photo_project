@@ -22,20 +22,25 @@ var getAllBySetId = function(req, setId, done) {
             var expectedRows = rows.length;
             var returnedRows = 0;
 
-            _.each(rows, function(row) {
-                row.date_taken = dateFormat(Date.parse(row.date_taken), 'HH:MM:ss dd-mm-yyyy');
+            if (expectedRows > 0) {
+                _.each(rows, function(row) {
+                    row.date_taken = dateFormat(Date.parse(row.date_taken), 'HH:MM:ss dd-mm-yyyy');
 
-                userData.getById(row.owner_id, function(err, user) {
-                    if (err) return done(err);
+                    userData.getById(row.owner_id, function(err, user) {
+                        if (err) return done(err);
 
-                    row.uploader = user;
-                    returnedRows++;
+                        row.uploader = user;
+                        returnedRows++;
 
-                    if (expectedRows == returnedRows) {
-                        done(null, rows);
-                    }
+                        if (expectedRows == returnedRows) {
+                            done(null, rows);
+                        }
+                    });
                 });
-            });
+            }
+            else {
+                done(null, rows);
+            }
 
         });
     });
