@@ -3,7 +3,7 @@ Shoto [![Build Status](https://travis-ci.org/matto1990/photo_project.png)](https
 
 Shoto is a photo sharing service which takes photos from multiple sources and combines them into a single photo stream. The backend is written in [node.js](http://nodejs.org) and the frontend is written in [Backbone.js](http://backbonejs.org).
 
-Testing is done in in a Behavior-driven development style using [Mocha](http://visionmedia.github.com/mocha/) and uses [Travis-ci](http://travis-ci.org) as a continuous integration server.
+Testing is done in in a Behavior-driven development style using [Mocha](http://mochajs.org/) and uses [Travis-ci](http://travis-ci.org) as a continuous integration server.
 
 Getting Started
 ---------------
